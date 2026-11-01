@@ -15,6 +15,7 @@ import email
 from email.header import decode_header
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse
+from urllib.request import urlopen, Request
 from datetime import datetime, timedelta
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -117,10 +118,15 @@ def load_email_config():
         except Exception:
             pass
     env_pw = os.environ.get("GMAIL_APP_PASSWORD", "")
-    return {"email": CANDIDATE_EMAIL, "app_password": env_pw}
+    return {"email": CANDIDATE_EMAIL, "apps_script_url": "", "app_password": env_pw}
 
-def save_email_config(email_addr, app_password):
-    cfg = {"email": email_addr or CANDIDATE_EMAIL, "app_password": app_password.replace(" ", "")}
+def save_email_config(email_addr, app_password=None, apps_script_url=None):
+    cfg = load_email_config()
+    cfg["email"] = email_addr or cfg.get("email") or CANDIDATE_EMAIL
+    if app_password is not None:
+        cfg["app_password"] = app_password.replace(" ", "")
+    if apps_script_url is not None:
+        cfg["apps_script_url"] = apps_script_url.strip()
     with open(EMAIL_CONFIG_PATH, "w", encoding="utf-8") as f:
         json.dump(cfg, f, indent=2)
     return cfg
@@ -137,26 +143,120 @@ def decode_mime_words(s):
             out.append(str(content))
     return "".join(out)
 
-def verify_gmail_confirmations(email_addr=None, app_password=None, days_back=21):
+def match_and_confirm_jobs_from_messages(messages, target_email):
+    """Matches a list of {subject, from, date, snippet} email objects against jobs.db and marks them Confirmed."""
+    init_db()
+    conn = get_db_connection()
+    jobs = [dict(r) for r in conn.execute("SELECT * FROM jobs").fetchall()]
+    confirmed_jobs = []
+
+    for m in messages:
+        subject = m.get("subject", "")
+        sender = m.get("from", "")
+        date_str = m.get("date", "")
+        snippet = m.get("snippet", "")
+        combined_text = f"{subject} {sender} {snippet}".lower()
+
+        for job in jobs:
+            if job.get("status") == "Confirmed":
+                continue
+            company_raw = (job.get("company") or "").strip()
+            if not company_raw:
+                continue
+            primary_token = re.split(r"[\s,/()-]+", company_raw.lower())[0]
+            if len(primary_token) < 3:
+                primary_token = company_raw.lower()
+
+            if company_raw.lower() in combined_text or primary_token in combined_text:
+                now_str = datetime.now().strftime("%Y-%m-%d %H:%M")
+                note_addition = f" [Email Confirmed ({target_email}): '{subject[:70]}' on {now_str}]"
+                updated_notes = ((job.get("notes") or "") + note_addition).strip()
+                applied_dt = job.get("applied_date") or now_str
+                if "Email Verified" not in applied_dt:
+                    applied_dt = f"{applied_dt} (Email Verified)"
+
+                conn.execute(
+                    "UPDATE jobs SET status = 'Confirmed', applied_date = ?, notes = ?, updated_at = ? WHERE id = ?",
+                    (applied_dt, updated_notes, now_str, job["id"])
+                )
+                job["status"] = "Confirmed"
+                confirmed_jobs.append({
+                    "id": job["id"],
+                    "company": job["company"],
+                    "title": job["title"],
+                    "subject": subject or f"Confirmed match for {job['company']}",
+                    "date": date_str or now_str
+                })
+
+    conn.commit()
+    conn.close()
+    sync_jobs_json()
+    return confirmed_jobs
+
+def verify_gmail_confirmations(email_addr=None, app_password=None, days_back=21, apps_script_url=None, receipt_text=None):
     """
-    Connects to Gmail IMAP for sudhakar.r08@gmail.com, scans recent emails for
-    'Thank you for applying' / 'Your application was sent' receipts, and promotes
-    matching jobs in jobs.db to status = 'Confirmed'.
+    Supports 3 ways to confirm job applications from sudhakar.r08@gmail.com:
+    1. Direct receipt_text paste from Gmail (works immediately without any password/script).
+    2. Google Apps Script Web App URL (works with 2FA / Passkeys when App Passwords is unavailable).
+    3. Gmail IMAP with 16-char App Password.
     """
     cfg = load_email_config()
     target_email = (email_addr or cfg.get("email") or CANDIDATE_EMAIL).strip()
-    target_pw = (app_password or cfg.get("app_password") or "").replace(" ", "").strip()
+    target_script_url = (apps_script_url if apps_script_url is not None else cfg.get("apps_script_url", "")).strip()
+    target_pw = (app_password if app_password is not None else cfg.get("app_password", "")).replace(" ", "").strip()
 
+    if app_password or apps_script_url:
+        save_email_config(target_email, app_password=target_pw if app_password else None, apps_script_url=target_script_url if apps_script_url else None)
+
+    # Mode 1: Direct pasted email receipt text / subject
+    if receipt_text and receipt_text.strip():
+        lines = [l.strip() for l in receipt_text.strip().splitlines() if l.strip()]
+        subj = lines[0][:90] if lines else "Pasted Email Confirmation"
+        confirmed = match_and_confirm_jobs_from_messages([{
+            "subject": subj,
+            "from": target_email,
+            "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
+            "snippet": receipt_text
+        }], target_email)
+        return {
+            "success": True,
+            "mode": "receipt_paste",
+            "email": target_email,
+            "scanned_count": 1,
+            "confirmed_jobs": confirmed
+        }
+
+    # Mode 2: Google Apps Script Bridge (No App Password Required - Works with Passkeys / 2FA)
+    if target_script_url:
+        try:
+            req = Request(target_script_url, headers={"User-Agent": "JobHuntTracker/2.0"})
+            with urlopen(req, timeout=15) as resp:
+                payload = json.loads(resp.read().decode("utf-8"))
+            messages = payload.get("messages", [])
+            confirmed = match_and_confirm_jobs_from_messages(messages, target_email)
+            return {
+                "success": True,
+                "mode": "apps_script",
+                "email": target_email,
+                "scanned_count": len(messages),
+                "confirmed_jobs": confirmed
+            }
+        except Exception as e:
+            return {
+                "success": False,
+                "error": f"Apps Script URL Error: {str(e)}",
+                "confirmed_jobs": [],
+                "scanned_count": 0
+            }
+
+    # Mode 3: IMAP with App Password
     if not target_pw:
         return {
             "success": False,
-            "error": f"Gmail App Password not configured yet for {target_email}. Add your 16-character Google App Password in '📧 Email Verify' to enable automatic inbox confirmation.",
+            "error": "No Google Apps Script URL or email snippet provided yet. Since Google disabled App Passwords on your account, use the 1-click Google Apps Script URL or paste any email confirmation text above!",
             "confirmed_jobs": [],
             "scanned_count": 0
         }
-
-    if app_password:
-        save_email_config(target_email, target_pw)
 
     init_db()
     conn = get_db_connection()
@@ -423,6 +523,7 @@ class TrackerHandler(BaseHTTPRequestHandler):
             cfg = load_email_config()
             self.send_json({
                 "email": cfg.get("email", CANDIDATE_EMAIL),
+                "apps_script_url": cfg.get("apps_script_url", ""),
                 "has_password": bool(cfg.get("app_password"))
             })
         elif path == "/api/profile":
@@ -520,7 +621,9 @@ class TrackerHandler(BaseHTTPRequestHandler):
                 result = verify_gmail_confirmations(
                     email_addr=data.get("email", CANDIDATE_EMAIL),
                     app_password=data.get("app_password"),
-                    days_back=int(data.get("days_back", 21))
+                    days_back=int(data.get("days_back", 21)),
+                    apps_script_url=data.get("apps_script_url"),
+                    receipt_text=data.get("receipt_text")
                 )
                 self.send_json(result, 200 if result.get("success") else 400)
             except Exception as e:

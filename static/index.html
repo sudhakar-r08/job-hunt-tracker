@@ -1306,38 +1306,54 @@
         <div>
           <h2 id="emailVerifyTitle">📧 Auto-Confirm via Gmail (`sudhakar.r08@gmail.com`)</h2>
           <p style="font-size: 0.78rem; color: var(--text-muted);">
-            Scans your inbox for "Thank you for applying" / "Your application was sent" receipts
+            Works even when Google App Passwords is disabled on your account!
           </p>
         </div>
         <button type="button" class="btn btn-sm" onclick="document.getElementById('emailVerifyDialog').close()">✕</button>
       </div>
       <div class="dialog-body">
         <div class="detail-box">
-          <h4>How Outlined vs. Filled Applied Works</h4>
-          <p style="margin-block-end:0.45rem;">
-            1. <strong><span class="status-badge status-applied">◎ Applied</span> (Outlined):</strong> Shown right after an application is sent using <code>sudhakar.r08@gmail.com</code>.
+          <h4>Option 1 (Instant — No Password Required): Open Gmail Search &amp; Paste</h4>
+          <p style="margin-block-end:0.55rem;">
+            Click below to open your logged-in Gmail tab filtered for application confirmations, or paste any confirmation email line (e.g., <em>"Your application was sent to Emirates"</em>) to auto-confirm:
           </p>
-          <p>
-            2. <strong><span class="status-badge status-confirmed">✓ Applied</span> (Filled Solid):</strong> Shown once you click <strong>✓ Confirm</strong> OR when this Gmail reader detects a confirmation email (e.g., <em>"Thank you for applying to..."</em>) in <code>sudhakar.r08@gmail.com</code>!
-          </p>
-        </div>
-
-        <div class="form-group">
-          <label for="verifyEmailAddr">Candidate Gmail Address</label>
-          <input type="email" id="verifyEmailAddr" class="input-field" value="sudhakar.r08@gmail.com" readonly />
-        </div>
-
-        <div class="form-group">
-          <label for="verifyAppPassword">Google 16-Character App Password (saved privately to local <code>data/email_config.json</code>)</label>
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-block-end:0.65rem;">
+            <a
+              href="https://mail.google.com/mail/u/0/#search/%22thank+you+for+applying%22+OR+%22application+was+sent%22+OR+%22application+received%22"
+              target="_blank"
+              rel="noopener"
+              class="btn btn-sm btn-primary"
+            >
+              🔎 Open Gmail Confirmation Search ↗
+            </a>
+          </div>
           <input
-            type="password"
-            id="verifyAppPassword"
+            type="text"
+            id="verifyReceiptText"
             class="input-field"
-            placeholder="xxxx xxxx xxxx xxxx (Leave blank if already saved)"
+            placeholder="Paste email subject or snippet here (e.g., 'Your application was sent to Deloitte')..."
           />
-          <span class="form-hint">
-            Generate at Google Account → Security → 2-Step Verification → App passwords. Never pushed to GitHub.
-          </span>
+        </div>
+
+        <div class="detail-box">
+          <h4>Option 2 (100% Automatic in Background — Google Apps Script Bridge)</h4>
+          <p style="margin-block-end:0.55rem;">
+            Since Google hides <em>App Passwords</em> on accounts using Passkeys/Google Prompts, you can run a 15-line script inside your own Google account (<a href="https://script.google.com/home/start" target="_blank" rel="noopener">script.google.com ↗</a>) that reads your confirmation emails with zero passwords:
+          </p>
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-block-end:0.6rem;">
+            <button type="button" class="btn btn-sm" onclick="copyAppsScriptCode()">
+              📋 1. Copy 15-Line Gmail Script
+            </button>
+            <a href="https://script.google.com/home/start" target="_blank" rel="noopener" class="btn btn-sm">
+              🚀 2. Open Google Apps Script (Deploy → Web App) ↗
+            </a>
+          </div>
+          <input
+            type="url"
+            id="verifyAppsScriptUrl"
+            class="input-field"
+            placeholder="Paste deployed https://script.google.com/macros/s/.../exec URL here"
+          />
         </div>
 
         <div id="emailVerifyResultBox" style="display:none;" class="detail-box"></div>
@@ -1345,7 +1361,7 @@
       <div class="dialog-footer">
         <button type="button" class="btn" onclick="document.getElementById('emailVerifyDialog').close()">Close</button>
         <button type="submit" class="btn btn-emerald" id="runEmailVerifyBtn">
-          🔄 Scan Inbox &amp; Confirm Applications
+          🔄 Verify &amp; Confirm Applications
         </button>
       </div>
     </form>
@@ -1688,6 +1704,23 @@
       }
     }
 
+    function copyAppsScriptCode() {
+      const code = [
+        "function doGet(e) {",
+        "  const q = '(\"thank you for applying\" OR \"thanks for applying\" OR \"application was sent\" OR \"we received your application\" OR \"application received\" OR \"application submitted\") newer_than:21d';",
+        "  const threads = GmailApp.search(q, 0, 50);",
+        "  const messages = threads.map(t => {",
+        "    const m = t.getMessages().pop();",
+        "    return { subject: m.getSubject(), from: m.getFrom(), date: m.getDate().toISOString(), snippet: m.getPlainBody().slice(0, 400) };",
+        "  });",
+        "  return ContentService.createTextOutput(JSON.stringify({ success: true, messages })).setMimeType(ContentService.MimeType.JSON);",
+        "}"
+      ].join('\n');
+      navigator.clipboard.writeText(code).then(() => {
+        showToast('📋 Copied Gmail Apps Script! Paste in script.google.com → Deploy → New deployment → Web app');
+      });
+    }
+
     async function openEmailVerifyModal() {
       const box = document.getElementById('emailVerifyResultBox');
       if (box) {
@@ -1698,9 +1731,9 @@
         const res = await fetch('./api/email-config');
         if (res.ok) {
           const cfg = await res.json();
-          const pwInput = document.getElementById('verifyAppPassword');
-          if (cfg.has_password && pwInput) {
-            pwInput.placeholder = '•••••••••••••••• (Saved locally — leave blank to use saved)';
+          const urlInput = document.getElementById('verifyAppsScriptUrl');
+          if (cfg.apps_script_url && urlInput) {
+            urlInput.value = cfg.apps_script_url;
           }
         }
       } catch {}
@@ -1711,11 +1744,12 @@
       event.preventDefault();
       const btn = document.getElementById('runEmailVerifyBtn');
       const box = document.getElementById('emailVerifyResultBox');
-      const pw = document.getElementById('verifyAppPassword').value.trim();
+      const receiptText = (document.getElementById('verifyReceiptText').value || '').trim();
+      const appsScriptUrl = (document.getElementById('verifyAppsScriptUrl').value || '').trim();
       btn.disabled = true;
-      btn.textContent = '⏳ Scanning sudhakar.r08@gmail.com...';
+      btn.textContent = '⏳ Checking confirmations...';
       box.style.display = 'block';
-      box.innerHTML = '<p>Connecting to <code>imap.gmail.com</code> for <strong>sudhakar.r08@gmail.com</strong>...</p>';
+      box.innerHTML = '<p>Verifying job application confirmations for <strong>sudhakar.r08@gmail.com</strong>...</p>';
 
       try {
         const res = await fetch('./api/verify-emails', {
@@ -1723,13 +1757,15 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             email: 'sudhakar.r08@gmail.com',
-            app_password: pw || undefined,
+            receipt_text: receiptText || undefined,
+            apps_script_url: appsScriptUrl || undefined,
             days_back: 21
           })
         });
         const data = await res.json();
         if (data.success) {
           const matched = data.confirmed_jobs || [];
+          document.getElementById('verifyReceiptText').value = '';
           if (matched.length > 0) {
             box.innerHTML = `
               <h4 style="color:#34d399;">✓ Confirmed ${matched.length} Application(s) from Gmail!</h4>
@@ -1737,23 +1773,23 @@
                 ${matched.map((m) => `<li><strong>${escapeHtml(m.company)}</strong> — ${escapeHtml(m.subject)}</li>`).join('')}
               </ul>
             `;
-            showToast(`✓ Auto-confirmed ${matched.length} job(s) from Gmail!`);
+            showToast(`✓ Auto-confirmed ${matched.length} job(s) (Filled Badge)!`);
             await loadJobs(false);
           } else {
             box.innerHTML = `
-              <h4>Scanned ${data.scanned_count || 0} Recent Emails in sudhakar.r08@gmail.com</h4>
-              <p>No new "Thank you for applying" / "Your application was sent" receipts matched unconfirmed companies yet.</p>
+              <h4>Checked ${data.scanned_count || 0} Item(s)</h4>
+              <p>No matching unconfirmed company names found in the email receipt text / inbox yet.</p>
             `;
-            showToast('Inbox scanned — no new confirmation receipts found yet');
+            showToast('No matching unconfirmed companies found yet');
           }
         } else {
-          box.innerHTML = `<h4 style="color:#fbbf24;">Setup Required</h4><p>${escapeHtml(data.error || 'Could not verify emails')}</p>`;
+          box.innerHTML = `<h4 style="color:#fbbf24;">Action Needed</h4><p>${escapeHtml(data.error || 'Could not verify emails')}</p>`;
         }
       } catch (err) {
         box.innerHTML = `<h4 style="color:#f43f5e;">Connection Note</h4><p>Email verification requires the local server (<code>http://localhost:5050</code>) running on your Mac.</p>`;
       } finally {
         btn.disabled = false;
-        btn.textContent = '🔄 Scan Inbox & Confirm Applications';
+        btn.textContent = '🔄 Verify & Confirm Applications';
       }
     }
 
