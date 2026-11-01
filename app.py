@@ -21,7 +21,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "data", "jobs.db")
 RESUMES_DIR = os.path.join(BASE_DIR, "resumes")
 CORE_PROFILE_PATH = os.path.join(BASE_DIR, "data", "core_profile.md")
-EMAIL_CONFIG_PATH = os.path.join(BASE_DIR, "data", ".email_config.json")
+EMAIL_CONFIG_PATH = os.path.join(BASE_DIR, "data", "email_config.json")
 CANDIDATE_EMAIL = "sudhakar.r08@gmail.com"
 
 os.makedirs(os.path.join(BASE_DIR, "data"), exist_ok=True)
