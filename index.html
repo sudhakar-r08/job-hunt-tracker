@@ -536,21 +536,30 @@
       font-size: 0.79rem;
     }
 
-    /* Status Badges: Outlined Applied (Sent) vs Filled Applied (Confirmed) */
+    /* Status Buttons: Outlined Applied (Automation Sent) vs Filled Applied (Confirmed) */
     .status-badge {
       display: inline-flex;
       align-items: center;
       gap: 0.35rem;
-      padding: 0.26rem 0.72rem;
+      padding: 0.34rem 0.82rem;
       border-radius: 999px;
-      font-size: 0.74rem;
+      font-size: 0.76rem;
       font-weight: 700;
+      font-family: inherit;
       white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.16s ease;
+    }
+    .status-badge:hover {
+      transform: translateY(-1px);
     }
     .status-applied {
       background: transparent;
       color: #34d399;
       border: 1.5px solid #10b981;
+    }
+    .status-applied:hover {
+      background: rgba(16, 185, 129, 0.14);
     }
     .status-confirmed {
       background: linear-gradient(135deg, #10b981, #059669);
@@ -1396,7 +1405,7 @@
     let currentStatusTab = 'ALL';
     let rawProfileMarkdown = '';
     let deferredInstallPrompt = null;
-    const LOCAL_OVERRIDES_KEY = 'sr_job_tracker_overrides_v3';
+    const LOCAL_OVERRIDES_KEY = 'sr_job_tracker_overrides_v4';
     const GH_TOKEN_KEY = 'sr_job_tracker_gh_pat';
     const AUTH_USER_KEY = 'sr_job_tracker_auth_user';
     const GITHUB_REPO = 'sudhakar-r08/job-hunt-tracker';
@@ -1639,10 +1648,37 @@
               <div class="rating-pill">★ ${escapeHtml(job.reliability_rating || 'Pending Review')}</div>
             </td>
             <td>
-              <div style="display:flex; flex-direction:column; align-items:flex-start; gap:0.22rem;">
-                <span class="${badgeClass}" title="${isConfirmed ? 'Confirmed (Filled)' : (isSent ? 'Application Sent — Awaiting Confirmation (Outlined)' : '')}">${escapeHtml(badgeLabel)}</span>
-                ${isSent ? `<span style="font-size:0.68rem; color:#94a3b8;">Sent: ${escapeHtml(job.applied_date || 'Awaiting confirmation')}</span>` : ''}
-                ${isConfirmed ? `<span style="font-size:0.69rem; color:#34d399; font-weight:600;">Confirmed: ${escapeHtml(job.applied_date || 'Verified')}</span>` : ''}
+              <div style="display:flex; flex-direction:column; align-items:flex-start; gap:0.25rem;">
+                ${isSent ? `
+                  <button
+                    type="button"
+                    class="${badgeClass}"
+                    onclick="setJobApplicationStage(${Number(job.id)}, 'Confirmed')"
+                    title="Applied by Automation (Outlined) — Click once confirmed to make it Filled Applied"
+                  >
+                    ◎ Applied
+                  </button>
+                  <span style="font-size:0.68rem; color:#94a3b8;">Click button to confirm</span>
+                ` : isConfirmed ? `
+                  <button
+                    type="button"
+                    class="${badgeClass}"
+                    onclick="setJobApplicationStage(${Number(job.id)}, 'Applied')"
+                    title="Confirmed Applied (Filled) — Click to revert to Outlined Applied"
+                  >
+                    ✓ Applied
+                  </button>
+                  <span style="font-size:0.69rem; color:#34d399; font-weight:600;">Confirmed: ${escapeHtml(job.applied_date || 'Verified')}</span>
+                ` : `
+                  <button
+                    type="button"
+                    class="${badgeClass}"
+                    onclick="setJobApplicationStage(${Number(job.id)}, 'Applied')"
+                    title="Queued — Click to mark as Outlined Applied"
+                  >
+                    ${escapeHtml(badgeLabel)}
+                  </button>
+                `}
               </div>
             </td>
             <td>
