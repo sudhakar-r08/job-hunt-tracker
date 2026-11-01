@@ -1405,7 +1405,7 @@
     let currentStatusTab = 'ALL';
     let rawProfileMarkdown = '';
     let deferredInstallPrompt = null;
-    const LOCAL_OVERRIDES_KEY = 'sr_job_tracker_overrides_v8';
+    const LOCAL_OVERRIDES_KEY = 'sr_job_tracker_overrides_v9';
     const GH_TOKEN_KEY = 'sr_job_tracker_gh_pat';
     const AUTH_USER_KEY = 'sr_job_tracker_auth_user';
     const GITHUB_REPO = 'sudhakar-r08/job-hunt-tracker';
@@ -1683,8 +1683,11 @@
             </td>
             <td>
               <div class="row-actions">
-                <button type="button" class="btn btn-sm btn-primary" onclick="openJobDetail(${Number(job.id)})">
-                  View Detail
+                <button type="button" class="btn btn-sm btn-primary" onclick="openJobDetail(${Number(job.id)}, 'prep')" title="View Tailored Interview Preparation Guide &amp; System Design">
+                  🎯 Prep Guide
+                </button>
+                <button type="button" class="btn btn-sm" onclick="openJobDetail(${Number(job.id)}, 'resume')" title="View Tailored Resume &amp; Full Job Details">
+                  📄 Resume &amp; Detail
                 </button>
                 ${(!isSent && !isConfirmed) ? `
                   <button type="button" class="btn btn-sm btn-emerald" onclick="setJobApplicationStage(${Number(job.id)}, 'Applied')" title="Mark application sent (Outlined Applied)">
@@ -1808,8 +1811,35 @@
       btn.textContent = '✓ Match & Confirm Applications';
     }
 
-    // Open Full Detail Dialog + Inline Job URL Updater
-    async function openJobDetail(jobId) {
+    // Open Full Detail Dialog + Inline Job URL Updater + Prep Guide & Tailored Resume Tabs
+    let activeDetailDocs = { prepHtml: '', resumeHtml: '', prepRaw: '', resumeRaw: '', currentTab: 'prep' };
+
+    function switchDetailDocTab(tab) {
+      activeDetailDocs.currentTab = tab;
+      const btnPrep = document.getElementById('docTabBtnPrep');
+      const btnResume = document.getElementById('docTabBtnResume');
+      const viewer = document.getElementById('detailMarkdownViewer');
+      if (btnPrep && btnResume) {
+        btnPrep.classList.toggle('active', tab === 'prep');
+        btnResume.classList.toggle('active', tab === 'resume');
+      }
+      if (viewer) {
+        viewer.innerHTML = tab === 'prep' ? activeDetailDocs.prepHtml : activeDetailDocs.resumeHtml;
+      }
+    }
+
+    function copyActiveDetailDoc() {
+      const text = activeDetailDocs.currentTab === 'prep' ? activeDetailDocs.prepRaw : activeDetailDocs.resumeRaw;
+      if (!text) {
+        showToast('No Markdown content to copy');
+        return;
+      }
+      navigator.clipboard.writeText(text).then(() => {
+        showToast(activeDetailDocs.currentTab === 'prep' ? '🎯 Interview Prep Guide copied!' : '📄 Tailored Resume copied!');
+      });
+    }
+
+    async function openJobDetail(jobId, initialDocTab = 'prep') {
       const job = allJobs.find((j) => Number(j.id) === Number(jobId));
       if (!job) return;
 
@@ -1824,6 +1854,40 @@
           if (r.ok) resumeMd = await r.text();
         } catch {}
       }
+
+      let prepMd = job.prep_guide_content || '';
+      if (!prepMd) {
+        const companyLower = (job.company || '').toLowerCase();
+        const prepMap = {
+          deloitte: 'deloitte-prep.md',
+          phonepe: 'phonepe-prep.md',
+          youtrip: 'youtrip-prep.md',
+          emirates: 'emirates-prep.md',
+          careem: 'careem-prep.md',
+          nagarro: 'nagarro-prep.md',
+          valuelabs: 'valuelabs-prep.md'
+        };
+        const matchKey = Object.keys(prepMap).find((k) => companyLower.includes(k));
+        const prepFile = job.prep_guide_path ? job.prep_guide_path.split('/').pop() : (matchKey ? prepMap[matchKey] : '');
+        if (prepFile) {
+          try {
+            const pRes = await fetch('./prep/' + prepFile);
+            if (pRes.ok) prepMd = await pRes.text();
+          } catch {}
+        }
+      }
+
+      activeDetailDocs = {
+        prepRaw: prepMd,
+        resumeRaw: resumeMd,
+        prepHtml: prepMd
+          ? renderMarkdown(prepMd)
+          : '<p><em>Interview preparation guide will be generated automatically once this role is analyzed.</em></p>',
+        resumeHtml: resumeMd
+          ? renderMarkdown(resumeMd)
+          : '<p><em>This URL is scheduled for the next automated session. The tailored Markdown resume will be generated automatically from your Master Core Profile.</em></p>',
+        currentTab: initialDocTab
+      };
 
       const body = document.getElementById('detailModalBody');
       body.innerHTML = `
@@ -1884,11 +1948,31 @@
         ` : ''}
 
         <div>
-          <h3 style="font-size:0.92rem; margin-block-end:0.55rem; color:var(--accent-sky);">
-            📄 Tailored Resume for ${escapeHtml(job.company)}
-          </h3>
-          <div class="markdown-viewer">
-            ${resumeMd ? renderMarkdown(resumeMd) : '<p><em>This URL is scheduled for the next automated session. The tailored Markdown resume will be generated automatically from your Master Core Profile.</em></p>'}
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-block-end:0.65rem;">
+            <div class="status-tabs" role="tablist" aria-label="Document Viewer Tabs">
+              <button
+                type="button"
+                id="docTabBtnPrep"
+                class="tab-pill ${initialDocTab === 'prep' ? 'active' : ''}"
+                onclick="switchDetailDocTab('prep')"
+              >
+                🎯 Interview Preparation Guide (.md)
+              </button>
+              <button
+                type="button"
+                id="docTabBtnResume"
+                class="tab-pill ${initialDocTab === 'resume' ? 'active' : ''}"
+                onclick="switchDetailDocTab('resume')"
+              >
+                📄 Tailored Resume (.md)
+              </button>
+            </div>
+            <button type="button" class="btn btn-sm" onclick="copyActiveDetailDoc()">
+              📋 Copy Markdown
+            </button>
+          </div>
+          <div class="markdown-viewer" id="detailMarkdownViewer">
+            ${initialDocTab === 'prep' ? activeDetailDocs.prepHtml : activeDetailDocs.resumeHtml}
           </div>
         </div>
       `;

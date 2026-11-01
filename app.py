@@ -21,12 +21,39 @@ from datetime import datetime, timedelta
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "data", "jobs.db")
 RESUMES_DIR = os.path.join(BASE_DIR, "resumes")
+PREP_DIR = os.path.join(BASE_DIR, "prep")
 CORE_PROFILE_PATH = os.path.join(BASE_DIR, "data", "core_profile.md")
 EMAIL_CONFIG_PATH = os.path.join(BASE_DIR, "data", "email_config.json")
 CANDIDATE_EMAIL = "sudhakar.r08@gmail.com"
 
 os.makedirs(os.path.join(BASE_DIR, "data"), exist_ok=True)
 os.makedirs(RESUMES_DIR, exist_ok=True)
+os.makedirs(PREP_DIR, exist_ok=True)
+
+PREP_FILE_MAP = {
+    "deloitte": "deloitte-prep.md",
+    "phonepe": "phonepe-prep.md",
+    "youtrip": "youtrip-prep.md",
+    "emirates": "emirates-prep.md",
+    "careem": "careem-prep.md",
+    "nagarro": "nagarro-prep.md",
+    "valuelabs": "valuelabs-prep.md",
+}
+
+def get_prep_info_for_company(company_name):
+    """Returns (prep_rel_path, prep_content) for a given company name."""
+    c_lower = (company_name or "").lower()
+    for token, filename in PREP_FILE_MAP.items():
+        if token in c_lower:
+            full_path = os.path.join(PREP_DIR, filename)
+            rel_path = os.path.join("prep", filename)
+            if os.path.exists(full_path):
+                try:
+                    with open(full_path, "r", encoding="utf-8") as pf:
+                        return (rel_path, pf.read())
+                except Exception:
+                    return (rel_path, "")
+    return ("", "")
 
 # Default credentials
 AUTH_USERS = {
@@ -101,6 +128,9 @@ def sync_jobs_json():
                     item["tailored_resume_content"] = ""
             else:
                 item["tailored_resume_content"] = ""
+            prep_path, prep_content = get_prep_info_for_company(item.get("company"))
+            item["prep_guide_path"] = prep_path
+            item["prep_guide_content"] = prep_content
             jobs.append(item)
         conn.close()
 
@@ -548,6 +578,9 @@ class TrackerHandler(BaseHTTPRequestHandler):
                         item["tailored_resume_content"] = ""
                 else:
                     item["tailored_resume_content"] = ""
+                prep_path, prep_content = get_prep_info_for_company(item.get("company"))
+                item["prep_guide_path"] = prep_path
+                item["prep_guide_content"] = prep_content
                 jobs.append(item)
             conn.close()
             self.send_json({"jobs": jobs, "total": len(jobs), "candidate_email": CANDIDATE_EMAIL})
@@ -567,6 +600,9 @@ class TrackerHandler(BaseHTTPRequestHandler):
                         item["tailored_resume_content"] = ""
                 else:
                     item["tailored_resume_content"] = ""
+                prep_path, prep_content = get_prep_info_for_company(item.get("company"))
+                item["prep_guide_path"] = prep_path
+                item["prep_guide_content"] = prep_content
                 self.send_json(item)
             else:
                 self.send_json({"error": "Job not found"}, 404)
@@ -583,6 +619,19 @@ class TrackerHandler(BaseHTTPRequestHandler):
                 self.send_response(404)
                 self.end_headers()
                 self.wfile.write(b"Resume file not found")
+        elif path.startswith("/prep/"):
+            filename = os.path.basename(path)
+            file_path = os.path.join(PREP_DIR, filename)
+            if os.path.exists(file_path):
+                self.send_response(200)
+                self.send_header("Content-Type", "text/markdown; charset=utf-8")
+                self.end_headers()
+                with open(file_path, "rb") as f:
+                    self.wfile.write(f.read())
+            else:
+                self.send_response(404)
+                self.end_headers()
+                self.wfile.write(b"Prep file not found")
         else:
             self.send_response(404)
             self.end_headers()
