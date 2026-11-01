@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Job Hunt Tracker - Local Dashboard & Storage with Authentication
+Job Hunt Tracker - Local Dashboard & Storage with Authentication, URL Queueing & PWA Support
 Manages jobs applied/queued, company profiles, market salaries, reviews, and tailored resumes.
 """
 import os
@@ -62,7 +62,7 @@ def get_db_connection():
     return conn
 
 def sync_jobs_json():
-    """Exports SQLite records to data/jobs.json for GitHub Pages static hosting."""
+    """Exports SQLite records to data/jobs.json for GitHub Pages & Mobile sync."""
     try:
         conn = get_db_connection()
         rows = conn.execute("SELECT * FROM jobs ORDER BY updated_at DESC").fetchall()
@@ -87,20 +87,45 @@ def sync_jobs_json():
     except Exception as e:
         print("Error syncing jobs.json:", e)
 
+def infer_company_and_title_from_url(url):
+    """Extracts a sensible placeholder company/title when a user queues a raw URL for the next session."""
+    if not url:
+        return ("Pending Analysis", "Queued Role (Next Session)")
+    parsed = urlparse(url)
+    host = parsed.netloc.lower().replace("www.", "")
+    path_parts = [p for p in parsed.path.split("/") if p]
+    company = "LinkedIn Job Listing" if "linkedin.com" in host else (host.split(".")[0].capitalize() or "Target Company")
+    title = "Queued Job URL (Scheduled for Next Session)"
+    if path_parts:
+        slug = path_parts[-1].replace("-", " ").replace("_", " ").strip()
+        if len(slug) > 4 and not slug.isdigit():
+            title = slug.title()[:80]
+    return (company, title)
+
 def add_or_update_job(job_data):
     init_db()
     conn = get_db_connection()
     cursor = conn.cursor()
     
-    job_url = job_data.get('job_url', '')
-    company = job_data.get('company', '')
-    title = job_data.get('title', '')
-    
+    job_url = (job_data.get('job_url') or '').strip()
+    company = (job_data.get('company') or '').strip()
+    title = (job_data.get('title') or '').strip()
+
+    if not company or not title:
+        inferred_company, inferred_title = infer_company_and_title_from_url(job_url)
+        if not company:
+            company = inferred_company
+        if not title:
+            title = inferred_title
+
     existing = None
-    if job_url:
+    if job_data.get('id'):
+        cursor.execute("SELECT id FROM jobs WHERE id = ?", (job_data.get('id'),))
+        existing = cursor.fetchone()
+    if not existing and job_url:
         cursor.execute("SELECT id FROM jobs WHERE job_url = ?", (job_url,))
         existing = cursor.fetchone()
-    if not existing and company and title:
+    if not existing and company and title and title != "Queued Job URL (Scheduled for Next Session)":
         cursor.execute("SELECT id FROM jobs WHERE company = ? AND title = ?", (company, title))
         existing = cursor.fetchone()
         
@@ -128,25 +153,26 @@ def add_or_update_job(job_data):
                 updated_at = ?
             WHERE id = ?
         """, (
-            job_data.get('title'),
-            job_data.get('company'),
-            job_data.get('location'),
-            job_data.get('line_of_business'),
-            job_data.get('need_for_role'),
-            job_data.get('company_profile'),
-            job_data.get('reliability_rating'),
-            job_data.get('glassdoor_review'),
-            job_data.get('market_salary'),
-            job_data.get('quoted_salary'),
-            job_data.get('job_url'),
-            job_data.get('applied_date'),
-            job_data.get('status'),
-            job_data.get('tailored_resume_path'),
-            job_data.get('notes'),
+            job_data.get('title') or None,
+            job_data.get('company') or None,
+            job_data.get('location') or None,
+            job_data.get('line_of_business') or None,
+            job_data.get('need_for_role') or None,
+            job_data.get('company_profile') or None,
+            job_data.get('reliability_rating') or None,
+            job_data.get('glassdoor_review') or None,
+            job_data.get('market_salary') or None,
+            job_data.get('quoted_salary') or None,
+            job_url or None,
+            job_data.get('applied_date') or None,
+            job_data.get('status') or None,
+            job_data.get('tailored_resume_path') or None,
+            job_data.get('notes') or None,
             now,
             job_id
         ))
     else:
+        status = job_data.get('status') or 'Queued for Next Session'
         cursor.execute("""
             INSERT INTO jobs (
                 title, company, location, line_of_business, need_for_role,
@@ -155,21 +181,21 @@ def add_or_update_job(job_data):
                 status, tailored_resume_path, notes, created_at, updated_at
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
-            job_data.get('title', 'Unknown Title'),
-            job_data.get('company', 'Unknown Company'),
-            job_data.get('location', ''),
-            job_data.get('line_of_business', ''),
-            job_data.get('need_for_role', ''),
-            job_data.get('company_profile', ''),
-            job_data.get('reliability_rating', ''),
-            job_data.get('glassdoor_review', ''),
-            job_data.get('market_salary', ''),
-            job_data.get('quoted_salary', ''),
-            job_data.get('job_url', ''),
-            job_data.get('applied_date', now),
-            job_data.get('status', 'Queued'),
-            job_data.get('tailored_resume_path', ''),
-            job_data.get('notes', ''),
+            title,
+            company,
+            job_data.get('location') or 'TBD (Scheduled Analysis)',
+            job_data.get('line_of_business') or 'Queued for Next Session Deep-Dive',
+            job_data.get('need_for_role') or 'Scheduled for automated agent extraction in next session.',
+            job_data.get('company_profile') or 'Queued URL awaiting next session analysis.',
+            job_data.get('reliability_rating') or 'Pending Review',
+            job_data.get('glassdoor_review') or 'Will be fetched in next scheduled session.',
+            job_data.get('market_salary') or 'Target: 36.4+ LPA / AED 30k+ mo',
+            job_data.get('quoted_salary') or '36.4+ LPA (+30% hike baseline)',
+            job_url,
+            job_data.get('applied_date') or now.split(' ')[0],
+            status,
+            job_data.get('tailored_resume_path') or '',
+            job_data.get('notes') or 'Added via Job URL Queue for next automated session.',
             now,
             now
         ))
@@ -190,6 +216,20 @@ class TrackerHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(json.dumps(data).encode("utf-8"))
 
+    def serve_static_file(self, rel_path, content_type):
+        full_path = os.path.join(BASE_DIR, rel_path)
+        if os.path.exists(full_path):
+            self.send_response(200)
+            self.send_header("Content-Type", content_type)
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            with open(full_path, "rb") as f:
+                self.wfile.write(f.read())
+        else:
+            self.send_response(404)
+            self.end_headers()
+            self.wfile.write(b"Not Found")
+
     def do_OPTIONS(self):
         self.send_response(204)
         self.send_header("Access-Control-Allow-Origin", "*")
@@ -203,6 +243,16 @@ class TrackerHandler(BaseHTTPRequestHandler):
         
         if path == "/" or path == "/index.html":
             self.serve_dashboard()
+        elif path == "/manifest.json":
+            self.serve_static_file("manifest.json", "application/manifest+json; charset=utf-8")
+        elif path == "/sw.js":
+            self.serve_static_file("sw.js", "application/javascript; charset=utf-8")
+        elif path == "/icon.svg":
+            self.serve_static_file("icon.svg", "image/svg+xml")
+        elif path == "/data/jobs.json":
+            self.serve_static_file(os.path.join("data", "jobs.json"), "application/json; charset=utf-8")
+        elif path == "/data/core_profile.md":
+            self.serve_static_file(os.path.join("data", "core_profile.md"), "text/markdown; charset=utf-8")
         elif path == "/api/profile":
             if os.path.exists(CORE_PROFILE_PATH):
                 with open(CORE_PROFILE_PATH, "r", encoding="utf-8") as pf:
@@ -296,7 +346,10 @@ class TrackerHandler(BaseHTTPRequestHandler):
             try:
                 data = json.loads(body.decode("utf-8"))
                 job_id = add_or_update_job(data)
-                self.send_json({"success": True, "id": job_id})
+                conn = get_db_connection()
+                row = conn.execute("SELECT * FROM jobs WHERE id = ?", (job_id,)).fetchone()
+                conn.close()
+                self.send_json({"success": True, "id": job_id, "job": dict(row) if row else {}})
             except Exception as e:
                 self.send_json({"error": str(e)}, 400)
         else:
@@ -327,8 +380,26 @@ class TrackerHandler(BaseHTTPRequestHandler):
                 query = f"UPDATE jobs SET {', '.join(fields)} WHERE id = ?"
                 conn.execute(query, values)
                 conn.commit()
+                row = conn.execute("SELECT * FROM jobs WHERE id = ?", (job_id,)).fetchone()
                 conn.close()
-                self.send_json({"success": True, "id": job_id})
+                sync_jobs_json()
+                self.send_json({"success": True, "id": job_id, "job": dict(row) if row else {}})
+            except Exception as e:
+                self.send_json({"error": str(e)}, 400)
+        else:
+            self.send_response(404)
+            self.end_headers()
+
+    def do_DELETE(self):
+        if self.path.startswith("/api/jobs/"):
+            job_id = self.path.split("/")[-1]
+            try:
+                conn = get_db_connection()
+                conn.execute("DELETE FROM jobs WHERE id = ?", (job_id,))
+                conn.commit()
+                conn.close()
+                sync_jobs_json()
+                self.send_json({"success": True, "deleted_id": job_id})
             except Exception as e:
                 self.send_json({"error": str(e)}, 400)
         else:
@@ -352,6 +423,7 @@ class TrackerHandler(BaseHTTPRequestHandler):
 
 def run_server(port=5050):
     init_db()
+    sync_jobs_json()
     server_address = ("", port)
     httpd = HTTPServer(server_address, TrackerHandler)
     print(f"Job Hunt Tracker running at http://localhost:{port}")
@@ -369,6 +441,7 @@ if __name__ == "__main__":
 
     if args.command == "init":
         init_db()
+        sync_jobs_json()
         print("Database initialized at", DB_PATH)
     elif args.command == "add" and args.data:
         data = json.loads(args.data)
@@ -377,9 +450,9 @@ if __name__ == "__main__":
     elif args.command == "list":
         init_db()
         conn = get_db_connection()
-        rows = conn.execute("SELECT id, title, company, location, status, quoted_salary FROM jobs ORDER BY id DESC").fetchall()
+        rows = conn.execute("SELECT id, title, company, location, status, quoted_salary, job_url FROM jobs ORDER BY id DESC").fetchall()
         for r in rows:
-            print(f"[{r['id']}] {r['title']} @ {r['company']} ({r['location']}) - {r['status']} | Quoted: {r['quoted_salary']}")
+            print(f"[{r['id']}] {r['title']} @ {r['company']} ({r['location']}) - {r['status']} | Quoted: {r['quoted_salary']} | URL: {r['job_url']}")
         conn.close()
     else:
         run_server(args.port)

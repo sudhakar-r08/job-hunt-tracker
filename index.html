@@ -1,1404 +1,2000 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Career Command Center | Sudhakar Raju</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Marked.js for seamless markdown rendering -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <style>
-        :root {
-            --bg-base: #090d16;
-            --bg-surface: #0f172a;
-            --bg-card: #141f36;
-            --bg-card-hover: #1a2947;
-            
-            --border-subtle: #1e293b;
-            --border-medium: #334155;
-            --border-focus: #38bdf8;
-
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --text-dim: #64748b;
-
-            --primary: #3b82f6;
-            --primary-hover: #2563eb;
-            --emerald: #10b981;
-            --emerald-bg: rgba(16, 185, 129, 0.12);
-            --emerald-border: rgba(16, 185, 129, 0.28);
-            --amber: #f59e0b;
-            --amber-bg: rgba(245, 158, 11, 0.12);
-            --amber-border: rgba(245, 158, 11, 0.28);
-            --violet: #8b5cf6;
-            --violet-bg: rgba(139, 92, 246, 0.12);
-            --violet-border: rgba(139, 92, 246, 0.28);
-            --cyan: #06b6d4;
-            --cyan-bg: rgba(6, 182, 212, 0.12);
-            --rose: #f43f5e;
-            --rose-bg: rgba(244, 63, 94, 0.12);
-
-            --radius-sm: 6px;
-            --radius-md: 10px;
-            --radius-lg: 14px;
-            --radius-full: 9999px;
-            
-            --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
-            --shadow-md: 0 4px 12px rgba(0,0,0,0.5);
-            --shadow-lg: 0 12px 32px rgba(0,0,0,0.6);
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: var(--bg-base);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            line-height: 1.5;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* LOGIN SCREEN OVERLAY */
-        #loginScreen {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(circle at 50% 30%, #172554 0%, var(--bg-base) 70%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            z-index: 9999;
-        }
-
-        .login-card {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-medium);
-            border-radius: var(--radius-lg);
-            width: 100%;
-            max-width: 420px;
-            padding: 36px 32px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .login-header {
-            text-align: center;
-        }
-
-        .login-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #2563eb, #7c3aed);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            margin: 0 auto 14px;
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
-        }
-
-        .login-header h2 {
-            font-size: 20px;
-            font-weight: 800;
-            color: #fff;
-        }
-
-        .login-header p {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .form-group label {
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-            color: var(--text-dim);
-        }
-
-        .form-input {
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-sm);
-            padding: 10px 14px;
-            color: #fff;
-            font-size: 13.5px;
-            outline: none;
-            transition: border-color 0.15s ease;
-        }
-
-        .form-input:focus {
-            border-color: var(--border-focus);
-        }
-
-        .btn-submit {
-            background: var(--primary);
-            border: 1px solid #60a5fa;
-            color: #fff;
-            padding: 11px;
-            border-radius: var(--radius-sm);
-            font-size: 13.5px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background 0.15s ease;
-        }
-
-        .btn-submit:hover {
-            background: var(--primary-hover);
-        }
-
-        .login-hint {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px dashed var(--border-subtle);
-            border-radius: var(--radius-sm);
-            padding: 10px 12px;
-            font-size: 11.5px;
-            color: var(--text-dim);
-            text-align: center;
-            line-height: 1.6;
-        }
-
-        .login-hint strong {
-            color: #38bdf8;
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .login-error {
-            display: none;
-            color: var(--rose);
-            font-size: 12px;
-            text-align: center;
-            font-weight: 600;
-        }
-
-        /* Top Navigation Bar */
-        header {
-            background: rgba(15, 23, 42, 0.88);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border-subtle);
-            position: sticky;
-            top: 0;
-            z-index: 50;
-        }
-
-        .header-inner {
-            max-width: 1440px;
-            margin: 0 auto;
-            padding: 12px 28px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 16px;
-        }
-
-        .brand-section {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .brand-logo {
-            width: 36px;
-            height: 36px;
-            border-radius: var(--radius-md);
-            background: linear-gradient(135deg, #2563eb, #7c3aed);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 17px;
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
-        }
-
-        .brand-text h1 {
-            font-size: 16.5px;
-            font-weight: 800;
-            letter-spacing: -0.3px;
-            color: #fff;
-        }
-
-        .brand-text p {
-            font-size: 12px;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .badge-current-role {
-            background: rgba(59, 130, 246, 0.15);
-            color: #60a5fa;
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            padding: 1px 7px;
-            border-radius: var(--radius-full);
-            font-size: 10.5px;
-            font-weight: 600;
-        }
-
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .btn-profile-md {
-            background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(139, 92, 246, 0.15));
-            border: 1px solid rgba(56, 189, 248, 0.4);
-            color: #38bdf8;
-            padding: 6px 12px;
-            border-radius: var(--radius-sm);
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.15s ease;
-        }
-
-        .btn-profile-md:hover {
-            background: rgba(56, 189, 248, 0.25);
-            border-color: #38bdf8;
-            color: #fff;
-        }
-
-        .user-chip {
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            padding: 6px 12px;
-            border-radius: var(--radius-md);
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .user-chip a {
-            color: #38bdf8;
-            text-decoration: none;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .user-chip a:hover {
-            text-decoration: underline;
-        }
-
-        .btn-logout {
-            background: transparent;
-            border: 1px solid var(--border-subtle);
-            color: var(--text-dim);
-            padding: 6px 10px;
-            border-radius: var(--radius-sm);
-            font-size: 11.5px;
-            cursor: pointer;
-        }
-
-        .btn-logout:hover {
-            color: var(--rose);
-            border-color: rgba(244, 63, 94, 0.4);
-        }
-
-        /* Main Container */
-        main {
-            max-width: 1440px;
-            margin: 0 auto;
-            padding: 24px 28px 60px;
-            width: 100%;
-            flex: 1;
-        }
-
-        /* Metric KPI Grid */
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-
-        @media (max-width: 900px) {
-            .metrics-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        .metric-card {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-lg);
-            padding: 16px 20px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: var(--shadow-sm);
-            transition: transform 0.2s ease, border-color 0.2s ease;
-        }
-
-        .metric-card:hover {
-            border-color: var(--border-medium);
-            transform: translateY(-1px);
-        }
-
-        .metric-card::before {
-            content: '';
-            position: absolute;
-            left: 0; top: 0; bottom: 0;
-            width: 3px;
-            background: var(--primary);
-        }
-
-        .metric-card.emerald::before { background: var(--emerald); }
-        .metric-card.amber::before { background: var(--amber); }
-        .metric-card.violet::before { background: var(--violet); }
-
-        .metric-label {
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-            color: var(--text-dim);
-        }
-
-        .metric-num {
-            font-size: 26px;
-            font-weight: 800;
-            margin: 4px 0 2px;
-            color: var(--text-main);
-            letter-spacing: -0.5px;
-        }
-
-        .metric-desc {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        /* Filter & Control Strip */
-        .control-strip {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--bg-surface);
-            border: 1px solid var(--border-subtle);
-            padding: 10px 14px;
-            border-radius: var(--radius-md);
-            margin-bottom: 18px;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .search-container {
-            display: flex;
-            align-items: center;
-            background: var(--bg-base);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-sm);
-            padding: 7px 12px;
-            flex: 1;
-            min-width: 260px;
-            max-width: 420px;
-        }
-
-        .search-container input {
-            background: transparent;
-            border: none;
-            outline: none;
-            color: var(--text-main);
-            font-size: 13px;
-            width: 100%;
-            margin-left: 8px;
-        }
-
-        .filter-controls {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        select {
-            background: var(--bg-base);
-            border: 1px solid var(--border-subtle);
-            color: var(--text-main);
-            padding: 7px 12px;
-            border-radius: var(--radius-sm);
-            font-size: 12px;
-            font-weight: 500;
-            outline: none;
-            cursor: pointer;
-            transition: border-color 0.15s ease;
-        }
-
-        select:focus {
-            border-color: var(--border-focus);
-        }
-
-        .btn {
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            color: var(--text-main);
-            padding: 7px 14px;
-            border-radius: var(--radius-sm);
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            text-decoration: none;
-            transition: all 0.15s ease;
-        }
-
-        .btn:hover {
-            background: var(--bg-card-hover);
-            border-color: var(--border-medium);
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            border-color: #60a5fa;
-            color: #ffffff;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-hover);
-        }
-
-        .btn-sm {
-            padding: 5px 10px;
-            font-size: 11px;
-            border-radius: 5px;
-        }
-
-        .btn-linkedin {
-            background: rgba(10, 102, 194, 0.15);
-            color: #38bdf8;
-            border-color: rgba(10, 102, 194, 0.4);
-            font-weight: 600;
-        }
-
-        .btn-linkedin:hover {
-            background: rgba(10, 102, 194, 0.3);
-            border-color: #38bdf8;
-        }
-
-        /* TABLE VIEW - FIXED LAYOUT */
-        .table-card {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            box-shadow: var(--shadow-md);
-        }
-
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-            font-size: 13px;
-        }
-
-        .data-table thead {
-            background: #111a2f;
-            border-bottom: 1px solid var(--border-medium);
-        }
-
-        .data-table th {
-            padding: 12px 14px;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-            font-weight: 700;
-            color: var(--text-dim);
-            text-align: left;
-            white-space: nowrap;
-        }
-
-        .col-role      { width: 32%; }
-        .col-location  { width: 14%; }
-        .col-salary    { width: 18%; }
-        .col-rating    { width: 10%; }
-        .col-status    { width: 12%; }
-        .col-actions   { width: 14%; text-align: right !important; }
-
-        .job-row {
-            border-bottom: 1px solid var(--border-subtle);
-            transition: background 0.15s ease;
-            cursor: pointer;
-        }
-
-        .job-row:hover {
-            background: var(--bg-card);
-        }
-
-        .job-row td {
-            padding: 13px 14px;
-            vertical-align: middle;
-            overflow: hidden;
-        }
-
-        .title-block {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-        }
-
-        .title-text {
-            font-weight: 700;
-            font-size: 13.5px;
-            color: var(--text-main);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .company-row {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12px;
-        }
-
-        .company-name {
-            font-weight: 700;
-            color: #60a5fa;
-        }
-
-        .tag-lob {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-muted);
-            padding: 1px 6px;
-            border-radius: 4px;
-            font-size: 10.5px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 140px;
-        }
-
-        .location-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            font-weight: 500;
-            color: var(--text-muted);
-            white-space: nowrap;
-        }
-
-        .salary-block {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .salary-main {
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 700;
-            font-size: 13px;
-            color: var(--emerald);
-            white-space: nowrap;
-        }
-
-        .salary-sub {
-            font-size: 11px;
-            color: var(--text-dim);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .rating-chip {
-            display: inline-flex;
-            align-items: center;
-            gap: 3px;
-            background: rgba(245, 158, 11, 0.1);
-            color: #fbbf24;
-            border: 1px solid rgba(245, 158, 11, 0.25);
-            padding: 2px 7px;
-            border-radius: var(--radius-sm);
-            font-size: 11px;
-            font-weight: 700;
-            white-space: nowrap;
-        }
-
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 3px 8px;
-            border-radius: var(--radius-full);
-            font-size: 10.5px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-            white-space: nowrap;
-        }
-
-        .status-applied { background: var(--emerald-bg); color: var(--emerald); border: 1px solid var(--emerald-border); }
-        .status-queued { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
-        .status-interviewing { background: var(--violet-bg); color: #c084fc; border: 1px solid var(--violet-border); }
-        .status-offer { background: var(--cyan-bg); color: #38bdf8; border: 1px solid rgba(6, 182, 212, 0.3); }
-        .status-rejected { background: var(--rose-bg); color: var(--rose); border: 1px solid rgba(244, 63, 94, 0.3); }
-
-        .actions-cell {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 6px;
-            white-space: nowrap;
-        }
-
-        /* MODAL STYLES */
-        .modal-backdrop {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.82);
-            backdrop-filter: blur(6px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            padding: 24px;
-            z-index: 1000;
-        }
-
-        .modal-window {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-medium);
-            border-radius: var(--radius-lg);
-            width: 100%;
-            max-width: 900px;
-            max-height: 90vh;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
-        }
-
-        .modal-header {
-            padding: 18px 24px;
-            border-bottom: 1px solid var(--border-subtle);
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            background: #111a2f;
-            border-top-left-radius: var(--radius-lg);
-            border-top-right-radius: var(--radius-lg);
-        }
-
-        .modal-body {
-            padding: 24px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .modal-section {
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-md);
-            padding: 16px;
-        }
-
-        .modal-section h4 {
-            font-size: 11.5px;
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-            color: #38bdf8;
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        /* Markdown rendered content styles */
-        .markdown-rendered {
-            font-size: 13px;
-            line-height: 1.7;
-            color: #e2e8f0;
-        }
-
-        .markdown-rendered h1 { font-size: 19px; color: #fff; margin-bottom: 12px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 6px; }
-        .markdown-rendered h2 { font-size: 16px; color: #60a5fa; margin: 18px 0 8px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 4px; }
-        .markdown-rendered h3 { font-size: 14px; color: #38bdf8; margin: 14px 0 6px; }
-        .markdown-rendered p { margin-bottom: 10px; color: #cbd5e1; }
-        .markdown-rendered ul, .markdown-rendered ol { padding-left: 20px; margin-bottom: 12px; }
-        .markdown-rendered li { margin-bottom: 4px; color: #cbd5e1; }
-        .markdown-rendered strong { color: #fff; font-weight: 700; }
-        .markdown-rendered a { color: #38bdf8; text-decoration: underline; }
-        .markdown-rendered blockquote { border-left: 3px solid #3b82f6; padding-left: 12px; margin: 12px 0; color: #94a3b8; font-style: italic; }
-        .markdown-rendered table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 12px; }
-        .markdown-rendered th, .markdown-rendered td { border: 1px solid var(--border-subtle); padding: 8px 10px; }
-        .markdown-rendered th { background: rgba(0,0,0,0.3); color: #38bdf8; }
-
-        .modal-footer {
-            padding: 14px 24px;
-            border-top: 1px solid var(--border-subtle);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #111a2f;
-            border-bottom-left-radius: var(--radius-lg);
-            border-bottom-right-radius: var(--radius-lg);
-        }
-
-        .btn-close {
-            background: transparent;
-            border: none;
-            color: var(--text-dim);
-            font-size: 22px;
-            cursor: pointer;
-            line-height: 1;
-        }
-
-        .btn-close:hover { color: #fff; }
-
-        .copy-toast {
-            display: none;
-            color: var(--emerald);
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .empty-state {
-            padding: 48px 16px;
-            text-align: center;
-            color: var(--text-dim);
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#090d16" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="JobTracker" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="./icon.svg" />
+  <link rel="apple-touch-icon" href="./icon.svg" />
+  <title>Sudhakar Raju — Mobile Architect Career Pipeline</title>
+  <style>
+    :root {
+      --bg-base: #070b14;
+      --bg-surface: #0f172a;
+      --bg-elevated: #162038;
+      --bg-glass: rgba(15, 23, 42, 0.82);
+      --border-subtle: rgba(148, 163, 184, 0.14);
+      --border-focus: rgba(56, 189, 248, 0.55);
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --accent-sky: #38bdf8;
+      --accent-indigo: #6366f1;
+      --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --accent-purple: #a855f7;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      --shadow-card: 0 12px 32px -8px rgba(2, 6, 23, 0.65);
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: radial-gradient(circle at 15% 0%, rgba(56, 189, 248, 0.10), transparent 40%),
+                  radial-gradient(circle at 85% 10%, rgba(99, 102, 241, 0.10), transparent 40%),
+                  var(--bg-base);
+      color: var(--text-primary);
+      line-height: 1.5;
+      min-block-size: 100dvh;
+      padding-block-end: 88px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: var(--accent-sky);
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Top App Header */
+    .app-header {
+      position: sticky;
+      inset-block-start: 0;
+      z-index: 40;
+      background: rgba(7, 11, 20, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-block-end: 1px solid var(--border-subtle);
+      padding: 0.85rem 1.5rem;
+    }
+    .header-inner {
+      max-inline-size: 1400px;
+      margin-inline: auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+    .brand-logo {
+      inline-size: 40px;
+      block-size: 40px;
+      border-radius: 11px;
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(99, 102, 241, 0.25));
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: var(--accent-sky);
+      flex-shrink: 0;
+    }
+    .brand-title h1 {
+      font-size: clamp(1.05rem, 1.8vw, 1.3rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(90deg, #f8fafc, #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .brand-subtitle {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.42rem;
+      padding: 0.52rem 0.95rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-surface);
+      color: var(--text-primary);
+      transition: all 0.16s ease;
+      white-space: nowrap;
+      text-decoration: none !important;
+    }
+    .btn:hover {
+      background: var(--bg-elevated);
+      border-color: rgba(148, 163, 184, 0.35);
+      transform: translateY(-1px);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #0284c7, #4f46e5);
+      border-color: rgba(56, 189, 248, 0.45);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(56, 189, 248, 0.22);
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #0369a1, #4338ca);
+      border-color: var(--accent-sky);
+    }
+    .btn-emerald {
+      background: rgba(16, 185, 129, 0.14);
+      border-color: rgba(16, 185, 129, 0.4);
+      color: #34d399;
+    }
+    .btn-emerald:hover {
+      background: rgba(16, 185, 129, 0.24);
+    }
+    .btn-amber {
+      background: rgba(245, 158, 11, 0.14);
+      border-color: rgba(245, 158, 11, 0.4);
+      color: #fbbf24;
+    }
+    .btn-amber:hover {
+      background: rgba(245, 158, 11, 0.24);
+    }
+    .btn-sm {
+      padding: 0.36rem 0.68rem;
+      font-size: 0.76rem;
+      border-radius: 7px;
+    }
+
+    /* Main Container */
+    .main-container {
+      max-inline-size: 1400px;
+      margin-inline: auto;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    /* Candidate Strip */
+    .candidate-banner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.85rem 1.15rem;
+      background: linear-gradient(90deg, rgba(15, 23, 42, 0.9), rgba(30, 27, 75, 0.65));
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      font-size: 0.83rem;
+    }
+    .candidate-pills {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .info-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.25rem 0.65rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+      color: var(--text-secondary);
+      font-size: 0.77rem;
+    }
+    .info-pill strong {
+      color: var(--text-primary);
+    }
+
+    /* KPI Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.95rem;
+    }
+    .kpi-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.05rem 1.2rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+    }
+    .kpi-card::before {
+      content: "";
+      position: absolute;
+      inset-block-start: 0;
+      inset-inline: 0;
+      block-size: 3px;
+      background: var(--kpi-color, var(--accent-sky));
+    }
+    .kpi-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .kpi-value {
+      font-size: 1.7rem;
+      font-weight: 800;
+      margin-block: 0.25rem 0.15rem;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+    }
+    .kpi-sub {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+    }
+
+    /* Quick Schedule Job URL Panel */
+    .quick-schedule-card {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(22, 32, 56, 0.9));
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: var(--radius-md);
+      padding: 1.1rem 1.25rem;
+      box-shadow: var(--shadow-card);
+    }
+    .quick-schedule-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-block-end: 0.75rem;
+    }
+    .quick-schedule-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .quick-schedule-badge {
+      font-size: 0.71rem;
+      padding: 0.18rem 0.55rem;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent-sky);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      font-weight: 600;
+    }
+    .quick-schedule-form {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr auto;
+      gap: 0.65rem;
+      align-items: center;
+    }
+    @media (max-width: 960px) {
+      .quick-schedule-form {
+        grid-template-columns: 1fr 1fr;
+      }
+      .quick-schedule-form .url-input-wrap {
+        grid-column: 1 / -1;
+      }
+      .quick-schedule-form button {
+        grid-column: 1 / -1;
+      }
+    }
+    .input-field, .select-field {
+      inline-size: 100%;
+      padding: 0.58rem 0.85rem;
+      background: rgba(7, 11, 20, 0.75);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-size: 0.84rem;
+      font-family: inherit;
+      transition: border-color 0.15s ease;
+    }
+    .input-field:focus, .select-field:focus {
+      outline: none;
+      border-color: var(--accent-sky);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+    }
+    .input-field:user-invalid {
+      border-color: var(--accent-rose);
+    }
+
+    /* Filter & Search Toolbar */
+    .toolbar-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 0.9rem 1.15rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+    .toolbar-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+    .status-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+    .tab-pill {
+      padding: 0.36rem 0.78rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .tab-pill:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-primary);
+    }
+    .tab-pill.active {
+      background: rgba(56, 189, 248, 0.18);
+      border-color: var(--accent-sky);
+      color: var(--accent-sky);
+    }
+    .toolbar-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.6rem;
+      flex: 1;
+      justify-content: flex-end;
+    }
+    .search-box {
+      min-inline-size: 240px;
+      flex: 1;
+      max-inline-size: 380px;
+    }
+
+    /* Responsive Data Table with Container Queries (modern-web-guidance: responsive-table) */
+    .table-wrapper {
+      overflow: auto;
+      max-inline-size: 100%;
+      container-type: inline-size;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-card);
+    }
+    .table-wrapper:focus-visible {
+      outline: 2px solid var(--accent-sky);
+      outline-offset: 2px;
+    }
+
+    table.jobs-table {
+      inline-size: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      text-align: start;
+      font-size: 0.84rem;
+      --label-location: "Location";
+      --label-comp: "Compensation";
+      --label-rating: "Reliability & Rating";
+      --label-status: "Status";
+      --label-actions: "Actions";
+    }
+
+    .jobs-table caption {
+      position: absolute;
+      inline-size: 1px;
+      block-size: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* Sticky column headers on desktop */
+    .jobs-table thead {
+      position: sticky;
+      inset-block-start: 0;
+      z-index: 2;
+      background: #131d35;
+    }
+    .jobs-table thead th {
+      padding: 0.85rem 1rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      border-block-end: 1px solid var(--border-subtle);
+      white-space: nowrap;
+    }
+
+    .jobs-table tbody tr {
+      transition: background-color 0.14s ease;
+    }
+    .jobs-table tbody tr:hover {
+      background: rgba(56, 189, 248, 0.04);
+    }
+    .jobs-table tbody th,
+    .jobs-table tbody td {
+      padding: 0.95rem 1rem;
+      border-block-end: 1px solid var(--border-subtle);
+      vertical-align: middle;
+    }
+
+    /* Sticky row header on desktop */
+    .jobs-table tbody th {
+      position: sticky;
+      inset-inline-start: 0;
+      background: var(--bg-surface);
+      z-index: 1;
+      font-weight: 600;
+      min-inline-size: 250px;
+      max-inline-size: 330px;
+    }
+    .jobs-table tbody tr:hover th {
+      background: #131e36;
+    }
+
+    .role-title-link {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: block;
+      margin-block-end: 0.25rem;
+      cursor: pointer;
+    }
+    .role-title-link:hover {
+      color: var(--accent-sky);
+    }
+    .company-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.79rem;
+    }
+    .company-name {
+      color: var(--accent-sky);
+      font-weight: 600;
+    }
+    .lob-badge {
+      font-size: 0.71rem;
+      color: var(--text-muted);
+      background: rgba(148, 163, 184, 0.1);
+      padding: 0.12rem 0.48rem;
+      border-radius: 5px;
+    }
+    .url-preview-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      margin-block-start: 0.35rem;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      max-inline-size: 280px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .comp-primary {
+      color: #34d399;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+    .comp-secondary {
+      color: var(--text-muted);
+      font-size: 0.74rem;
+      margin-block-start: 0.15rem;
+    }
+
+    .rating-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      color: #fbbf24;
+      font-weight: 600;
+      font-size: 0.79rem;
+    }
+
+    /* Status Badges */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.26rem 0.68rem;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .status-applied {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.35);
+    }
+    .status-queued {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.35);
+    }
+    .status-scheduled {
+      background: rgba(168, 85, 247, 0.16);
+      color: #c084fc;
+      border: 1px solid rgba(168, 85, 247, 0.4);
+    }
+    .status-interviewing {
+      background: rgba(56, 189, 248, 0.16);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+    }
+
+    .row-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.42rem;
+    }
+
+    /* Container query transformation for narrow containers & mobile screens */
+    @container (width < 820px) {
+      table.jobs-table,
+      .jobs-table thead,
+      .jobs-table tbody,
+      .jobs-table tr,
+      .jobs-table th,
+      .jobs-table td {
+        display: block;
+      }
+
+      .jobs-table thead {
+        display: none;
+      }
+
+      .jobs-table tbody tr {
+        margin: 0.85rem;
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-md);
+        background: rgba(15, 23, 42, 0.75);
+        overflow: hidden;
+      }
+
+      .jobs-table tbody th {
+        position: sticky;
+        inset-block-start: 0;
+        z-index: 2;
+        max-inline-size: none;
+        background: #16223d;
+        border-block-end: 1px solid var(--border-subtle);
+      }
+
+      .jobs-table tbody td {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.7rem 1rem;
+      }
+
+      .jobs-table tbody td:nth-child(2)::before {
+        content: var(--label-location) ": ";
+        font-weight: 600;
+        color: var(--text-muted);
+        font-size: 0.76rem;
+      }
+      .jobs-table tbody td:nth-child(3)::before {
+        content: var(--label-comp) ": ";
+        font-weight: 600;
+        color: var(--text-muted);
+        font-size: 0.76rem;
+      }
+      .jobs-table tbody td:nth-child(4)::before {
+        content: var(--label-rating) ": ";
+        font-weight: 600;
+        color: var(--text-muted);
+        font-size: 0.76rem;
+      }
+      .jobs-table tbody td:nth-child(5)::before {
+        content: var(--label-status) ": ";
+        font-weight: 600;
+        color: var(--text-muted);
+        font-size: 0.76rem;
+      }
+      .jobs-table tbody td:nth-child(6)::before {
+        content: var(--label-actions) ": ";
+        font-weight: 600;
+        color: var(--text-muted);
+        font-size: 0.76rem;
+      }
+    }
+
+    /* Native Dialogs (modern-web-guidance: light-dismiss-a-dialog) */
+    dialog.app-dialog {
+      margin: auto;
+      inline-size: min(92vw, 880px);
+      max-block-size: 88dvh;
+      background: var(--bg-surface);
+      color: var(--text-primary);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.85);
+      padding: 0;
+      overflow: hidden;
+    }
+    dialog.app-dialog.dialog-narrow {
+      inline-size: min(92vw, 540px);
+    }
+    dialog.app-dialog::backdrop {
+      background-color: rgba(2, 6, 23, 0.72);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+    }
+    .dialog-shell {
+      display: flex;
+      flex-direction: column;
+      max-block-size: 88dvh;
+    }
+    .dialog-header {
+      padding: 1.1rem 1.35rem;
+      background: var(--bg-elevated);
+      border-block-end: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .dialog-header h2 {
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .dialog-body {
+      padding: 1.35rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+    .dialog-footer {
+      padding: 0.9rem 1.35rem;
+      background: var(--bg-elevated);
+      border-block-start: 1px solid var(--border-subtle);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.6rem;
+    }
+
+    /* Detail Grid inside Job Detail Modal */
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 0.9rem;
+    }
+    .detail-box {
+      background: rgba(7, 11, 20, 0.6);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 0.9rem 1rem;
+    }
+    .detail-box h4 {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent-sky);
+      margin-block-end: 0.35rem;
+    }
+    .detail-box p {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+    }
+
+    /* Inline URL Editor Box inside Detail Modal */
+    .url-edit-banner {
+      background: rgba(56, 189, 248, 0.07);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: var(--radius-sm);
+      padding: 0.9rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+    .url-edit-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .url-edit-row input {
+      flex: 1;
+      min-inline-size: 220px;
+    }
+
+    /* Markdown Viewer Box */
+    .markdown-viewer {
+      background: #070b14;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 1.25rem;
+      font-size: 0.85rem;
+      line-height: 1.65;
+      color: var(--text-secondary);
+      overflow-x: auto;
+    }
+    .markdown-viewer h1,
+    .markdown-viewer h2,
+    .markdown-viewer h3 {
+      color: var(--text-primary);
+      margin-block: 1rem 0.45rem;
+      border-block-end: 1px solid rgba(148, 163, 184, 0.14);
+      padding-block-end: 0.25rem;
+    }
+    .markdown-viewer h1:first-child,
+    .markdown-viewer h2:first-child {
+      margin-block-start: 0;
+    }
+    .markdown-viewer ul {
+      padding-inline-start: 1.35rem;
+      margin-block: 0.4rem;
+    }
+    .markdown-viewer li {
+      margin-block: 0.25rem;
+    }
+    .markdown-viewer strong {
+      color: #f8fafc;
+    }
+    .markdown-viewer code {
+      background: rgba(56, 189, 248, 0.12);
+      color: var(--accent-sky);
+      padding: 0.1rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+    }
+
+    /* Form Stack */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .form-group label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    .form-hint {
+      font-size: 0.73rem;
+      color: var(--text-muted);
+    }
+
+    /* Toast Notification */
+    .toast-container {
+      position: fixed;
+      inset-block-end: 84px;
+      inset-inline-end: 20px;
+      z-index: 90;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      pointer-events: none;
+    }
+    .toast {
+      background: #1e293b;
+      color: #f8fafc;
+      border: 1px solid var(--accent-sky);
+      border-radius: var(--radius-sm);
+      padding: 0.7rem 1rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      pointer-events: auto;
+      animation: slideIn 0.2s ease-out;
+    }
+    @keyframes slideIn {
+      from { transform: translateY(12px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Mobile Bottom Navigation Bar */
+    .mobile-bottom-nav {
+      display: none;
+      position: fixed;
+      inset-block-end: 0;
+      inset-inline: 0;
+      z-index: 50;
+      background: rgba(10, 15, 28, 0.94);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-block-start: 1px solid var(--border-subtle);
+      padding: 0.45rem 0.75rem calc(0.45rem + env(safe-area-inset-bottom));
+      justify-content: space-around;
+      align-items: center;
+    }
+    .mobile-nav-item {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      font-weight: 600;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.2rem;
+      cursor: pointer;
+      padding: 0.3rem 0.6rem;
+      border-radius: 8px;
+    }
+    .mobile-nav-item.active,
+    .mobile-nav-item:hover {
+      color: var(--accent-sky);
+      background: rgba(56, 189, 248, 0.1);
+    }
+    .mobile-nav-icon {
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+
+    @media (max-width: 768px) {
+      .app-header {
+        padding: 0.75rem 1rem;
+      }
+      .main-container {
+        padding: 0.95rem 0.85rem;
+      }
+      .mobile-bottom-nav {
+        display: flex;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<!-- Login Overlay Screen -->
-<div id="loginScreen">
-    <div class="login-card">
-        <div class="login-header">
-            <div class="login-icon">&#128274;</div>
-            <h2>Career Command Center</h2>
-            <p>Enter your credentials to access your job tracker</p>
-        </div>
-
-        <div id="loginError" class="login-error">Invalid username or password</div>
-
-        <form id="loginForm" onsubmit="handleLogin(event)" style="display: flex; flex-direction: column; gap: 14px;">
-            <div class="form-group">
-                <label>Username / Email</label>
-                <input type="text" id="loginUser" class="form-input" placeholder="e.g. sudhakar" required autofocus value="sudhakar">
-            </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" id="loginPass" class="form-input" placeholder="Enter password" required value="JobHunt2026!">
-            </div>
-            <button type="submit" class="btn-submit">Sign In to Command Center &rarr;</button>
-        </form>
-
-        <div class="login-hint">
-            <div>Credentials configured:</div>
-            <div>Username: <strong>sudhakar</strong> | Password: <strong>JobHunt2026!</strong></div>
-        </div>
-    </div>
-</div>
-
-<!-- Header -->
-<header>
+  <!-- Sticky Header -->
+  <header class="app-header">
     <div class="header-inner">
-        <div class="brand-section">
-            <div class="brand-logo">&#9889;</div>
-            <div class="brand-text">
-                <h1>Career Pipeline & Tracker</h1>
-                <p>
-                    <span>Sudhakar Raju</span>
-                    <span class="badge-current-role">Current: Guardian &bull; Lead Mobile Architect</span>
-                </p>
-            </div>
+      <div class="brand-group">
+        <div class="brand-logo" aria-hidden="true">SR</div>
+        <div class="brand-title">
+          <h1>Candidate Career Opportunity Pipeline</h1>
+          <div class="brand-subtitle">
+            <span>Lead Mobile Architect @ Guardian</span>
+            <span>•</span>
+            <span>Bangalore, Chennai, Hyderabad &amp; UAE</span>
+          </div>
         </div>
+      </div>
 
-        <div class="nav-actions">
-            <!-- Dedicated Master Profile Reader Button -->
-            <button class="btn-profile-md" onclick="openProfileModal()">
-                <span>&#128196; View Master Profile (.md)</span>
-            </button>
-
-            <div class="user-chip">
-                <span>&#9993;</span>
-                <a href="mailto:sudhakar.r08@gmail.com">sudhakar.r08@gmail.com</a>
-                <span>&bull;</span>
-                <a href="https://www.linkedin.com/in/sudhakar-raju/" target="_blank" rel="noreferrer">
-                    LinkedIn &#x2197;
-                </a>
-            </div>
-
-            <button class="btn-logout" onclick="handleLogout()" title="Sign out of dashboard">
-                Sign Out
-            </button>
-        </div>
+      <div class="header-actions">
+        <button type="button" class="btn btn-primary" onclick="openScheduleModal()">
+          ⚡ + Schedule / Update Job URL
+        </button>
+        <button type="button" class="btn btn-emerald" onclick="openProfileModal()">
+          📄 Master Core Profile (.md)
+        </button>
+        <button type="button" class="btn" onclick="openMobileAppModal()">
+          📱 Mobile App &amp; Sync
+        </button>
+        <button type="button" class="btn" id="authBtn" onclick="openAuthModal()">
+          🔐 Login
+        </button>
+      </div>
     </div>
-</header>
+  </header>
 
-<!-- Main Dashboard -->
-<main>
-    <!-- KPI Row -->
-    <div class="metrics-grid">
-        <div class="metric-card">
-            <div class="metric-label">Positions Tracked</div>
-            <div class="metric-num" id="stat-total">0</div>
-            <div class="metric-desc">Matched from LinkedIn & UAE listings</div>
+  <main class="main-container">
+    <!-- Candidate Quick Info Banner -->
+    <section class="candidate-banner" aria-label="Candidate Summary">
+      <div class="candidate-pills">
+        <span class="info-pill">👤 <strong>Sudhakar Raju</strong> (MCA, Anna University)</span>
+        <span class="info-pill">📧 <a href="mailto:sudhakar.r08@gmail.com">sudhakar.r08@gmail.com</a></span>
+        <span class="info-pill">🔗 <a href="https://www.linkedin.com/in/sudhakar-raju/" target="_blank" rel="noopener">linkedin.com/in/sudhakar-raju ↗</a></span>
+        <span class="info-pill">💼 Ex-Ayla Networks • Ex-Vectone • Ex-Infitech</span>
+      </div>
+      <div class="candidate-pills">
+        <span class="info-pill" style="border-color: rgba(16,185,129,0.35); color:#34d399;">
+          🎯 Target: <strong>36.4+ LPA (+30% Hike) / AED 30k+ mo</strong>
+        </span>
+      </div>
+    </section>
+
+    <!-- KPI Cards -->
+    <section class="kpi-grid" aria-label="Pipeline Metrics">
+      <div class="kpi-card" style="--kpi-color: #38bdf8;">
+        <div class="kpi-label">Total Positions Tracked</div>
+        <div class="kpi-value" id="kpiTotal">0</div>
+        <div class="kpi-sub">Vetted across India Tier-1 &amp; UAE</div>
+      </div>
+      <div class="kpi-card" style="--kpi-color: #10b981;">
+        <div class="kpi-label">Applications Submitted</div>
+        <div class="kpi-value" id="kpiApplied">0</div>
+        <div class="kpi-sub">Tailored resume &amp; profile ready</div>
+      </div>
+      <div class="kpi-card" style="--kpi-color: #a855f7;">
+        <div class="kpi-label">Scheduled / Queued URLs</div>
+        <div class="kpi-value" id="kpiQueued">0</div>
+        <div class="kpi-sub">Queued for next automated session</div>
+      </div>
+      <div class="kpi-card" style="--kpi-color: #f59e0b;">
+        <div class="kpi-label">Baseline → Target Package</div>
+        <div class="kpi-value" style="font-size: 1.4rem;">28 → 36.4+ LPA</div>
+        <div class="kpi-sub">+30% Hike / AED 30,000+ Tax-Free</div>
+      </div>
+    </section>
+
+    <!-- Quick Bar: Add or Update Job URL for Next Session -->
+    <section class="quick-schedule-card" aria-labelledby="quickScheduleTitle">
+      <div class="quick-schedule-header">
+        <div class="quick-schedule-title" id="quickScheduleTitle">
+          <span>🔗 Quick Queue Job URL for Next Automated Session</span>
+          <span class="quick-schedule-badge">Auto-Scrapes &amp; Tailors Resume at 9:00 AM IST</span>
         </div>
-        <div class="metric-card emerald">
-            <div class="metric-label">Applied / Submitted</div>
-            <div class="metric-num" id="stat-applied">0</div>
-            <div class="metric-desc">Tailored profile & resume delivered</div>
+        <span style="font-size: 0.76rem; color: var(--text-muted);">
+          Paste any LinkedIn or company job link from Desktop or Mobile to schedule it
+        </span>
+      </div>
+      <form class="quick-schedule-form" onsubmit="handleQuickQueueSubmit(event)">
+        <div class="url-input-wrap">
+          <input
+            type="url"
+            id="quickJobUrl"
+            class="input-field"
+            placeholder="https://www.linkedin.com/jobs/view/... or company job link"
+            required
+            aria-label="Job URL to schedule"
+          />
         </div>
-        <div class="metric-card amber">
-            <div class="metric-label">Ready in Queue</div>
-            <div class="metric-num" id="stat-queued">0</div>
-            <div class="metric-desc">Vetted matches awaiting review</div>
+        <input
+          type="text"
+          id="quickCompany"
+          class="input-field"
+          placeholder="Company (optional)"
+          aria-label="Company Name"
+        />
+        <input
+          type="text"
+          id="quickTitle"
+          class="input-field"
+          placeholder="Role Title (optional)"
+          aria-label="Role Title"
+        />
+        <button type="submit" class="btn btn-primary">
+          ⚡ Schedule for Next Session
+        </button>
+      </form>
+    </section>
+
+    <!-- Filter & Search Controls -->
+    <section class="toolbar-card" aria-label="Filter Jobs">
+      <div class="toolbar-top">
+        <div class="status-tabs" role="tablist" aria-label="Filter by Status">
+          <button type="button" class="tab-pill active" data-status="ALL" onclick="setStatusTab('ALL', this)">All Roles</button>
+          <button type="button" class="tab-pill" data-status="Applied" onclick="setStatusTab('Applied', this)">Applied</button>
+          <button type="button" class="tab-pill" data-status="Queued" onclick="setStatusTab('Queued', this)">Ready in Queue</button>
+          <button type="button" class="tab-pill" data-status="Queued for Next Session" onclick="setStatusTab('Queued for Next Session', this)">⚡ Scheduled URLs</button>
+          <button type="button" class="tab-pill" data-status="Interviewing" onclick="setStatusTab('Interviewing', this)">Interviewing</button>
         </div>
-        <div class="metric-card violet">
-            <div class="metric-label">Current &rarr; Target Package</div>
-            <div class="metric-num" style="font-size: 21px; margin-top: 6px;">28 &rarr; 36.4+ LPA</div>
-            <div class="metric-desc">+30% Targeted Hike Baseline</div>
+
+        <div class="toolbar-controls">
+          <input
+            type="search"
+            id="searchInput"
+            class="input-field search-box"
+            placeholder="🔍 Search role, company, domain, city..."
+            oninput="renderJobs()"
+            aria-label="Search jobs"
+          />
+          <select id="locationFilter" class="select-field" style="inline-size: auto;" onchange="renderJobs()" aria-label="Filter by Location">
+            <option value="ALL">All Locations</option>
+            <option value="Bangalore">Bangalore</option>
+            <option value="Chennai">Chennai</option>
+            <option value="Hyderabad">Hyderabad</option>
+            <option value="Dubai">UAE (Dubai / Abu Dhabi)</option>
+          </select>
+          <button type="button" class="btn btn-sm" onclick="loadJobs(true)">↻ Refresh</button>
         </div>
+      </div>
+    </section>
+
+    <!-- Responsive Data Table (modern-web-guidance: responsive-table) -->
+    <div tabindex="0" role="region" aria-labelledby="pipeline-table-caption" class="table-wrapper">
+      <table class="jobs-table">
+        <caption id="pipeline-table-caption">Sudhakar Raju Career Opportunity Pipeline and Scheduled Job URLs</caption>
+        <thead>
+          <tr>
+            <th scope="col">Role &amp; Company</th>
+            <th scope="col">Location</th>
+            <th scope="col">Quoted / Target Compensation</th>
+            <th scope="col">Reliability &amp; Rating</th>
+            <th scope="col">Status</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="jobsTableBody">
+          <!-- Dynamically populated -->
+        </tbody>
+      </table>
     </div>
+  </main>
 
-    <!-- Filters & Search Toolbar -->
-    <div class="control-strip">
-        <div class="search-container">
-            <span>&#128269;</span>
-            <input type="text" id="searchInput" placeholder="Search by role, company, line of business, tech..." oninput="filterJobs()">
+  <!-- Mobile Bottom Navigation Bar -->
+  <nav class="mobile-bottom-nav" aria-label="Mobile Navigation">
+    <button type="button" class="mobile-nav-item active" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+      <span class="mobile-nav-icon">📋</span>
+      <span>Pipeline</span>
+    </button>
+    <button type="button" class="mobile-nav-item" onclick="openScheduleModal()">
+      <span class="mobile-nav-icon">🔗</span>
+      <span>+ Job URL</span>
+    </button>
+    <button type="button" class="mobile-nav-item" onclick="openProfileModal()">
+      <span class="mobile-nav-icon">📄</span>
+      <span>Core Profile</span>
+    </button>
+    <button type="button" class="mobile-nav-item" onclick="openMobileAppModal()">
+      <span class="mobile-nav-icon">📱</span>
+      <span>Mobile Sync</span>
+    </button>
+  </nav>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <!-- 1. DIALOG: Full Job Application Detail & Inline URL Updater -->
+  <dialog id="jobDetailDialog" class="app-dialog" closedby="any" aria-labelledby="detailModalTitle">
+    <div class="dialog-shell">
+      <div class="dialog-header">
+        <div>
+          <h2 id="detailModalTitle">Job Application Details</h2>
+          <p id="detailModalSubtitle" style="font-size: 0.82rem; color: var(--text-muted); margin-block-start: 0.2rem;"></p>
         </div>
-        <div class="filter-controls">
-            <select id="statusFilter" onchange="filterJobs()">
-                <option value="ALL">All Statuses</option>
-                <option value="Applied">Applied</option>
-                <option value="Queued">Queued</option>
-                <option value="Interviewing">Interviewing</option>
-                <option value="Offer">Offer</option>
-                <option value="Rejected">Rejected</option>
+        <button type="button" class="btn btn-sm" onclick="document.getElementById('jobDetailDialog').close()">✕ Close</button>
+      </div>
+      <div class="dialog-body" id="detailModalBody">
+        <!-- Populated by openJobDetail(id) -->
+      </div>
+      <div class="dialog-footer">
+        <button type="button" class="btn" onclick="document.getElementById('jobDetailDialog').close()">Close</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- 2. DIALOG: Add / Update Job URL Modal -->
+  <dialog id="scheduleUrlDialog" class="app-dialog dialog-narrow" closedby="any" aria-labelledby="scheduleDialogTitle">
+    <form class="dialog-shell" onsubmit="handleModalJobSave(event)">
+      <div class="dialog-header">
+        <div>
+          <h2 id="scheduleDialogTitle">Update or Schedule Job URL</h2>
+          <p style="font-size: 0.78rem; color: var(--text-muted);">
+            Update an existing job link or queue a new URL for the next automated run
+          </p>
+        </div>
+        <button type="button" class="btn btn-sm" onclick="document.getElementById('scheduleUrlDialog').close()">✕</button>
+      </div>
+      <div class="dialog-body">
+        <input type="hidden" id="editJobId" value="" />
+
+        <div class="form-group">
+          <label for="modalJobSelect">Target Job Record</label>
+          <select id="modalJobSelect" class="select-field" onchange="handleModalJobSelectChange(this.value)">
+            <option value="NEW">➕ Queue a New Job URL for Next Session</option>
+          </select>
+          <span class="form-hint">Choose an existing role to fix/update its link, or create a new queued URL.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="modalJobUrl">Exact Job Posting URL (LinkedIn / Careers Page) *</label>
+          <input
+            type="url"
+            id="modalJobUrl"
+            class="input-field"
+            placeholder="https://www.linkedin.com/jobs/view/..."
+            required
+          />
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div class="form-group">
+            <label for="modalCompany">Company Name</label>
+            <input type="text" id="modalCompany" class="input-field" placeholder="e.g., Emirates, Swiggy" />
+          </div>
+          <div class="form-group">
+            <label for="modalLocation">Location</label>
+            <input type="text" id="modalLocation" class="input-field" placeholder="e.g., Bangalore / Dubai" />
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div class="form-group">
+            <label for="modalTitle">Role Title</label>
+            <input type="text" id="modalTitle" class="input-field" placeholder="e.g., Mobile Application Architect" />
+          </div>
+          <div class="form-group">
+            <label for="modalStatus">Pipeline Status</label>
+            <select id="modalStatus" class="select-field">
+              <option value="Queued for Next Session">⚡ Queued for Next Session</option>
+              <option value="Queued">Queued (Ready to Apply)</option>
+              <option value="Applied">Applied</option>
+              <option value="Interviewing">Interviewing</option>
+              <option value="Offer">Offer Extended</option>
             </select>
-            <select id="locationFilter" onchange="filterJobs()">
-                <option value="ALL">All Locations</option>
-                <option value="Bangalore">Bangalore</option>
-                <option value="Chennai">Chennai</option>
-                <option value="Hyderabad">Hyderabad</option>
-                <option value="UAE">UAE / Dubai</option>
-            </select>
-            <button class="btn btn-sm" onclick="fetchJobs()">&#x21bb; Refresh</button>
+          </div>
         </div>
+
+        <div class="form-group">
+          <label for="modalNotes">Notes / Custom Instructions for Next Session</label>
+          <input
+            type="text"
+            id="modalNotes"
+            class="input-field"
+            placeholder="e.g., Referral available, emphasize Kotlin Multiplatform & Guardian IoT work"
+          />
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button type="button" class="btn" onclick="document.getElementById('scheduleUrlDialog').close()">Cancel</button>
+        <button type="submit" class="btn btn-primary">💾 Save Job URL</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- 3. DIALOG: Master Core Profile (.md) Reader -->
+  <dialog id="profileDialog" class="app-dialog" closedby="any" aria-labelledby="profileDialogTitle">
+    <div class="dialog-shell">
+      <div class="dialog-header">
+        <div>
+          <h2 id="profileDialogTitle">📄 Master Core Profile (`data/core_profile.md`)</h2>
+          <p style="font-size: 0.78rem; color: var(--text-muted);">
+            Verified Employment History (Guardian, Ayla Networks, Vectone Mobile, Infitech, Anubavam, Valley Point) &amp; Pet Projects
+          </p>
+        </div>
+        <button type="button" class="btn btn-sm" onclick="document.getElementById('profileDialog').close()">✕ Close</button>
+      </div>
+      <div class="dialog-body">
+        <div class="markdown-viewer" id="profileMarkdownContainer">Loading Master Core Profile...</div>
+      </div>
+      <div class="dialog-footer">
+        <button type="button" class="btn" onclick="copyProfileMarkdown()">📋 Copy Raw Markdown</button>
+        <button type="button" class="btn btn-primary" onclick="document.getElementById('profileDialog').close()">Done</button>
+      </div>
     </div>
+  </dialog>
 
-    <!-- Strictly Contained Table View -->
-    <div class="table-card">
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th class="col-role">Role & Company</th>
-                    <th class="col-location">Location</th>
-                    <th class="col-salary">Target Compensation</th>
-                    <th class="col-rating">Rating</th>
-                    <th class="col-status">Status</th>
-                    <th class="col-actions">Actions</th>
-                </tr>
-            </thead>
-            <tbody id="jobsTableBody">
-                <!-- Dynamically rendered rows -->
-            </tbody>
-        </table>
+  <!-- 4. DIALOG: Mobile App Install & GitHub Cloud Sync -->
+  <dialog id="mobileAppDialog" class="app-dialog dialog-narrow" closedby="any" aria-labelledby="mobileDialogTitle">
+    <div class="dialog-shell">
+      <div class="dialog-header">
+        <div>
+          <h2 id="mobileDialogTitle">📱 Mobile App &amp; Two-Way Cloud Sync</h2>
+          <p style="font-size: 0.78rem; color: var(--text-muted);">
+            Install on Android / iOS &amp; update job links from anywhere
+          </p>
+        </div>
+        <button type="button" class="btn btn-sm" onclick="document.getElementById('mobileAppDialog').close()">✕</button>
+      </div>
+      <div class="dialog-body">
+        <div class="detail-box">
+          <h4>1. Install as a Mobile App (Android &amp; iOS PWA)</h4>
+          <p style="margin-block-end: 0.6rem;">
+            Open <strong><a href="https://sudhakar-r08.github.io/job-hunt-tracker/" target="_blank" rel="noopener">sudhakar-r08.github.io/job-hunt-tracker</a></strong> on your phone:
+          </p>
+          <ul style="padding-inline-start: 1.2rem; font-size: 0.81rem; color: var(--text-secondary);">
+            <li><strong>Android (Chrome):</strong> Tap <strong>"Install App"</strong> below (or Menu ⋮ → <em>Add to Home screen / Install app</em>). You can also share job links directly from the LinkedIn app to <strong>JobTracker</strong> via the Android Share Sheet!</li>
+            <li><strong>iPhone (Safari):</strong> Tap the <strong>Share</strong> icon → <strong>Add to Home Screen</strong>. Launches full-screen with its own app icon.</li>
+          </ul>
+          <div style="margin-block-start: 0.75rem;">
+            <button type="button" class="btn btn-primary btn-sm" id="installPwaBtn" onclick="triggerPwaInstall()">
+              📲 Install App to Device
+            </button>
+          </div>
+        </div>
+
+        <div class="detail-box">
+          <h4>2. Two-Way Mobile → GitHub Sync (Optional)</h4>
+          <p style="margin-block-end: 0.65rem;">
+            When using the app on your mobile phone via GitHub Pages, saving a GitHub Personal Access Token (with <code>repo</code> / <code>contents:write</code> scope) allows any job URL you add or edit on mobile to commit directly to <code>sudhakar-r08/job-hunt-tracker/data/jobs.json</code> so your next 9:00 AM automated session processes it automatically!
+          </p>
+          <div class="form-group">
+            <label for="ghTokenInput">GitHub Personal Access Token (Stored only on this device)</label>
+            <input
+              type="password"
+              id="ghTokenInput"
+              class="input-field"
+              placeholder="ghp_xxxxxxxxxxxxxxxxxxxx or github_pat_..."
+            />
+          </div>
+          <div style="display: flex; gap: 0.5rem; margin-block-start: 0.65rem;">
+            <button type="button" class="btn btn-emerald btn-sm" onclick="saveGithubToken()">
+              ☁️ Save Token &amp; Enable Mobile Cloud Sync
+            </button>
+            <button type="button" class="btn btn-sm" onclick="syncNowToGithub()">
+              ⬆️ Push Local Changes to GitHub Now
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button type="button" class="btn" onclick="document.getElementById('mobileAppDialog').close()">Close</button>
+      </div>
     </div>
-</main>
+  </dialog>
 
-<!-- Master Profile (.md) Modal -->
-<div id="profileModal" class="modal-backdrop" onclick="closeProfileModal(event)">
-    <div class="modal-window" onclick="event.stopPropagation()">
-        <div class="modal-header">
-            <div>
-                <h2 style="font-size: 17px; font-weight: 700; color: #fff;">Master Core Profile</h2>
-                <div style="font-size: 12px; color: #38bdf8; margin-top: 3px;">
-                    Rendered directly from <code>data/core_profile.md</code>
-                </div>
-            </div>
-            <button class="btn-close" onclick="closeProfileModal()">&times;</button>
+  <!-- 5. DIALOG: Login Modal -->
+  <dialog id="authDialog" class="app-dialog dialog-narrow" closedby="any" aria-labelledby="authDialogTitle">
+    <form class="dialog-shell" onsubmit="handleLogin(event)">
+      <div class="dialog-header">
+        <div>
+          <h2 id="authDialogTitle">🔐 Candidate Sign In</h2>
+          <p style="font-size: 0.78rem; color: var(--text-muted);">
+            Sign in to unlock URL editing &amp; scheduling
+          </p>
         </div>
-        <div class="modal-body">
-            <div class="modal-section" style="background: #090e18;">
-                <div id="profileMarkdownContent" class="markdown-rendered">
-                    <em>Loading profile markdown...</em>
-                </div>
-            </div>
+        <button type="button" class="btn btn-sm" onclick="document.getElementById('authDialog').close()">✕</button>
+      </div>
+      <div class="dialog-body">
+        <div class="form-group">
+          <label for="loginUsername">Username or Email</label>
+          <input type="text" id="loginUsername" class="input-field" value="sudhakar.r08@gmail.com" required />
         </div>
-        <div class="modal-footer">
-            <span id="profileCopyToast" class="copy-toast">&#10003; Master profile copied to clipboard!</span>
-            <div style="display: flex; gap: 8px;">
-                <button class="btn btn-sm" onclick="copyMasterProfile()">&#128203; Copy Profile Markdown</button>
-                <button class="btn btn-sm btn-primary" onclick="closeProfileModal()">Done</button>
-            </div>
+        <div class="form-group">
+          <label for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" class="input-field" value="JobHunt2026!" required />
         </div>
-    </div>
-</div>
+      </div>
+      <div class="dialog-footer">
+        <button type="button" class="btn" onclick="document.getElementById('authDialog').close()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Sign In</button>
+      </div>
+    </form>
+  </dialog>
 
-<!-- Deep Dive Intelligence & Resume Modal -->
-<div id="detailModal" class="modal-backdrop" onclick="closeModal(event)">
-    <div class="modal-window" onclick="event.stopPropagation()">
-        <div class="modal-header">
-            <div>
-                <h2 id="mTitle" style="font-size: 17px; font-weight: 700; color: #fff;">Role Title</h2>
-                <div id="mSubtitle" style="font-size: 12.5px; color: #38bdf8; margin-top: 3px;">Company &bull; Location</div>
-            </div>
-            <button class="btn-close" onclick="closeModal()">&times;</button>
-        </div>
+  <script>
+    // MANDATORY Safari / Legacy Browser Fallback for <dialog closedby="any"> (from modern-web-guidance: light-dismiss-a-dialog)
+    document.querySelectorAll('dialog').forEach((dialog) => {
+      if (!('closedBy' in HTMLDialogElement.prototype)) {
+        dialog.addEventListener('click', (event) => {
+          if (event.target !== dialog) return;
+          const rect = dialog.getBoundingClientRect();
+          const isDialogContent = (
+            rect.top <= event.clientY &&
+            event.clientY <= rect.top + rect.height &&
+            rect.left <= event.clientX &&
+            event.clientX <= rect.left + rect.width
+          );
+          if (isDialogContent) return;
+          dialog.close();
+        });
+      }
+    });
 
-        <div class="modal-body" id="mBody">
-            <!-- Rendered by openModal() -->
-        </div>
-
-        <div class="modal-footer">
-            <div>
-                <span id="copyToast" class="copy-toast">&#10003; Tailored resume copied to clipboard!</span>
-            </div>
-            <div style="display: flex; gap: 8px;">
-                <button class="btn btn-sm" onclick="copyResumeText()">&#128203; Copy Resume Markdown</button>
-                <a id="mLinkedInBtn" href="#" target="_blank" rel="noreferrer" class="btn btn-sm btn-primary">
-                    Exact LinkedIn Match &#x2197;
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
+    // Global State
     let allJobs = [];
-    let activeModalJob = null;
-    let masterProfileRaw = '';
+    let currentStatusTab = 'ALL';
+    let rawProfileMarkdown = '';
+    let deferredInstallPrompt = null;
+    const LOCAL_OVERRIDES_KEY = 'sr_job_tracker_overrides_v2';
+    const GH_TOKEN_KEY = 'sr_job_tracker_gh_pat';
+    const AUTH_USER_KEY = 'sr_job_tracker_auth_user';
+    const GITHUB_REPO = 'sudhakar-r08/job-hunt-tracker';
 
-    // Check Authentication
-    function checkAuth() {
-        const token = localStorage.getItem('job_hunt_token');
-        const loginScreen = document.getElementById('loginScreen');
-        if (token) {
-            loginScreen.style.display = 'none';
-            fetchJobs();
-            fetchMasterProfile();
-        } else {
-            loginScreen.style.display = 'flex';
-        }
+    // Register Service Worker for Mobile PWA
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
     }
 
-    async function handleLogin(e) {
-        e.preventDefault();
-        const username = document.getElementById('loginUser').value.trim();
-        const password = document.getElementById('loginPass').value.trim();
-        const errDiv = document.getElementById('loginError');
-        errDiv.style.display = 'none';
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+    });
 
-        // 1. Try backend authentication endpoint
+    function showToast(message) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 3800);
+    }
+
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    // Simple Markdown to HTML renderer for Core Profile & Tailored Resumes
+    function renderMarkdown(md) {
+      if (!md) return '<p>No content available.</p>';
+      let html = escapeHtml(md);
+      html = html.replace(/^### (.*)$/gm, '<h3>$1</h3>');
+      html = html.replace(/^## (.*)$/gm, '<h2>$1</h2>');
+      html = html.replace(/^# (.*)$/gm, '<h1>$1</h1>');
+      html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+      html = html.replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1 ↗</a>');
+      const lines = html.split('\n');
+      let out = [];
+      let inList = false;
+      for (const line of lines) {
+        if (/^\s*[-*]\s+/.test(line)) {
+          if (!inList) { out.push('<ul>'); inList = true; }
+          out.push('<li>' + line.replace(/^\s*[-*]\s+/, '') + '</li>');
+        } else {
+          if (inList) { out.push('</ul>'); inList = false; }
+          if (line.trim() === '---') {
+            out.push('<hr style="border:none;border-top:1px solid rgba(148,163,184,0.18);margin:0.85rem 0;" />');
+          } else if (line.startsWith('<h')) {
+            out.push(line);
+          } else if (line.trim()) {
+            out.push('<p style="margin-block:0.35rem;">' + line + '</p>');
+          }
+        }
+      }
+      if (inList) out.push('</ul>');
+      return out.join('\n');
+    }
+
+    // Load local overrides from localStorage (supports offline / mobile edits)
+    function getLocalOverrides() {
+      try {
+        return JSON.parse(localStorage.getItem(LOCAL_OVERRIDES_KEY) || '{"updated":{},"added":[]}');
+      } catch {
+        return { updated: {}, added: [] };
+      }
+    }
+
+    function saveLocalOverrides(overrides) {
+      localStorage.setItem(LOCAL_OVERRIDES_KEY, JSON.stringify(overrides));
+    }
+
+    function mergeWithLocalOverrides(serverJobs) {
+      const overrides = getLocalOverrides();
+      const map = new Map();
+      serverJobs.forEach((j) => {
+        const over = overrides.updated[j.id] || {};
+        map.set(Number(j.id), { ...j, ...over });
+      });
+      (overrides.added || []).forEach((addedJob) => {
+        const existsByUrl = Array.from(map.values()).some(
+          (existing) => existing.job_url && existing.job_url === addedJob.job_url
+        );
+        if (!existsByUrl) {
+          map.set(Number(addedJob.id), addedJob);
+        }
+      });
+      return Array.from(map.values()).sort((a, b) => Number(b.id) - Number(a.id));
+    }
+
+    async function loadJobs(notify = false) {
+      let fetched = [];
+      try {
+        const res = await fetch('./api/jobs', { cache: 'no-store' });
+        if (res.ok) {
+          const data = await res.json();
+          fetched = data.jobs || [];
+        } else {
+          throw new Error('Fallback to static JSON');
+        }
+      } catch {
         try {
-            const res = await fetch('/api/login', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({username, password})
-            });
-            if (res.ok) {
-                const data = await res.json();
-                if (data.success && data.token) {
-                    localStorage.setItem('job_hunt_token', data.token);
-                    localStorage.setItem('job_hunt_user', JSON.stringify(data.user));
-                    document.getElementById('loginScreen').style.display = 'none';
-                    fetchJobs();
-                    fetchMasterProfile();
-                    return;
-                }
-            }
+          const res = await fetch('./data/jobs.json', { cache: 'no-store' });
+          if (res.ok) {
+            const data = await res.json();
+            fetched = data.jobs || [];
+          }
         } catch (err) {
-            // Fallback for static GitHub Pages hosting
+          console.warn('Could not load jobs.json:', err);
         }
+      }
 
-        // 2. Static / Client-side authentication fallback for GitHub Pages
-        const validUsers = ['sudhakar', 'sudhakar.r08@gmail.com'];
-        if (validUsers.includes(username.toLowerCase()) && password === 'JobHunt2026!') {
-            const dummyToken = 'gh_pages_' + Math.random().toString(36).substring(2);
-            localStorage.setItem('job_hunt_token', dummyToken);
-            localStorage.setItem('job_hunt_user', JSON.stringify({name: 'Sudhakar Raju', username}));
-            document.getElementById('loginScreen').style.display = 'none';
-            fetchJobs();
-            fetchMasterProfile();
-        } else {
-            errDiv.innerText = 'Invalid username or password';
-            errDiv.style.display = 'block';
+      allJobs = mergeWithLocalOverrides(fetched);
+      updateKpis();
+      renderJobs();
+      populateModalJobSelector();
+      if (notify) showToast('Pipeline refreshed (' + allJobs.length + ' positions)');
+    }
+
+    function updateKpis() {
+      const total = allJobs.length;
+      const applied = allJobs.filter((j) => (j.status || '').toLowerCase() === 'applied').length;
+      const queued = allJobs.filter((j) => (j.status || '').toLowerCase().includes('queued')).length;
+      document.getElementById('kpiTotal').textContent = total;
+      document.getElementById('kpiApplied').textContent = applied;
+      document.getElementById('kpiQueued').textContent = queued;
+    }
+
+    function setStatusTab(status, btnEl) {
+      currentStatusTab = status;
+      document.querySelectorAll('.tab-pill').forEach((b) => b.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
+      renderJobs();
+    }
+
+    function getStatusBadgeClass(status) {
+      const s = (status || '').toLowerCase();
+      if (s === 'applied') return 'status-badge status-applied';
+      if (s.includes('next session') || s.includes('scheduled')) return 'status-badge status-scheduled';
+      if (s.includes('interview')) return 'status-badge status-interviewing';
+      return 'status-badge status-queued';
+    }
+
+    function renderJobs() {
+      const query = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+      const locFilter = document.getElementById('locationFilter').value;
+      const tbody = document.getElementById('jobsTableBody');
+
+      const filtered = allJobs.filter((job) => {
+        if (currentStatusTab !== 'ALL') {
+          if (currentStatusTab === 'Queued') {
+            if ((job.status || '') !== 'Queued') return false;
+          } else if ((job.status || '') !== currentStatusTab) {
+            return false;
+          }
         }
-    }
-
-    function handleLogout() {
-        localStorage.removeItem('job_hunt_token');
-        localStorage.removeItem('job_hunt_user');
-        document.getElementById('loginScreen').style.display = 'flex';
-    }
-
-    // Markdown Parser Helper
-    function parseMarkdown(mdText) {
-        if (!mdText) return '';
-        if (typeof marked !== 'undefined') {
-            return marked.parse(mdText);
+        if (locFilter !== 'ALL') {
+          const loc = (job.location || '').toLowerCase();
+          if (locFilter === 'Dubai') {
+            if (!loc.includes('dubai') && !loc.includes('uae') && !loc.includes('emirates') && !loc.includes('abu dhabi')) return false;
+          } else if (!loc.includes(locFilter.toLowerCase())) {
+            return false;
+          }
         }
-        return mdText
-            .replace(/^# (.*$)/gim, '<h1>$1</h1>')
-            .replace(/^## (.*$)/gim, '<h2>$1</h2>')
-            .replace(/^### (.*$)/gim, '<h3>$1</h3>')
-            .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>')
-            .replace(/\*(.*)\*/gim, '<em>$1</em>')
-            .replace(/^\- (.*$)/gim, '<li>$1</li>')
-            .replace(/\n$/gim, '<br />');
-    }
-
-    async function fetchMasterProfile() {
-        // First try dynamic API, then fallback to static file for GitHub Pages
-        try {
-            const res = await fetch('/api/profile');
-            if (res.ok) {
-                const data = await res.json();
-                masterProfileRaw = data.content || '';
-                return;
-            }
-        } catch (e) {}
-
-        try {
-            const resStatic = await fetch('data/core_profile.md');
-            if (resStatic.ok) {
-                masterProfileRaw = await resStatic.text();
-            }
-        } catch (e) {
-            console.error("Failed to load master profile", e);
+        if (query) {
+          const hay = [
+            job.title,
+            job.company,
+            job.location,
+            job.line_of_business,
+            job.need_for_role,
+            job.status,
+            job.job_url
+          ].join(' ').toLowerCase();
+          if (!hay.includes(query)) return false;
         }
-    }
+        return true;
+      });
 
-    function openProfileModal() {
-        const container = document.getElementById('profileMarkdownContent');
-        if (masterProfileRaw) {
-            container.innerHTML = parseMarkdown(masterProfileRaw);
-        } else {
-            container.innerHTML = '<p>Loading master profile...</p>';
-            fetchMasterProfile().then(() => {
-                container.innerHTML = parseMarkdown(masterProfileRaw);
-            });
-        }
-        document.getElementById('profileModal').style.display = 'flex';
-    }
-
-    function closeProfileModal(e) {
-        document.getElementById('profileModal').style.display = 'none';
-        document.getElementById('profileCopyToast').style.display = 'none';
-    }
-
-    function copyMasterProfile() {
-        if (!masterProfileRaw) return;
-        navigator.clipboard.writeText(masterProfileRaw).then(() => {
-            const toast = document.getElementById('profileCopyToast');
-            toast.style.display = 'inline-block';
-            setTimeout(() => { toast.style.display = 'none'; }, 3000);
-        });
-    }
-
-    async function fetchJobs() {
-        // Try dynamic backend first, fallback to static JSON for GitHub Pages
-        let loadedJobs = [];
-        try {
-            const res = await fetch('/api/jobs');
-            if (res.ok) {
-                const data = await res.json();
-                loadedJobs = data.jobs || [];
-            }
-        } catch (e) {}
-
-        if (loadedJobs.length === 0) {
-            try {
-                const resStatic = await fetch('data/jobs.json');
-                if (resStatic.ok) {
-                    const data = await resStatic.json();
-                    loadedJobs = data.jobs || [];
-                }
-            } catch (e) {
-                console.error("Error loading jobs static file", e);
-            }
-        }
-
-        // Apply any local status overrides from localStorage
-        const localOverrides = JSON.parse(localStorage.getItem('job_status_overrides') || '{}');
-        allJobs = loadedJobs.map(j => {
-            if (localOverrides[j.id]) {
-                return {...j, status: localOverrides[j.id]};
-            }
-            return j;
-        });
-
-        updateKPIs();
-        filterJobs();
-    }
-
-    function updateKPIs() {
-        document.getElementById('stat-total').innerText = allJobs.length;
-        document.getElementById('stat-applied').innerText = allJobs.filter(j => j.status === 'Applied').length;
-        document.getElementById('stat-queued').innerText = allJobs.filter(j => j.status === 'Queued').length;
-    }
-
-    function filterJobs() {
-        const query = document.getElementById('searchInput').value.toLowerCase().trim();
-        const status = document.getElementById('statusFilter').value;
-        const location = document.getElementById('locationFilter').value;
-
-        const filtered = allJobs.filter(j => {
-            const matchQuery = !query ||
-                (j.title && j.title.toLowerCase().includes(query)) ||
-                (j.company && j.company.toLowerCase().includes(query)) ||
-                (j.line_of_business && j.line_of_business.toLowerCase().includes(query)) ||
-                (j.location && j.location.toLowerCase().includes(query));
-
-            const matchStatus = status === 'ALL' || j.status === status;
-            const matchLocation = location === 'ALL' || (j.location && j.location.toLowerCase().includes(location.toLowerCase()));
-
-            return matchQuery && matchStatus && matchLocation;
-        });
-
-        renderRows(filtered);
-    }
-
-    function getStatusBadge(status) {
-        switch(status) {
-            case 'Applied': return `<span class="status-badge status-applied">Applied</span>`;
-            case 'Queued': return `<span class="status-badge status-queued">Queued</span>`;
-            case 'Interviewing': return `<span class="status-badge status-interviewing">Interviewing</span>`;
-            case 'Offer': return `<span class="status-badge status-offer">Offer</span>`;
-            case 'Rejected': return `<span class="status-badge status-rejected">Rejected</span>`;
-            default: return `<span class="status-badge status-queued">${status}</span>`;
-        }
-    }
-
-    function parseShortSalary(quoted) {
-        if (!quoted) return '36.4+ LPA';
-        if (quoted.includes('AED')) {
-            const match = quoted.match(/AED\s*[\d,]+/i);
-            return match ? match[0] + '/mo' : 'AED 30k/mo';
-        }
-        const match = quoted.match(/₹?[\d.]+\s*LPA/i);
-        return match ? match[0] : '36.4+ LPA';
-    }
-
-    function parseShortRating(rating) {
-        if (!rating) return '★ 4.2';
-        const match = rating.match(/[\d.]+/);
-        return match ? `★ ${match[0]}` : '★ 4.2';
-    }
-
-    function parseShortLocation(loc) {
-        if (!loc) return 'India';
-        if (loc.toLowerCase().includes('dubai') || loc.toLowerCase().includes('uae')) return 'Dubai, UAE';
-        if (loc.toLowerCase().includes('bangalore') || loc.toLowerCase().includes('bengaluru')) return 'Bangalore';
-        if (loc.toLowerCase().includes('chennai')) return 'Chennai';
-        if (loc.toLowerCase().includes('hyderabad')) return 'Hyderabad';
-        return loc.split(',')[0];
-    }
-
-    async function changeStatus(id, newStatus, event) {
-        if (event) event.stopPropagation();
-
-        // Save override in localStorage (persists on GitHub Pages)
-        const localOverrides = JSON.parse(localStorage.getItem('job_status_overrides') || '{}');
-        localOverrides[id] = newStatus;
-        localStorage.setItem('job_status_overrides', JSON.stringify(localOverrides));
-
-        try {
-            await fetch(`/api/jobs/${id}`, {
-                method: 'PUT',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({status: newStatus})
-            });
-        } catch (err) {}
-
-        await fetchJobs();
-    }
-
-    function renderRows(jobs) {
-        const tbody = document.getElementById('jobsTableBody');
-        if (!jobs || jobs.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="6" class="empty-state">No matching positions found.</td></tr>`;
-            return;
-        }
-
-        let html = '';
-        jobs.forEach(j => {
-            const exactSearchKeywords = `"${j.title}" ${j.company}`;
-            const linkedInUrl = j.job_url || `https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(exactSearchKeywords)}&location=${encodeURIComponent(j.location || '')}&sortBy=R`;
-            const shortSalary = parseShortSalary(j.quoted_salary);
-            const shortRating = parseShortRating(j.reliability_rating);
-            const shortLocation = parseShortLocation(j.location);
-            const lobCategory = (j.line_of_business || 'Technology').split('/')[0].split(',')[0].trim();
-
-            html += `
-                <tr class="job-row" onclick="openModal(${j.id})">
-                    <td class="col-role">
-                        <div class="title-block">
-                            <div class="title-text" title="${escapeHtml(j.title)}">${escapeHtml(j.title)}</div>
-                            <div class="company-row">
-                                <span class="company-name">${escapeHtml(j.company)}</span>
-                                <span class="tag-lob" title="${escapeHtml(j.line_of_business || '')}">${escapeHtml(lobCategory)}</span>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="col-location">
-                        <span class="location-pill">&#128205; ${escapeHtml(shortLocation)}</span>
-                    </td>
-                    <td class="col-salary">
-                        <div class="salary-block">
-                            <span class="salary-main">${escapeHtml(shortSalary)}</span>
-                            <span class="salary-sub">Target (+30% Hike)</span>
-                        </div>
-                    </td>
-                    <td class="col-rating">
-                        <span class="rating-chip">${escapeHtml(shortRating)}</span>
-                    </td>
-                    <td class="col-status" onclick="event.stopPropagation()">
-                        <div style="display: flex; align-items: center; gap: 5px;">
-                            ${getStatusBadge(j.status)}
-                            <select onchange="changeStatus(${j.id}, this.value, event)" style="padding: 1px 4px; font-size: 10px;">
-                                <option value="Queued" ${j.status === 'Queued' ? 'selected' : ''}>Queued</option>
-                                <option value="Applied" ${j.status === 'Applied' ? 'selected' : ''}>Applied</option>
-                                <option value="Interviewing" ${j.status === 'Interviewing' ? 'selected' : ''}>Interviewing</option>
-                                <option value="Offer" ${j.status === 'Offer' ? 'selected' : ''}>Offer</option>
-                                <option value="Rejected" ${j.status === 'Rejected' ? 'selected' : ''}>Rejected</option>
-                            </select>
-                        </div>
-                    </td>
-                    <td class="col-actions" onclick="event.stopPropagation()">
-                        <div class="actions-cell">
-                            <button class="btn btn-primary btn-sm" onclick="openModal(${j.id})">
-                                View Detail
-                            </button>
-                            <a href="${linkedInUrl}" target="_blank" rel="noreferrer" class="btn btn-sm btn-linkedin" title="Open exact matching LinkedIn job listing">
-                                Match &#x2197;
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-            `;
-        });
-
-        tbody.innerHTML = html;
-    }
-
-    function openModal(id) {
-        const job = allJobs.find(j => j.id === id);
-        if (!job) return;
-        activeModalJob = job;
-
-        document.getElementById('mTitle').innerText = job.title;
-        document.getElementById('mSubtitle').innerHTML = `
-            <strong>${escapeHtml(job.company)}</strong> &bull; ${escapeHtml(job.location)} &bull; Line of Business: <em>${escapeHtml(job.line_of_business || 'Technology')}</em>
+      if (!filtered.length) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" style="text-align:center; padding: 2.2rem; color: var(--text-muted);">
+              No matching roles found. Paste a Job URL above to schedule it for the next session!
+            </td>
+          </tr>
         `;
+        return;
+      }
 
-        const exactKeywords = `"${job.title}" ${job.company}`;
-        const linkedInUrl = job.job_url || `https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(exactKeywords)}&location=${encodeURIComponent(job.location || '')}&sortBy=R`;
-        document.getElementById('mLinkedInBtn').href = linkedInUrl;
-
-        const resumeMarkdown = job.tailored_resume_content || 'No tailored resume found.';
-        const renderedResumeHtml = parseMarkdown(resumeMarkdown);
-
-        document.getElementById('mBody').innerHTML = `
-            <div class="modal-section">
-                <h4>&#127970; Company Profile & Line of Business</h4>
-                <p style="color: var(--text-muted); font-size: 13px;">${escapeHtml(job.company_profile || 'Leading enterprise and product organization.')}</p>
-                <div style="margin-top: 6px; font-size: 12px; color: var(--text-dim);">
-                    <strong>Domain:</strong> ${escapeHtml(job.line_of_business || 'Technology / Mobile')}
-                </div>
-            </div>
-
-            <div class="modal-section">
-                <h4>&#127919; Strategic Need for This Role</h4>
-                <p style="color: var(--text-muted); font-size: 13px;">${escapeHtml(job.need_for_role || 'Role requirements matching Mobile Architect & Staff SWE competencies.')}</p>
-            </div>
-
-            <div class="modal-section">
-                <h4>&#11088; Company Reliability & Glassdoor / Culture Feedback</h4>
-                <p style="color: #fbbf24; font-weight: 700; font-size: 13px; margin-bottom: 4px;">
-                    ${escapeHtml(job.reliability_rating || '4.2 / 5 (Glassdoor)')}
-                </p>
-                <p style="color: var(--text-muted); font-size: 13px;">${escapeHtml(job.glassdoor_review || 'Positive engineering culture and competitive compensation.')}</p>
-            </div>
-
-            <div class="modal-section">
-                <h4>&#128181; Compensation Positioning</h4>
-                <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 4px;">
-                    <div>
-                        <span style="font-size: 11px; color: var(--text-dim); text-transform: uppercase;">Market Benchmark:</span>
-                        <div style="font-weight: 600; font-size: 13px;">${escapeHtml(job.market_salary || 'Competitive market rate')}</div>
-                    </div>
-                    <div>
-                        <span style="font-size: 11px; color: var(--text-dim); text-transform: uppercase;">Target Quoted Rate (+30% Hike):</span>
-                        <div style="font-weight: 700; color: var(--emerald); font-family: 'JetBrains Mono', monospace; font-size: 14px;">
-                            ${escapeHtml(job.quoted_salary || '36.4+ LPA')}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal-section">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                    <h4>&#128196; Tailored Resume (Synthesizing Guardian & Core Architecture Experience)</h4>
-                    <span style="font-size: 10.5px; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">
-                        ${escapeHtml(job.tailored_resume_path || '')}
-                    </span>
-                </div>
-                <div class="markdown-rendered" style="background: #090e18; border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 18px; max-height: 380px; overflow-y: auto;">
-                    ${renderedResumeHtml}
-                </div>
-            </div>
+      tbody.innerHTML = filtered.map((job) => {
+        const badgeClass = getStatusBadgeClass(job.status);
+        const safeUrl = escapeHtml(job.job_url || '#');
+        const shortUrl = (job.job_url || '').replace(/^https?:\/\/(www\.)?/, '').slice(0, 42);
+        return `
+          <tr>
+            <th scope="row">
+              <span class="role-title-link" onclick="openJobDetail(${Number(job.id)})">
+                ${escapeHtml(job.title)}
+              </span>
+              <div class="company-row">
+                <span class="company-name">${escapeHtml(job.company)}</span>
+                ${job.line_of_business ? `<span class="lob-badge">${escapeHtml(job.line_of_business)}</span>` : ''}
+              </div>
+              <div class="url-preview-chip" title="${safeUrl}">
+                🔗 ${escapeHtml(shortUrl || 'No URL set')}
+              </div>
+            </th>
+            <td>
+              <span style="color: var(--text-secondary); font-weight: 500;">${escapeHtml(job.location || 'TBD')}</span>
+            </td>
+            <td>
+              <div class="comp-primary">${escapeHtml(job.quoted_salary || '36.4+ LPA')}</div>
+              <div class="comp-secondary">${escapeHtml(job.market_salary || '')}</div>
+            </td>
+            <td>
+              <div class="rating-pill">★ ${escapeHtml(job.reliability_rating || 'Pending Review')}</div>
+            </td>
+            <td>
+              <span class="${badgeClass}">${escapeHtml(job.status || 'Queued')}</span>
+            </td>
+            <td>
+              <div class="row-actions">
+                <button type="button" class="btn btn-sm btn-primary" onclick="openJobDetail(${Number(job.id)})">
+                  View Detail
+                </button>
+                <button type="button" class="btn btn-sm btn-amber" onclick="openEditJobUrl(${Number(job.id)})" title="Update Job URL">
+                  ✎ Edit URL
+                </button>
+                ${job.job_url ? `
+                  <a href="${safeUrl}" target="_blank" rel="noopener" class="btn btn-sm">
+                    Open Job ↗
+                  </a>
+                ` : ''}
+              </div>
+            </td>
+          </tr>
         `;
-
-        document.getElementById('detailModal').style.display = 'flex';
+      }).join('');
     }
 
-    function closeModal(e) {
-        document.getElementById('detailModal').style.display = 'none';
-        document.getElementById('copyToast').style.display = 'none';
+    // Open Full Detail Dialog + Inline Job URL Updater
+    async function openJobDetail(jobId) {
+      const job = allJobs.find((j) => Number(j.id) === Number(jobId));
+      if (!job) return;
+
+      document.getElementById('detailModalTitle').textContent = `${job.title} — ${job.company}`;
+      document.getElementById('detailModalSubtitle').textContent = `${job.location || 'Location TBD'} • Status: ${job.status || 'Queued'}`;
+
+      let resumeMd = job.tailored_resume_content || '';
+      if (!resumeMd && job.tailored_resume_path) {
+        const fileName = job.tailored_resume_path.split('/').pop();
+        try {
+          const r = await fetch('./resumes/' + fileName);
+          if (r.ok) resumeMd = await r.text();
+        } catch {}
+      }
+
+      const body = document.getElementById('detailModalBody');
+      body.innerHTML = `
+        <!-- Direct Job URL Edit Banner inside Detail Modal -->
+        <div class="url-edit-banner">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+            <strong style="font-size:0.82rem; color:var(--accent-sky);">🔗 Job Posting Link (Update anytime or schedule for next session)</strong>
+            ${job.job_url ? `<a href="${escapeHtml(job.job_url)}" target="_blank" rel="noopener" class="btn btn-sm btn-primary">Open Live Job Listing ↗</a>` : ''}
+          </div>
+          <div class="url-edit-row">
+            <input
+              type="url"
+              id="inlineDetailUrl_${job.id}"
+              class="input-field"
+              value="${escapeHtml(job.job_url || '')}"
+              placeholder="Paste exact LinkedIn or company job URL..."
+            />
+            <select id="inlineDetailStatus_${job.id}" class="select-field" style="inline-size:auto;">
+              <option value="Queued for Next Session" ${job.status === 'Queued for Next Session' ? 'selected' : ''}>⚡ Queued for Next Session</option>
+              <option value="Queued" ${job.status === 'Queued' ? 'selected' : ''}>Queued</option>
+              <option value="Applied" ${job.status === 'Applied' ? 'selected' : ''}>Applied</option>
+              <option value="Interviewing" ${job.status === 'Interviewing' ? 'selected' : ''}>Interviewing</option>
+            </select>
+            <button type="button" class="btn btn-emerald" onclick="saveInlineUrlUpdate(${Number(job.id)})">
+              💾 Update URL &amp; Status
+            </button>
+          </div>
+        </div>
+
+        <div class="detail-grid">
+          <div class="detail-box">
+            <h4>Company Profile &amp; Line of Business</h4>
+            <p><strong>${escapeHtml(job.line_of_business || 'Technology')}</strong></p>
+            <p style="margin-block-start:0.35rem;">${escapeHtml(job.company_profile || 'Scheduled for next automated session analysis.')}</p>
+          </div>
+          <div class="detail-box">
+            <h4>Why They Need This Role</h4>
+            <p>${escapeHtml(job.need_for_role || 'Will be extracted from job description during next session.')}</p>
+          </div>
+          <div class="detail-box">
+            <h4>Compensation Benchmark (+30% Target)</h4>
+            <p style="color:#34d399; font-weight:700;">Quoted: ${escapeHtml(job.quoted_salary || '36.4+ LPA')}</p>
+            <p style="margin-block-start:0.3rem;">Market: ${escapeHtml(job.market_salary || 'TBD')}</p>
+          </div>
+          <div class="detail-box">
+            <h4>Reliability &amp; Employee Sentiment</h4>
+            <p style="color:#fbbf24; font-weight:600;">★ ${escapeHtml(job.reliability_rating || 'Pending')}</p>
+            <p style="margin-block-start:0.3rem;">${escapeHtml(job.glassdoor_review || 'Pending review lookup.')}</p>
+          </div>
+        </div>
+
+        ${job.notes ? `
+          <div class="detail-box">
+            <h4>Pipeline &amp; Strategy Notes</h4>
+            <p>${escapeHtml(job.notes)}</p>
+          </div>
+        ` : ''}
+
+        <div>
+          <h3 style="font-size:0.92rem; margin-block-end:0.55rem; color:var(--accent-sky);">
+            📄 Tailored Resume for ${escapeHtml(job.company)}
+          </h3>
+          <div class="markdown-viewer">
+            ${resumeMd ? renderMarkdown(resumeMd) : '<p><em>This URL is scheduled for the next automated session. The tailored Markdown resume will be generated automatically from your Master Core Profile.</em></p>'}
+          </div>
+        </div>
+      `;
+
+      document.getElementById('jobDetailDialog').showModal();
     }
 
-    function copyResumeText() {
-        if (!activeModalJob) return;
-        const text = activeModalJob.tailored_resume_content || '';
-        navigator.clipboard.writeText(text).then(() => {
-            const toast = document.getElementById('copyToast');
-            toast.style.display = 'inline-block';
-            setTimeout(() => { toast.style.display = 'none'; }, 3000);
+    // Save Inline URL Update from Detail Modal
+    async function saveInlineUrlUpdate(jobId) {
+      const urlInput = document.getElementById(`inlineDetailUrl_${jobId}`);
+      const statusInput = document.getElementById(`inlineDetailStatus_${jobId}`);
+      if (!urlInput || !urlInput.value.trim()) {
+        showToast('Please enter a valid Job URL');
+        return;
+      }
+      await persistJobChange({
+        id: jobId,
+        job_url: urlInput.value.trim(),
+        status: statusInput ? statusInput.value : undefined
+      });
+      showToast('Job URL & status updated!');
+      openJobDetail(jobId);
+    }
+
+    // Quick Queue Form Submit (Top Bar)
+    async function handleQuickQueueSubmit(event) {
+      event.preventDefault();
+      const job_url = document.getElementById('quickJobUrl').value.trim();
+      const company = document.getElementById('quickCompany').value.trim();
+      const title = document.getElementById('quickTitle').value.trim();
+      if (!job_url) return;
+
+      await persistJobChange({
+        job_url,
+        company: company || undefined,
+        title: title || undefined,
+        status: 'Queued for Next Session',
+        notes: 'Scheduled via Quick URL Bar for next automated agent session.'
+      });
+
+      document.getElementById('quickJobUrl').value = '';
+      document.getElementById('quickCompany').value = '';
+      document.getElementById('quickTitle').value = '';
+      showToast('⚡ Job URL scheduled for the next session!');
+    }
+
+    // Populate Modal Job Dropdown
+    function populateModalJobSelector() {
+      const select = document.getElementById('modalJobSelect');
+      if (!select) return;
+      const options = ['<option value="NEW">➕ Queue a New Job URL for Next Session</option>'];
+      allJobs.forEach((j) => {
+        options.push(`<option value="${j.id}">✎ Update #${j.id}: ${escapeHtml(j.company)} — ${escapeHtml(j.title)}</option>`);
+      });
+      select.innerHTML = options.join('');
+    }
+
+    function openScheduleModal(prefillUrl = '', prefillTitle = '') {
+      populateModalJobSelector();
+      document.getElementById('modalJobSelect').value = 'NEW';
+      document.getElementById('editJobId').value = '';
+      document.getElementById('modalJobUrl').value = prefillUrl;
+      document.getElementById('modalCompany').value = '';
+      document.getElementById('modalLocation').value = '';
+      document.getElementById('modalTitle').value = prefillTitle;
+      document.getElementById('modalStatus').value = 'Queued for Next Session';
+      document.getElementById('modalNotes').value = '';
+      document.getElementById('scheduleUrlDialog').showModal();
+    }
+
+    function openEditJobUrl(jobId) {
+      populateModalJobSelector();
+      const job = allJobs.find((j) => Number(j.id) === Number(jobId));
+      if (!job) return;
+      document.getElementById('modalJobSelect').value = String(job.id);
+      document.getElementById('editJobId').value = String(job.id);
+      document.getElementById('modalJobUrl').value = job.job_url || '';
+      document.getElementById('modalCompany').value = job.company || '';
+      document.getElementById('modalLocation').value = job.location || '';
+      document.getElementById('modalTitle').value = job.title || '';
+      document.getElementById('modalStatus').value = job.status || 'Queued';
+      document.getElementById('modalNotes').value = job.notes || '';
+      document.getElementById('scheduleUrlDialog').showModal();
+    }
+
+    function handleModalJobSelectChange(val) {
+      if (val === 'NEW') {
+        document.getElementById('editJobId').value = '';
+        document.getElementById('modalJobUrl').value = '';
+        document.getElementById('modalCompany').value = '';
+        document.getElementById('modalLocation').value = '';
+        document.getElementById('modalTitle').value = '';
+        document.getElementById('modalStatus').value = 'Queued for Next Session';
+        document.getElementById('modalNotes').value = '';
+      } else {
+        openEditJobUrl(Number(val));
+      }
+    }
+
+    async function handleModalJobSave(event) {
+      event.preventDefault();
+      const editId = document.getElementById('editJobId').value;
+      const payload = {
+        id: editId ? Number(editId) : undefined,
+        job_url: document.getElementById('modalJobUrl').value.trim(),
+        company: document.getElementById('modalCompany').value.trim() || undefined,
+        location: document.getElementById('modalLocation').value.trim() || undefined,
+        title: document.getElementById('modalTitle').value.trim() || undefined,
+        status: document.getElementById('modalStatus').value,
+        notes: document.getElementById('modalNotes').value.trim() || undefined
+      };
+      await persistJobChange(payload);
+      document.getElementById('scheduleUrlDialog').close();
+      showToast(editId ? '✅ Job URL updated!' : '⚡ New Job URL scheduled for next session!');
+    }
+
+    // Persist Job Addition or Update across Local API + LocalStorage + GitHub API (for Mobile)
+    async function persistJobChange(payload) {
+      let savedViaApi = false;
+      try {
+        const endpoint = payload.id ? `./api/jobs/${payload.id}` : './api/jobs';
+        const method = payload.id ? 'PUT' : 'POST';
+        const res = await fetch(endpoint, {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
         });
+        if (res.ok) {
+          savedViaApi = true;
+        }
+      } catch {}
+
+      // Always update local overrides so mobile / static GitHub Pages works immediately
+      const overrides = getLocalOverrides();
+      if (payload.id) {
+        overrides.updated[payload.id] = {
+          ...(overrides.updated[payload.id] || {}),
+          ...Object.fromEntries(Object.entries(payload).filter(([_, v]) => v !== undefined)),
+          updated_at: new Date().toISOString()
+        };
+      } else {
+        const newId = Date.now();
+        let host = 'LinkedIn / Target Company';
+        try { host = new URL(payload.job_url).hostname.replace('www.', ''); } catch {}
+        const newJob = {
+          id: newId,
+          title: payload.title || 'Queued Job URL (Scheduled for Next Session)',
+          company: payload.company || (host.includes('linkedin') ? 'LinkedIn Listing' : host),
+          location: payload.location || 'TBD (Next Session)',
+          line_of_business: 'Scheduled URL Analysis',
+          need_for_role: 'Queued for automated agent extraction in next session.',
+          company_profile: 'Will be populated in next scheduled run.',
+          reliability_rating: 'Pending Review',
+          glassdoor_review: 'Will be fetched in next scheduled run.',
+          market_salary: 'Target: 36.4+ LPA / AED 30k+ mo',
+          quoted_salary: '36.4+ LPA (+30% hike baseline)',
+          job_url: payload.job_url,
+          status: payload.status || 'Queued for Next Session',
+          notes: payload.notes || 'Added via Web/Mobile URL Scheduler',
+          updated_at: new Date().toISOString()
+        };
+        if (!savedViaApi) {
+          overrides.added.unshift(newJob);
+        }
+      }
+      saveLocalOverrides(overrides);
+      await loadJobs(false);
+
+      // If GitHub PAT is configured (e.g. on Mobile GitHub Pages), auto-sync to GitHub repository
+      const ghToken = localStorage.getItem(GH_TOKEN_KEY);
+      if (ghToken && !savedViaApi) {
+        await pushJobsJsonToGithub(ghToken, false);
+      }
     }
 
-    function escapeHtml(text) {
-        if (!text) return '';
-        return text.toString()
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
+    // Master Core Profile Modal
+    async function openProfileModal() {
+      const dialog = document.getElementById('profileDialog');
+      dialog.showModal();
+      const container = document.getElementById('profileMarkdownContainer');
+      if (rawProfileMarkdown) {
+        container.innerHTML = renderMarkdown(rawProfileMarkdown);
+        return;
+      }
+      try {
+        let res = await fetch('./api/profile');
+        if (res.ok) {
+          const data = await res.json();
+          rawProfileMarkdown = data.content || '';
+        } else {
+          res = await fetch('./data/core_profile.md');
+          if (res.ok) rawProfileMarkdown = await res.text();
+        }
+      } catch {
+        try {
+          const res = await fetch('./data/core_profile.md');
+          if (res.ok) rawProfileMarkdown = await res.text();
+        } catch {}
+      }
+      container.innerHTML = rawProfileMarkdown
+        ? renderMarkdown(rawProfileMarkdown)
+        : '<p>Could not load <code>data/core_profile.md</code>.</p>';
     }
 
-    // Initialize Auth & App
-    checkAuth();
-</script>
+    function copyProfileMarkdown() {
+      if (!rawProfileMarkdown) return;
+      navigator.clipboard.writeText(rawProfileMarkdown).then(() => {
+        showToast('📋 Master Core Profile copied to clipboard!');
+      });
+    }
 
+    // Mobile App & GitHub Sync Modal
+    function openMobileAppModal() {
+      const savedToken = localStorage.getItem(GH_TOKEN_KEY) || '';
+      document.getElementById('ghTokenInput').value = savedToken;
+      document.getElementById('mobileAppDialog').showModal();
+    }
+
+    function triggerPwaInstall() {
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        deferredInstallPrompt.userChoice.then(() => {
+          deferredInstallPrompt = null;
+        });
+      } else {
+        showToast('Use your browser menu → "Add to Home Screen" or "Install App"');
+      }
+    }
+
+    function saveGithubToken() {
+      const token = document.getElementById('ghTokenInput').value.trim();
+      if (!token) {
+        localStorage.removeItem(GH_TOKEN_KEY);
+        showToast('GitHub token cleared');
+        return;
+      }
+      localStorage.setItem(GH_TOKEN_KEY, token);
+      showToast('☁️ GitHub token saved! Mobile updates will now sync to GitHub.');
+    }
+
+    async function syncNowToGithub() {
+      const token = document.getElementById('ghTokenInput').value.trim() || localStorage.getItem(GH_TOKEN_KEY);
+      if (!token) {
+        showToast('Please enter a GitHub Personal Access Token first');
+        return;
+      }
+      localStorage.setItem(GH_TOKEN_KEY, token);
+      await pushJobsJsonToGithub(token, true);
+    }
+
+    async function pushJobsJsonToGithub(token, showSuccessToast = true) {
+      try {
+        const apiUrl = `https://api.github.com/repos/${GITHUB_REPO}/contents/data/jobs.json`;
+        const getRes = await fetch(apiUrl, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/vnd.github+json'
+          }
+        });
+        let sha = undefined;
+        if (getRes.ok) {
+          const fileMeta = await getRes.json();
+          sha = fileMeta.sha;
+        }
+        const payloadStr = JSON.stringify({ jobs: allJobs, total: allJobs.length }, null, 2);
+        const encoded = btoa(unescape(encodeURIComponent(payloadStr)));
+        const putRes = await fetch(apiUrl, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/vnd.github+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            message: 'chore(mobile): sync updated job URLs & queue from JobTracker UI',
+            content: encoded,
+            sha
+          })
+        });
+        if (putRes.ok) {
+          if (showSuccessToast) showToast('☁️ Synced jobs.json directly to GitHub!');
+        } else {
+          if (showSuccessToast) showToast('⚠️ GitHub sync failed — check token permissions');
+        }
+      } catch (e) {
+        if (showSuccessToast) showToast('⚠️ Could not reach GitHub API');
+      }
+    }
+
+    // Auth Modal
+    function openAuthModal() {
+      document.getElementById('authDialog').showModal();
+    }
+
+    async function handleLogin(event) {
+      event.preventDefault();
+      const username = document.getElementById('loginUsername').value.trim();
+      const password = document.getElementById('loginPassword').value.trim();
+      try {
+        const res = await fetch('./api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        if (res.ok) {
+          localStorage.setItem(AUTH_USER_KEY, username);
+          updateAuthUi();
+          document.getElementById('authDialog').close();
+          showToast('Signed in as Sudhakar Raju');
+          return;
+        }
+      } catch {}
+
+      if ((username === 'sudhakar' || username === 'sudhakar.r08@gmail.com') && password === 'JobHunt2026!') {
+        localStorage.setItem(AUTH_USER_KEY, username);
+        updateAuthUi();
+        document.getElementById('authDialog').close();
+        showToast('Signed in as Sudhakar Raju');
+      } else {
+        showToast('Invalid credentials');
+      }
+    }
+
+    function updateAuthUi() {
+      const user = localStorage.getItem(AUTH_USER_KEY);
+      const btn = document.getElementById('authBtn');
+      if (user && btn) {
+        btn.textContent = '✅ Sudhakar';
+      }
+    }
+
+    // Handle Mobile Web Share Target (?shared_url=... or ?shared_text=...)
+    function checkSharedUrlParams() {
+      const params = new URLSearchParams(window.location.search);
+      const sharedUrl = params.get('shared_url') || params.get('url') || '';
+      const sharedText = params.get('shared_text') || params.get('text') || '';
+      const sharedTitle = params.get('shared_title') || params.get('title') || '';
+
+      let extractedUrl = sharedUrl;
+      if (!extractedUrl && sharedText) {
+        const match = sharedText.match(/https?:\/\/[^\s]+/);
+        if (match) extractedUrl = match[0];
+      }
+      if (extractedUrl) {
+        setTimeout(() => {
+          openScheduleModal(extractedUrl, sharedTitle);
+          showToast('📲 Link received from Share Sheet!');
+        }, 400);
+      }
+    }
+
+    // Initialize
+    updateAuthUi();
+    loadJobs(false).then(() => {
+      checkSharedUrlParams();
+    });
+  </script>
 </body>
 </html>
