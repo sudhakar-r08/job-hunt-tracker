@@ -61,6 +61,32 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
+def sync_jobs_json():
+    """Exports SQLite records to data/jobs.json for GitHub Pages static hosting."""
+    try:
+        conn = get_db_connection()
+        rows = conn.execute("SELECT * FROM jobs ORDER BY updated_at DESC").fetchall()
+        jobs = []
+        for r in rows:
+            item = dict(r)
+            resume_path = item.get("tailored_resume_path")
+            if resume_path and os.path.exists(resume_path):
+                try:
+                    with open(resume_path, "r", encoding="utf-8") as rf:
+                        item["tailored_resume_content"] = rf.read()
+                except Exception:
+                    item["tailored_resume_content"] = ""
+            else:
+                item["tailored_resume_content"] = ""
+            jobs.append(item)
+        conn.close()
+
+        json_path = os.path.join(BASE_DIR, "data", "jobs.json")
+        with open(json_path, "w", encoding="utf-8") as jf:
+            json.dump({"jobs": jobs, "total": len(jobs)}, jf, indent=2)
+    except Exception as e:
+        print("Error syncing jobs.json:", e)
+
 def add_or_update_job(job_data):
     init_db()
     conn = get_db_connection()
@@ -151,6 +177,7 @@ def add_or_update_job(job_data):
         
     conn.commit()
     conn.close()
+    sync_jobs_json()
     return job_id
 
 class TrackerHandler(BaseHTTPRequestHandler):

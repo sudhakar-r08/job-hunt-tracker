@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Marked.js for fast, seamless markdown rendering -->
+    <!-- Marked.js for seamless markdown rendering -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         :root {
@@ -1007,25 +1007,39 @@
         const errDiv = document.getElementById('loginError');
         errDiv.style.display = 'none';
 
+        // 1. Try backend authentication endpoint
         try {
             const res = await fetch('/api/login', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({username, password})
             });
-            const data = await res.json();
-            if (data.success && data.token) {
-                localStorage.setItem('job_hunt_token', data.token);
-                localStorage.setItem('job_hunt_user', JSON.stringify(data.user));
-                document.getElementById('loginScreen').style.display = 'none';
-                fetchJobs();
-                fetchMasterProfile();
-            } else {
-                errDiv.innerText = data.error || 'Invalid credentials';
-                errDiv.style.display = 'block';
+            if (res.ok) {
+                const data = await res.json();
+                if (data.success && data.token) {
+                    localStorage.setItem('job_hunt_token', data.token);
+                    localStorage.setItem('job_hunt_user', JSON.stringify(data.user));
+                    document.getElementById('loginScreen').style.display = 'none';
+                    fetchJobs();
+                    fetchMasterProfile();
+                    return;
+                }
             }
         } catch (err) {
-            errDiv.innerText = 'Server error during sign in';
+            // Fallback for static GitHub Pages hosting
+        }
+
+        // 2. Static / Client-side authentication fallback for GitHub Pages
+        const validUsers = ['sudhakar', 'sudhakar.r08@gmail.com'];
+        if (validUsers.includes(username.toLowerCase()) && password === 'JobHunt2026!') {
+            const dummyToken = 'gh_pages_' + Math.random().toString(36).substring(2);
+            localStorage.setItem('job_hunt_token', dummyToken);
+            localStorage.setItem('job_hunt_user', JSON.stringify({name: 'Sudhakar Raju', username}));
+            document.getElementById('loginScreen').style.display = 'none';
+            fetchJobs();
+            fetchMasterProfile();
+        } else {
+            errDiv.innerText = 'Invalid username or password';
             errDiv.style.display = 'block';
         }
     }
@@ -1042,7 +1056,6 @@
         if (typeof marked !== 'undefined') {
             return marked.parse(mdText);
         }
-        // Fallback simple parser
         return mdText
             .replace(/^# (.*$)/gim, '<h1>$1</h1>')
             .replace(/^## (.*$)/gim, '<h2>$1</h2>')
@@ -1054,10 +1067,21 @@
     }
 
     async function fetchMasterProfile() {
+        // First try dynamic API, then fallback to static file for GitHub Pages
         try {
             const res = await fetch('/api/profile');
-            const data = await res.json();
-            masterProfileRaw = data.content || '';
+            if (res.ok) {
+                const data = await res.json();
+                masterProfileRaw = data.content || '';
+                return;
+            }
+        } catch (e) {}
+
+        try {
+            const resStatic = await fetch('data/core_profile.md');
+            if (resStatic.ok) {
+                masterProfileRaw = await resStatic.text();
+            }
         } catch (e) {
             console.error("Failed to load master profile", e);
         }
@@ -1068,7 +1092,7 @@
         if (masterProfileRaw) {
             container.innerHTML = parseMarkdown(masterProfileRaw);
         } else {
-            container.innerHTML = '<p>Loading master profile from disk...</p>';
+            container.innerHTML = '<p>Loading master profile...</p>';
             fetchMasterProfile().then(() => {
                 container.innerHTML = parseMarkdown(masterProfileRaw);
             });
@@ -1091,15 +1115,39 @@
     }
 
     async function fetchJobs() {
+        // Try dynamic backend first, fallback to static JSON for GitHub Pages
+        let loadedJobs = [];
         try {
             const res = await fetch('/api/jobs');
-            const data = await res.json();
-            allJobs = data.jobs || [];
-            updateKPIs();
-            filterJobs();
-        } catch (e) {
-            console.error("Error fetching jobs", e);
+            if (res.ok) {
+                const data = await res.json();
+                loadedJobs = data.jobs || [];
+            }
+        } catch (e) {}
+
+        if (loadedJobs.length === 0) {
+            try {
+                const resStatic = await fetch('data/jobs.json');
+                if (resStatic.ok) {
+                    const data = await resStatic.json();
+                    loadedJobs = data.jobs || [];
+                }
+            } catch (e) {
+                console.error("Error loading jobs static file", e);
+            }
         }
+
+        // Apply any local status overrides from localStorage
+        const localOverrides = JSON.parse(localStorage.getItem('job_status_overrides') || '{}');
+        allJobs = loadedJobs.map(j => {
+            if (localOverrides[j.id]) {
+                return {...j, status: localOverrides[j.id]};
+            }
+            return j;
+        });
+
+        updateKPIs();
+        filterJobs();
     }
 
     function updateKPIs() {
@@ -1167,16 +1215,21 @@
 
     async function changeStatus(id, newStatus, event) {
         if (event) event.stopPropagation();
+
+        // Save override in localStorage (persists on GitHub Pages)
+        const localOverrides = JSON.parse(localStorage.getItem('job_status_overrides') || '{}');
+        localOverrides[id] = newStatus;
+        localStorage.setItem('job_status_overrides', JSON.stringify(localOverrides));
+
         try {
             await fetch(`/api/jobs/${id}`, {
                 method: 'PUT',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({status: newStatus})
             });
-            await fetchJobs();
-        } catch (err) {
-            alert("Error updating status");
-        }
+        } catch (err) {}
+
+        await fetchJobs();
     }
 
     function renderRows(jobs) {
@@ -1261,7 +1314,7 @@
         const linkedInUrl = job.job_url || `https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(exactKeywords)}&location=${encodeURIComponent(job.location || '')}&sortBy=R`;
         document.getElementById('mLinkedInBtn').href = linkedInUrl;
 
-        const resumeMarkdown = job.tailored_resume_content || 'No tailored resume found on disk.';
+        const resumeMarkdown = job.tailored_resume_content || 'No tailored resume found.';
         const renderedResumeHtml = parseMarkdown(resumeMarkdown);
 
         document.getElementById('mBody').innerHTML = `
@@ -1309,7 +1362,6 @@
                         ${escapeHtml(job.tailored_resume_path || '')}
                     </span>
                 </div>
-                <!-- Rendered Markdown seamlessly -->
                 <div class="markdown-rendered" style="background: #090e18; border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 18px; max-height: 380px; overflow-y: auto;">
                     ${renderedResumeHtml}
                 </div>
