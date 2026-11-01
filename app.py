@@ -1,22 +1,28 @@
 #!/usr/bin/env python3
 """
-Job Hunt Tracker - Local Dashboard & Storage with Authentication, URL Queueing & PWA Support
-Manages jobs applied/queued, company profiles, market salaries, reviews, and tailored resumes.
+Job Hunt Tracker - Local Dashboard & Storage with Authentication, URL Queueing,
+Two-Stage Applied/Confirmed Workflow & Gmail IMAP Confirmation Verifier
 """
 import os
+import re
 import json
 import sqlite3
 import argparse
 import hashlib
 import secrets
+import imaplib
+import email
+from email.header import decode_header
 from http.server import HTTPServer, BaseHTTPRequestHandler
-from urllib.parse import urlparse, parse_qs
-from datetime import datetime
+from urllib.parse import urlparse
+from datetime import datetime, timedelta
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "data", "jobs.db")
 RESUMES_DIR = os.path.join(BASE_DIR, "resumes")
 CORE_PROFILE_PATH = os.path.join(BASE_DIR, "data", "core_profile.md")
+EMAIL_CONFIG_PATH = os.path.join(BASE_DIR, "data", ".email_config.json")
+CANDIDATE_EMAIL = "sudhakar.r08@gmail.com"
 
 os.makedirs(os.path.join(BASE_DIR, "data"), exist_ok=True)
 os.makedirs(RESUMES_DIR, exist_ok=True)
@@ -27,6 +33,22 @@ AUTH_USERS = {
     "sudhakar.r08@gmail.com": hashlib.sha256("JobHunt2026!".encode("utf-8")).hexdigest()
 }
 ACTIVE_SESSIONS = set()
+
+CONFIRMATION_PHRASES = [
+    "thank you for applying",
+    "thanks for applying",
+    "your application was sent",
+    "application was sent to",
+    "we received your application",
+    "we have received your application",
+    "application received",
+    "thank you for your application",
+    "your application to",
+    "your application for",
+    "successfully applied",
+    "application submitted",
+    "submitted your application"
+]
 
 def init_db():
     conn = sqlite3.connect(DB_PATH)
@@ -87,8 +109,152 @@ def sync_jobs_json():
     except Exception as e:
         print("Error syncing jobs.json:", e)
 
+def load_email_config():
+    if os.path.exists(EMAIL_CONFIG_PATH):
+        try:
+            with open(EMAIL_CONFIG_PATH, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    env_pw = os.environ.get("GMAIL_APP_PASSWORD", "")
+    return {"email": CANDIDATE_EMAIL, "app_password": env_pw}
+
+def save_email_config(email_addr, app_password):
+    cfg = {"email": email_addr or CANDIDATE_EMAIL, "app_password": app_password.replace(" ", "")}
+    with open(EMAIL_CONFIG_PATH, "w", encoding="utf-8") as f:
+        json.dump(cfg, f, indent=2)
+    return cfg
+
+def decode_mime_words(s):
+    if not s:
+        return ""
+    decoded_parts = decode_header(s)
+    out = []
+    for content, charset in decoded_parts:
+        if isinstance(content, bytes):
+            out.append(content.decode(charset or "utf-8", errors="replace"))
+        else:
+            out.append(str(content))
+    return "".join(out)
+
+def verify_gmail_confirmations(email_addr=None, app_password=None, days_back=21):
+    """
+    Connects to Gmail IMAP for sudhakar.r08@gmail.com, scans recent emails for
+    'Thank you for applying' / 'Your application was sent' receipts, and promotes
+    matching jobs in jobs.db to status = 'Confirmed'.
+    """
+    cfg = load_email_config()
+    target_email = (email_addr or cfg.get("email") or CANDIDATE_EMAIL).strip()
+    target_pw = (app_password or cfg.get("app_password") or "").replace(" ", "").strip()
+
+    if not target_pw:
+        return {
+            "success": False,
+            "error": f"Gmail App Password not configured yet for {target_email}. Add your 16-character Google App Password in '📧 Email Verify' to enable automatic inbox confirmation.",
+            "confirmed_jobs": [],
+            "scanned_count": 0
+        }
+
+    if app_password:
+        save_email_config(target_email, target_pw)
+
+    init_db()
+    conn = get_db_connection()
+    jobs = [dict(r) for r in conn.execute("SELECT * FROM jobs").fetchall()]
+
+    try:
+        mail = imaplib.IMAP4_SSL("imap.gmail.com", 993)
+        mail.login(target_email, target_pw)
+        mail.select("INBOX")
+
+        since_date = (datetime.now() - timedelta(days=days_back)).strftime("%d-%b-%Y")
+        status, data = mail.search(None, f'(SINCE "{since_date}")')
+        if status != "OK" or not data or not data[0]:
+            mail.logout()
+            conn.close()
+            return {"success": True, "confirmed_jobs": [], "scanned_count": 0}
+
+        msg_ids = data[0].split()[-120:]  # Inspect up to 120 most recent emails
+        confirmed_jobs = []
+
+        for mid in reversed(msg_ids):
+            res, msg_data = mail.fetch(mid, "(RFC822.HEADER BODY.PEEK[TEXT]<0.2500>)")
+            if res != "OK" or not msg_data:
+                continue
+
+            raw_header = b""
+            raw_body = b""
+            for part in msg_data:
+                if isinstance(part, tuple):
+                    if b"HEADER" in part[0]:
+                        raw_header = part[1]
+                    else:
+                        raw_body = part[1]
+
+            msg = email.message_from_bytes(raw_header)
+            subject = decode_mime_words(msg.get("Subject", ""))
+            sender = decode_mime_words(msg.get("From", ""))
+            date_str = msg.get("Date", "")
+            body_snippet = raw_body.decode("utf-8", errors="ignore")
+            combined_text = f"{subject} {sender} {body_snippet}".lower()
+
+            is_confirmation = any(phrase in combined_text for phrase in CONFIRMATION_PHRASES)
+            if not is_confirmation:
+                continue
+
+            # Match against tracked companies
+            for job in jobs:
+                if job.get("status") == "Confirmed":
+                    continue
+                company_raw = (job.get("company") or "").strip()
+                if not company_raw:
+                    continue
+                # Normalize company token (e.g. "Emirates Group" -> "emirates", "Deloitte Digital" -> "deloitte")
+                primary_token = re.split(r"[\s,/()-]+", company_raw.lower())[0]
+                if len(primary_token) < 3:
+                    primary_token = company_raw.lower()
+
+                if company_raw.lower() in combined_text or primary_token in combined_text:
+                    now_str = datetime.now().strftime("%Y-%m-%d %H:%M")
+                    note_addition = f" [Email Confirmed ({target_email}): '{subject[:70]}' on {now_str}]"
+                    updated_notes = ((job.get("notes") or "") + note_addition).strip()
+                    applied_dt = job.get("applied_date") or now_str
+                    if "Email Verified" not in applied_dt:
+                        applied_dt = f"{applied_dt} (Email Verified)"
+
+                    conn.execute(
+                        "UPDATE jobs SET status = 'Confirmed', applied_date = ?, notes = ?, updated_at = ? WHERE id = ?",
+                        (applied_dt, updated_notes, now_str, job["id"])
+                    )
+                    job["status"] = "Confirmed"
+                    confirmed_jobs.append({
+                        "id": job["id"],
+                        "company": job["company"],
+                        "title": job["title"],
+                        "subject": subject,
+                        "date": date_str
+                    })
+
+        conn.commit()
+        conn.close()
+        mail.logout()
+        sync_jobs_json()
+        return {
+            "success": True,
+            "email": target_email,
+            "scanned_count": len(msg_ids),
+            "confirmed_jobs": confirmed_jobs
+        }
+    except Exception as e:
+        conn.close()
+        return {
+            "success": False,
+            "error": f"IMAP Check Error for {target_email}: {str(e)}",
+            "confirmed_jobs": [],
+            "scanned_count": 0
+        }
+
 def infer_company_and_title_from_url(url):
-    """Extracts a sensible placeholder company/title when a user queues a raw URL for the next session."""
     if not url:
         return ("Pending Analysis", "Queued Role (Next Session)")
     parsed = urlparse(url)
@@ -164,7 +330,7 @@ def add_or_update_job(job_data):
             job_data.get('market_salary') or None,
             job_data.get('quoted_salary') or None,
             job_url or None,
-            job_data.get('applied_date') or None,
+            job_data.get('applied_date') if 'applied_date' in job_data else None,
             job_data.get('status') or None,
             job_data.get('tailored_resume_path') or None,
             job_data.get('notes') or None,
@@ -192,10 +358,10 @@ def add_or_update_job(job_data):
             job_data.get('market_salary') or 'Target: 36.4+ LPA / AED 30k+ mo',
             job_data.get('quoted_salary') or '36.4+ LPA (+30% hike baseline)',
             job_url,
-            job_data.get('applied_date') or now.split(' ')[0],
+            job_data.get('applied_date') or '',
             status,
             job_data.get('tailored_resume_path') or '',
-            job_data.get('notes') or 'Added via Job URL Queue for next automated session.',
+            job_data.get('notes') or f'Candidate Email: {CANDIDATE_EMAIL}. Added via Job URL Queue.',
             now,
             now
         ))
@@ -253,11 +419,17 @@ class TrackerHandler(BaseHTTPRequestHandler):
             self.serve_static_file(os.path.join("data", "jobs.json"), "application/json; charset=utf-8")
         elif path == "/data/core_profile.md":
             self.serve_static_file(os.path.join("data", "core_profile.md"), "text/markdown; charset=utf-8")
+        elif path == "/api/email-config":
+            cfg = load_email_config()
+            self.send_json({
+                "email": cfg.get("email", CANDIDATE_EMAIL),
+                "has_password": bool(cfg.get("app_password"))
+            })
         elif path == "/api/profile":
             if os.path.exists(CORE_PROFILE_PATH):
                 with open(CORE_PROFILE_PATH, "r", encoding="utf-8") as pf:
                     content = pf.read()
-                self.send_json({"content": content, "path": CORE_PROFILE_PATH})
+                self.send_json({"content": content, "path": CORE_PROFILE_PATH, "email": CANDIDATE_EMAIL})
             else:
                 self.send_json({"error": "Profile not found"}, 404)
         elif path == "/api/jobs":
@@ -277,7 +449,7 @@ class TrackerHandler(BaseHTTPRequestHandler):
                     item["tailored_resume_content"] = ""
                 jobs.append(item)
             conn.close()
-            self.send_json({"jobs": jobs, "total": len(jobs)})
+            self.send_json({"jobs": jobs, "total": len(jobs), "candidate_email": CANDIDATE_EMAIL})
         elif path.startswith("/api/jobs/"):
             job_id = path.split("/")[-1]
             conn = get_db_connection()
@@ -317,7 +489,7 @@ class TrackerHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         content_length = int(self.headers.get("Content-Length", 0))
-        body = self.rfile.read(content_length)
+        body = self.rfile.read(content_length) if content_length > 0 else b"{}"
         
         if self.path == "/api/login":
             try:
@@ -335,13 +507,24 @@ class TrackerHandler(BaseHTTPRequestHandler):
                         "user": {
                             "name": "Sudhakar Raju",
                             "username": username,
-                            "email": "sudhakar.r08@gmail.com"
+                            "email": CANDIDATE_EMAIL
                         }
                     })
                 else:
                     self.send_json({"success": False, "error": "Invalid username or password"}, 401)
             except Exception as e:
                 self.send_json({"error": str(e)}, 400)
+        elif self.path == "/api/verify-emails":
+            try:
+                data = json.loads(body.decode("utf-8")) if body else {}
+                result = verify_gmail_confirmations(
+                    email_addr=data.get("email", CANDIDATE_EMAIL),
+                    app_password=data.get("app_password"),
+                    days_back=int(data.get("days_back", 21))
+                )
+                self.send_json(result, 200 if result.get("success") else 400)
+            except Exception as e:
+                self.send_json({"success": False, "error": str(e)}, 400)
         elif self.path == "/api/jobs":
             try:
                 data = json.loads(body.decode("utf-8"))
@@ -426,7 +609,7 @@ def run_server(port=5050):
     sync_jobs_json()
     server_address = ("", port)
     httpd = HTTPServer(server_address, TrackerHandler)
-    print(f"Job Hunt Tracker running at http://localhost:{port}")
+    print(f"Job Hunt Tracker running at http://localhost:{port} (Candidate Email: {CANDIDATE_EMAIL})")
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
@@ -434,9 +617,10 @@ def run_server(port=5050):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Job Hunt Tracker Service")
-    parser.add_argument("command", choices=["serve", "init", "add", "list"], nargs="?", default="serve")
+    parser.add_argument("command", choices=["serve", "init", "add", "list", "verify-emails"], nargs="?", default="serve")
     parser.add_argument("--port", type=int, default=5050, help="Port to run server on")
     parser.add_argument("--data", type=str, help="JSON string of job data for 'add'")
+    parser.add_argument("--app-password", type=str, help="Gmail 16-char App Password for verify-emails")
     args = parser.parse_args()
 
     if args.command == "init":
@@ -447,6 +631,9 @@ if __name__ == "__main__":
         data = json.loads(args.data)
         jid = add_or_update_job(data)
         print(f"Added/Updated job #{jid}")
+    elif args.command == "verify-emails":
+        res = verify_gmail_confirmations(CANDIDATE_EMAIL, args.app_password)
+        print(json.dumps(res, indent=2))
     elif args.command == "list":
         init_db()
         conn = get_db_connection()

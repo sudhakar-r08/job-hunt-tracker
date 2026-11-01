@@ -536,21 +536,28 @@
       font-size: 0.79rem;
     }
 
-    /* Status Badges */
+    /* Status Badges: Outlined Applied (Sent) vs Filled Applied (Confirmed) */
     .status-badge {
       display: inline-flex;
       align-items: center;
       gap: 0.35rem;
-      padding: 0.26rem 0.68rem;
+      padding: 0.26rem 0.72rem;
       border-radius: 999px;
       font-size: 0.74rem;
       font-weight: 700;
       white-space: nowrap;
     }
     .status-applied {
-      background: rgba(16, 185, 129, 0.15);
+      background: transparent;
       color: #34d399;
-      border: 1px solid rgba(16, 185, 129, 0.35);
+      border: 1.5px solid #10b981;
+    }
+    .status-confirmed {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #022c22;
+      border: 1.5px solid #10b981;
+      font-weight: 800;
+      box-shadow: 0 2px 10px rgba(16, 185, 129, 0.35);
     }
     .status-queued {
       background: rgba(245, 158, 11, 0.15);
@@ -908,7 +915,10 @@
         <button type="button" class="btn btn-primary" onclick="openScheduleModal()">
           ⚡ + Schedule / Update Job URL
         </button>
-        <button type="button" class="btn btn-emerald" onclick="openProfileModal()">
+        <button type="button" class="btn btn-emerald" onclick="openEmailVerifyModal()">
+          📧 Check Email Confirmations
+        </button>
+        <button type="button" class="btn" onclick="openProfileModal()">
           📄 Master Core Profile (.md)
         </button>
         <button type="button" class="btn" onclick="openMobileAppModal()">
@@ -945,9 +955,9 @@
         <div class="kpi-sub">Vetted across India Tier-1 &amp; UAE</div>
       </div>
       <div class="kpi-card" style="--kpi-color: #10b981;">
-        <div class="kpi-label">Applications Submitted</div>
+        <div class="kpi-label">Applications Sent / Confirmed</div>
         <div class="kpi-value" id="kpiApplied">0</div>
-        <div class="kpi-sub">Tailored resume &amp; profile ready</div>
+        <div class="kpi-sub" id="kpiAppliedSub">0 Outlined (Sent) • 0 Filled (Confirmed)</div>
       </div>
       <div class="kpi-card" style="--kpi-color: #a855f7;">
         <div class="kpi-label">Scheduled / Queued URLs</div>
@@ -1008,7 +1018,8 @@
       <div class="toolbar-top">
         <div class="status-tabs" role="tablist" aria-label="Filter by Status">
           <button type="button" class="tab-pill active" data-status="ALL" onclick="setStatusTab('ALL', this)">All Roles</button>
-          <button type="button" class="tab-pill" data-status="Applied" onclick="setStatusTab('Applied', this)">Applied</button>
+          <button type="button" class="tab-pill" data-status="Applied" onclick="setStatusTab('Applied', this)">◎ Applied (Sent)</button>
+          <button type="button" class="tab-pill" data-status="Confirmed" onclick="setStatusTab('Confirmed', this)">✓ Applied (Confirmed)</button>
           <button type="button" class="tab-pill" data-status="Queued" onclick="setStatusTab('Queued', this)">Ready in Queue</button>
           <button type="button" class="tab-pill" data-status="Queued for Next Session" onclick="setStatusTab('Queued for Next Session', this)">⚡ Scheduled URLs</button>
           <button type="button" class="tab-pill" data-status="Interviewing" onclick="setStatusTab('Interviewing', this)">Interviewing</button>
@@ -1153,7 +1164,8 @@
             <select id="modalStatus" class="select-field">
               <option value="Queued for Next Session">⚡ Queued for Next Session</option>
               <option value="Queued">Queued (Ready to Apply)</option>
-              <option value="Applied">Applied</option>
+              <option value="Applied">◎ Applied (Outlined — Sent)</option>
+              <option value="Confirmed">✓ Applied (Filled — Confirmed)</option>
               <option value="Interviewing">Interviewing</option>
               <option value="Offer">Offer Extended</option>
             </select>
@@ -1283,6 +1295,58 @@
       <div class="dialog-footer">
         <button type="button" class="btn" onclick="document.getElementById('authDialog').close()">Cancel</button>
         <button type="submit" class="btn btn-primary">Sign In</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- 6. DIALOG: Gmail Confirmation Reader (sudhakar.r08@gmail.com) -->
+  <dialog id="emailVerifyDialog" class="app-dialog dialog-narrow" closedby="any" aria-labelledby="emailVerifyTitle">
+    <form class="dialog-shell" onsubmit="handleEmailVerification(event)">
+      <div class="dialog-header">
+        <div>
+          <h2 id="emailVerifyTitle">📧 Auto-Confirm via Gmail (`sudhakar.r08@gmail.com`)</h2>
+          <p style="font-size: 0.78rem; color: var(--text-muted);">
+            Scans your inbox for "Thank you for applying" / "Your application was sent" receipts
+          </p>
+        </div>
+        <button type="button" class="btn btn-sm" onclick="document.getElementById('emailVerifyDialog').close()">✕</button>
+      </div>
+      <div class="dialog-body">
+        <div class="detail-box">
+          <h4>How Outlined vs. Filled Applied Works</h4>
+          <p style="margin-block-end:0.45rem;">
+            1. <strong><span class="status-badge status-applied">◎ Applied</span> (Outlined):</strong> Shown right after an application is sent using <code>sudhakar.r08@gmail.com</code>.
+          </p>
+          <p>
+            2. <strong><span class="status-badge status-confirmed">✓ Applied</span> (Filled Solid):</strong> Shown once you click <strong>✓ Confirm</strong> OR when this Gmail reader detects a confirmation email (e.g., <em>"Thank you for applying to..."</em>) in <code>sudhakar.r08@gmail.com</code>!
+          </p>
+        </div>
+
+        <div class="form-group">
+          <label for="verifyEmailAddr">Candidate Gmail Address</label>
+          <input type="email" id="verifyEmailAddr" class="input-field" value="sudhakar.r08@gmail.com" readonly />
+        </div>
+
+        <div class="form-group">
+          <label for="verifyAppPassword">Google 16-Character App Password (saved privately to local <code>data/.email_config.json</code>)</label>
+          <input
+            type="password"
+            id="verifyAppPassword"
+            class="input-field"
+            placeholder="xxxx xxxx xxxx xxxx (Leave blank if already saved)"
+          />
+          <span class="form-hint">
+            Generate at Google Account → Security → 2-Step Verification → App passwords. Never pushed to GitHub.
+          </span>
+        </div>
+
+        <div id="emailVerifyResultBox" style="display:none;" class="detail-box"></div>
+      </div>
+      <div class="dialog-footer">
+        <button type="button" class="btn" onclick="document.getElementById('emailVerifyDialog').close()">Close</button>
+        <button type="submit" class="btn btn-emerald" id="runEmailVerifyBtn">
+          🔄 Scan Inbox &amp; Confirm Applications
+        </button>
       </div>
     </form>
   </dialog>
@@ -1439,10 +1503,15 @@
 
     function updateKpis() {
       const total = allJobs.length;
-      const applied = allJobs.filter((j) => (j.status || '').toLowerCase() === 'applied').length;
+      const sentCount = allJobs.filter((j) => (j.status || '').toLowerCase() === 'applied').length;
+      const confirmedCount = allJobs.filter((j) => (j.status || '').toLowerCase() === 'confirmed').length;
       const queued = allJobs.filter((j) => (j.status || '').toLowerCase().includes('queued')).length;
       document.getElementById('kpiTotal').textContent = total;
-      document.getElementById('kpiApplied').textContent = applied;
+      document.getElementById('kpiApplied').textContent = sentCount + confirmedCount;
+      const subEl = document.getElementById('kpiAppliedSub');
+      if (subEl) {
+        subEl.textContent = `${sentCount} Outlined (Sent) • ${confirmedCount} Filled (Confirmed)`;
+      }
       document.getElementById('kpiQueued').textContent = queued;
     }
 
@@ -1455,10 +1524,18 @@
 
     function getStatusBadgeClass(status) {
       const s = (status || '').toLowerCase();
+      if (s === 'confirmed') return 'status-badge status-confirmed';
       if (s === 'applied') return 'status-badge status-applied';
       if (s.includes('next session') || s.includes('scheduled')) return 'status-badge status-scheduled';
       if (s.includes('interview')) return 'status-badge status-interviewing';
       return 'status-badge status-queued';
+    }
+
+    function getStatusBadgeLabel(status) {
+      const s = (status || '').toLowerCase();
+      if (s === 'confirmed') return '✓ Applied';
+      if (s === 'applied') return '◎ Applied';
+      return status || 'Queued';
     }
 
     function renderJobs() {
@@ -1510,7 +1587,10 @@
 
       tbody.innerHTML = filtered.map((job) => {
         const badgeClass = getStatusBadgeClass(job.status);
-        const isApplied = (job.status || '').toLowerCase() === 'applied';
+        const badgeLabel = getStatusBadgeLabel(job.status);
+        const statusLower = (job.status || '').toLowerCase();
+        const isSent = statusLower === 'applied';
+        const isConfirmed = statusLower === 'confirmed';
         const safeUrl = escapeHtml(job.job_url || '#');
         const shortUrl = (job.job_url || '').replace(/^https?:\/\/(www\.)?/, '').slice(0, 42);
         return `
@@ -1539,8 +1619,9 @@
             </td>
             <td>
               <div style="display:flex; flex-direction:column; align-items:flex-start; gap:0.22rem;">
-                <span class="${badgeClass}">${isApplied ? '✓ Applied' : escapeHtml(job.status || 'Queued')}</span>
-                ${isApplied && job.applied_date ? `<span style="font-size:0.69rem; color:#34d399;">Confirmed: ${escapeHtml(job.applied_date)}</span>` : ''}
+                <span class="${badgeClass}" title="${isConfirmed ? 'Confirmed (Filled)' : (isSent ? 'Application Sent — Awaiting Confirmation (Outlined)' : '')}">${escapeHtml(badgeLabel)}</span>
+                ${isSent ? `<span style="font-size:0.68rem; color:#94a3b8;">Sent: ${escapeHtml(job.applied_date || 'Awaiting confirmation')}</span>` : ''}
+                ${isConfirmed ? `<span style="font-size:0.69rem; color:#34d399; font-weight:600;">Confirmed: ${escapeHtml(job.applied_date || 'Verified')}</span>` : ''}
               </div>
             </td>
             <td>
@@ -1548,15 +1629,24 @@
                 <button type="button" class="btn btn-sm btn-primary" onclick="openJobDetail(${Number(job.id)})">
                   View Detail
                 </button>
-                ${!isApplied ? `
-                  <button type="button" class="btn btn-sm btn-emerald" onclick="toggleAppliedStatus(${Number(job.id)}, true)" title="Confirm you submitted this application">
-                    ✓ Mark Applied
+                ${(!isSent && !isConfirmed) ? `
+                  <button type="button" class="btn btn-sm btn-emerald" onclick="setJobApplicationStage(${Number(job.id)}, 'Applied')" title="Mark application sent (Outlined Applied)">
+                    ◎ Mark Applied
                   </button>
-                ` : `
-                  <button type="button" class="btn btn-sm" onclick="toggleAppliedStatus(${Number(job.id)}, false)" title="Revert to Queued">
-                    ↩ Undo Applied
+                ` : ''}
+                ${isSent ? `
+                  <button type="button" class="btn btn-sm btn-emerald" style="background:#10b981; color:#022c22; font-weight:700;" onclick="setJobApplicationStage(${Number(job.id)}, 'Confirmed')" title="Confirm application received (Filled Applied)">
+                    ✓ Confirm
                   </button>
-                `}
+                  <button type="button" class="btn btn-sm" onclick="setJobApplicationStage(${Number(job.id)}, 'Queued')" title="Revert to Queued">
+                    ↩
+                  </button>
+                ` : ''}
+                ${isConfirmed ? `
+                  <button type="button" class="btn btn-sm" onclick="setJobApplicationStage(${Number(job.id)}, 'Applied')" title="Step back to Outlined Applied">
+                    ↩ Unconfirm
+                  </button>
+                ` : ''}
                 <button type="button" class="btn btn-sm btn-amber" onclick="openEditJobUrl(${Number(job.id)})" title="Update Job URL">
                   ✎ Edit URL
                 </button>
@@ -1572,15 +1662,22 @@
       }).join('');
     }
 
-    async function toggleAppliedStatus(jobId, markApplied) {
+    async function setJobApplicationStage(jobId, targetStage) {
       const nowStamp = new Date().toISOString().slice(0, 16).replace('T', ' ');
-      if (markApplied) {
+      if (targetStage === 'Applied') {
         await persistJobChange({
           id: jobId,
           status: 'Applied',
           applied_date: nowStamp
         });
-        showToast('✅ Confirmed as Applied (' + nowStamp + ')');
+        showToast('◎ Marked as Applied (Outlined — Application Sent)');
+      } else if (targetStage === 'Confirmed') {
+        await persistJobChange({
+          id: jobId,
+          status: 'Confirmed',
+          applied_date: nowStamp
+        });
+        showToast('✓ Confirmed Applied (Filled Badge)');
       } else {
         await persistJobChange({
           id: jobId,
@@ -1588,6 +1685,75 @@
           applied_date: ''
         });
         showToast('↩ Reverted status to Queued');
+      }
+    }
+
+    async function openEmailVerifyModal() {
+      const box = document.getElementById('emailVerifyResultBox');
+      if (box) {
+        box.style.display = 'none';
+        box.innerHTML = '';
+      }
+      try {
+        const res = await fetch('./api/email-config');
+        if (res.ok) {
+          const cfg = await res.json();
+          const pwInput = document.getElementById('verifyAppPassword');
+          if (cfg.has_password && pwInput) {
+            pwInput.placeholder = '•••••••••••••••• (Saved locally — leave blank to use saved)';
+          }
+        }
+      } catch {}
+      document.getElementById('emailVerifyDialog').showModal();
+    }
+
+    async function handleEmailVerification(event) {
+      event.preventDefault();
+      const btn = document.getElementById('runEmailVerifyBtn');
+      const box = document.getElementById('emailVerifyResultBox');
+      const pw = document.getElementById('verifyAppPassword').value.trim();
+      btn.disabled = true;
+      btn.textContent = '⏳ Scanning sudhakar.r08@gmail.com...';
+      box.style.display = 'block';
+      box.innerHTML = '<p>Connecting to <code>imap.gmail.com</code> for <strong>sudhakar.r08@gmail.com</strong>...</p>';
+
+      try {
+        const res = await fetch('./api/verify-emails', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: 'sudhakar.r08@gmail.com',
+            app_password: pw || undefined,
+            days_back: 21
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          const matched = data.confirmed_jobs || [];
+          if (matched.length > 0) {
+            box.innerHTML = `
+              <h4 style="color:#34d399;">✓ Confirmed ${matched.length} Application(s) from Gmail!</h4>
+              <ul style="padding-inline-start:1.2rem; font-size:0.81rem; margin-block-start:0.4rem;">
+                ${matched.map((m) => `<li><strong>${escapeHtml(m.company)}</strong> — ${escapeHtml(m.subject)}</li>`).join('')}
+              </ul>
+            `;
+            showToast(`✓ Auto-confirmed ${matched.length} job(s) from Gmail!`);
+            await loadJobs(false);
+          } else {
+            box.innerHTML = `
+              <h4>Scanned ${data.scanned_count || 0} Recent Emails in sudhakar.r08@gmail.com</h4>
+              <p>No new "Thank you for applying" / "Your application was sent" receipts matched unconfirmed companies yet.</p>
+            `;
+            showToast('Inbox scanned — no new confirmation receipts found yet');
+          }
+        } else {
+          box.innerHTML = `<h4 style="color:#fbbf24;">Setup Required</h4><p>${escapeHtml(data.error || 'Could not verify emails')}</p>`;
+        }
+      } catch (err) {
+        box.innerHTML = `<h4 style="color:#f43f5e;">Connection Note</h4><p>Email verification requires the local server (<code>http://localhost:5050</code>) running on your Mac.</p>`;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '🔄 Scan Inbox & Confirm Applications';
       }
     }
 
@@ -1627,7 +1793,8 @@
             <select id="inlineDetailStatus_${job.id}" class="select-field" style="inline-size:auto;">
               <option value="Queued for Next Session" ${job.status === 'Queued for Next Session' ? 'selected' : ''}>⚡ Queued for Next Session</option>
               <option value="Queued" ${job.status === 'Queued' ? 'selected' : ''}>Queued</option>
-              <option value="Applied" ${job.status === 'Applied' ? 'selected' : ''}>Applied</option>
+              <option value="Applied" ${job.status === 'Applied' ? 'selected' : ''}>◎ Applied (Outlined — Sent)</option>
+              <option value="Confirmed" ${job.status === 'Confirmed' ? 'selected' : ''}>✓ Applied (Filled — Confirmed)</option>
               <option value="Interviewing" ${job.status === 'Interviewing' ? 'selected' : ''}>Interviewing</option>
             </select>
             <button type="button" class="btn btn-emerald" onclick="saveInlineUrlUpdate(${Number(job.id)})">
