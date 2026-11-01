@@ -1311,7 +1311,7 @@
     let currentStatusTab = 'ALL';
     let rawProfileMarkdown = '';
     let deferredInstallPrompt = null;
-    const LOCAL_OVERRIDES_KEY = 'sr_job_tracker_overrides_v2';
+    const LOCAL_OVERRIDES_KEY = 'sr_job_tracker_overrides_v3';
     const GH_TOKEN_KEY = 'sr_job_tracker_gh_pat';
     const AUTH_USER_KEY = 'sr_job_tracker_auth_user';
     const GITHUB_REPO = 'sudhakar-r08/job-hunt-tracker';
@@ -1510,6 +1510,7 @@
 
       tbody.innerHTML = filtered.map((job) => {
         const badgeClass = getStatusBadgeClass(job.status);
+        const isApplied = (job.status || '').toLowerCase() === 'applied';
         const safeUrl = escapeHtml(job.job_url || '#');
         const shortUrl = (job.job_url || '').replace(/^https?:\/\/(www\.)?/, '').slice(0, 42);
         return `
@@ -1537,13 +1538,25 @@
               <div class="rating-pill">★ ${escapeHtml(job.reliability_rating || 'Pending Review')}</div>
             </td>
             <td>
-              <span class="${badgeClass}">${escapeHtml(job.status || 'Queued')}</span>
+              <div style="display:flex; flex-direction:column; align-items:flex-start; gap:0.22rem;">
+                <span class="${badgeClass}">${isApplied ? '✓ Applied' : escapeHtml(job.status || 'Queued')}</span>
+                ${isApplied && job.applied_date ? `<span style="font-size:0.69rem; color:#34d399;">Confirmed: ${escapeHtml(job.applied_date)}</span>` : ''}
+              </div>
             </td>
             <td>
               <div class="row-actions">
                 <button type="button" class="btn btn-sm btn-primary" onclick="openJobDetail(${Number(job.id)})">
                   View Detail
                 </button>
+                ${!isApplied ? `
+                  <button type="button" class="btn btn-sm btn-emerald" onclick="toggleAppliedStatus(${Number(job.id)}, true)" title="Confirm you submitted this application">
+                    ✓ Mark Applied
+                  </button>
+                ` : `
+                  <button type="button" class="btn btn-sm" onclick="toggleAppliedStatus(${Number(job.id)}, false)" title="Revert to Queued">
+                    ↩ Undo Applied
+                  </button>
+                `}
                 <button type="button" class="btn btn-sm btn-amber" onclick="openEditJobUrl(${Number(job.id)})" title="Update Job URL">
                   ✎ Edit URL
                 </button>
@@ -1557,6 +1570,25 @@
           </tr>
         `;
       }).join('');
+    }
+
+    async function toggleAppliedStatus(jobId, markApplied) {
+      const nowStamp = new Date().toISOString().slice(0, 16).replace('T', ' ');
+      if (markApplied) {
+        await persistJobChange({
+          id: jobId,
+          status: 'Applied',
+          applied_date: nowStamp
+        });
+        showToast('✅ Confirmed as Applied (' + nowStamp + ')');
+      } else {
+        await persistJobChange({
+          id: jobId,
+          status: 'Queued',
+          applied_date: ''
+        });
+        showToast('↩ Reverted status to Queued');
+      }
     }
 
     // Open Full Detail Dialog + Inline Job URL Updater
