@@ -41,13 +41,33 @@ PREP_FILE_MAP = {
 }
 
 def get_prep_info_for_company(company_name):
-    """Returns (prep_rel_path, prep_content) for a given company name."""
-    c_lower = (company_name or "").lower()
+    """Returns (prep_rel_path, prep_content) for a given company name, supporting both mapped and dynamic <slug>-prep.md files."""
+    c_lower = (company_name or "").lower().strip()
+    if not c_lower:
+        return ("", "")
+    # 1. Check explicit map first
     for token, filename in PREP_FILE_MAP.items():
         if token in c_lower:
             full_path = os.path.join(PREP_DIR, filename)
             rel_path = os.path.join("prep", filename)
             if os.path.exists(full_path):
+                try:
+                    with open(full_path, "r", encoding="utf-8") as pf:
+                        return (rel_path, pf.read())
+                except Exception:
+                    return (rel_path, "")
+    # 2. Dynamic lookup in prep/ directory for any new companies added by daily automation
+    primary_slug = re.sub(r"[^a-z0-9]+", "-", c_lower).strip("-")
+    first_word = re.split(r"[\s,/()-]+", c_lower)[0]
+    candidate_filenames = [f"{primary_slug}-prep.md", f"{first_word}-prep.md"]
+    if os.path.exists(PREP_DIR):
+        for fname in os.listdir(PREP_DIR):
+            if not fname.endswith("-prep.md"):
+                continue
+            prefix = fname[:-8].lower()
+            if fname in candidate_filenames or (len(prefix) >= 3 and prefix in c_lower):
+                full_path = os.path.join(PREP_DIR, fname)
+                rel_path = os.path.join("prep", fname)
                 try:
                     with open(full_path, "r", encoding="utf-8") as pf:
                         return (rel_path, pf.read())

@@ -1868,7 +1868,10 @@
           valuelabs: 'valuelabs-prep.md'
         };
         const matchKey = Object.keys(prepMap).find((k) => companyLower.includes(k));
-        const prepFile = job.prep_guide_path ? job.prep_guide_path.split('/').pop() : (matchKey ? prepMap[matchKey] : '');
+        const dynamicSlug = companyLower.split(/[\s,/()-]+/)[0].replace(/[^a-z0-9]/g, '');
+        const prepFile = job.prep_guide_path
+          ? job.prep_guide_path.split('/').pop()
+          : (matchKey ? prepMap[matchKey] : (dynamicSlug ? `${dynamicSlug}-prep.md` : ''));
         if (prepFile) {
           try {
             const pRes = await fetch('./prep/' + prepFile);
