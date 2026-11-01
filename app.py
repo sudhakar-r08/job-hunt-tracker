@@ -5,8 +5,10 @@ Two-Stage Applied/Confirmed Workflow & Gmail IMAP Confirmation Verifier
 """
 import os
 import re
+import html
 import json
 import sqlite3
+import subprocess
 import argparse
 import hashlib
 import secrets
@@ -131,9 +133,152 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
+def format_inline_markdown_to_html(text):
+    """Converts inline Markdown (**bold**, *italic*, `code`, [label](url)) into clean HTML with zero leftover ** or brackets."""
+    escaped = html.escape(text, quote=False)
+    # Convert markdown links [label](url) -> <a href="url">label</a>
+    escaped = re.sub(
+        r"\[([^\]]+)\]\(([^)]+)\)",
+        lambda m: f'<a href="{m.group(2).strip()}" style="color:#0f172a;text-decoration:underline;">{m.group(1).strip()}</a>',
+        escaped
+    )
+    # Convert **bold** and __bold__
+    escaped = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", escaped)
+    escaped = re.sub(r"__(.+?)__", r"<b>\1</b>", escaped)
+    # Convert *italic* and _italic_
+    escaped = re.sub(r"(?<!\*)\*([^*\n]+?)\*(?!\*)", r"<i>\1</i>", escaped)
+    # Convert `inline code`
+    escaped = re.sub(r"`([^`]+)`", r"<span>\1</span>", escaped)
+    # Clean any stray unmatched ** that might remain
+    escaped = escaped.replace("**", "")
+    return escaped
+
+def markdown_to_clean_resume_html(md_text):
+    """Converts a Markdown resume into clean, ATS-friendly HTML suitable for both browser printing and DOCX conversion."""
+    lines = (md_text or "").splitlines()
+    body_parts = []
+    in_list = False
+    skip_comp_section = False
+
+    for raw_line in lines:
+        line = raw_line.rstrip()
+        stripped = line.strip()
+
+        # Skip internal Compensation & Availability section in formal printable/DOCX resumes
+        if re.match(r"^#{1,4}\s*Compensation\s*&\s*Availability", stripped, re.IGNORECASE):
+            if in_list:
+                body_parts.append("</ul>")
+                in_list = False
+            skip_comp_section = True
+            continue
+        if skip_comp_section and re.match(r"^#{1,4}\s+", stripped):
+            skip_comp_section = False
+        if skip_comp_section:
+            continue
+
+        if not stripped:
+            if in_list:
+                body_parts.append("</ul>")
+                in_list = False
+            continue
+
+        if stripped == "---":
+            if in_list:
+                body_parts.append("</ul>")
+                in_list = False
+            body_parts.append('<hr style="border:none;border-top:1px solid #cbd5e1;margin:8pt 0;"/>')
+            continue
+
+        # Headings (#, ##, ###, ####)
+        m_heading = re.match(r"^(#{1,4})\s+(.*)$", stripped)
+        if m_heading:
+            if in_list:
+                body_parts.append("</ul>")
+                in_list = False
+            level = len(m_heading.group(1))
+            heading_html = format_inline_markdown_to_html(m_heading.group(2).strip())
+            if level == 1:
+                body_parts.append(f'<h1 style="font-size:16pt;margin:0 0 3pt 0;color:#0f172a;">{heading_html}</h1>')
+            elif level == 2:
+                body_parts.append(f'<h2 style="font-size:11.5pt;border-bottom:1px solid #334155;padding-bottom:2pt;margin:10pt 0 4pt 0;color:#0f172a;text-transform:uppercase;">{heading_html}</h2>')
+            else:
+                body_parts.append(f'<h3 style="font-size:10.5pt;margin:8pt 0 2pt 0;color:#1e293b;">{heading_html}</h3>')
+            continue
+
+        # Bullet points (- or *)
+        m_bullet = re.match(r"^(\s*)[-*]\s+(.*)$", line)
+        if m_bullet:
+            indent_spaces = len(m_bullet.group(1))
+            item_html = format_inline_markdown_to_html(m_bullet.group(2).strip())
+            if not in_list:
+                body_parts.append('<ul style="margin:3pt 0 5pt 16pt;padding:0;">')
+                in_list = True
+            margin_left = "14pt" if indent_spaces >= 2 else "0pt"
+            body_parts.append(f'<li style="margin:2pt 0 2pt {margin_left};line-height:1.4;">{item_html}</li>')
+            continue
+
+        if in_list:
+            body_parts.append("</ul>")
+            in_list = False
+
+        para_html = format_inline_markdown_to_html(stripped)
+        body_parts.append(f'<p style="margin:2.5pt 0;line-height:1.4;">{para_html}</p>')
+
+    if in_list:
+        body_parts.append("</ul>")
+
+    return (
+        '<!DOCTYPE html><html><head><meta charset="utf-8">'
+        '<style>body{font-family:Arial,Helvetica,sans-serif;font-size:10.5pt;line-height:1.42;color:#0f172a;max-width:780px;margin:24px auto;padding:0 16px;}'
+        'a{color:#0f172a;text-decoration:underline;}</style></head><body>'
+        + "\n".join(body_parts)
+        + "</body></html>"
+    )
+
+RESUME_DOCX_MAP = {
+    "youtrip-staff-mobile-engineer.md": "Raju_Sudhakar_YouTrip_Resume",
+    "nagarro-mobile-architect.md": "Raju_Sudhakar_Nagarro_Resume",
+    "deloitte-mobile-lead-architect.md": "Sudhakar_Raju_Deloitte_Resume",
+    "emirates-mobile-architect-dubai.md": "Raju_Sudhakar_Emirates_Resume",
+    "phonepe-staff-mobile-architect.md": "Raju_Sudhakar_PhonePe_Resume",
+    "careem-staff-mobile-architect.md": "Raju_Sudhakar_Careem_Resume",
+    "valuelabs-lead-android-developer.md": "Raju_Sudhakar_ValueLabs_Resume",
+}
+
+def compile_all_resumes():
+    """Compiles all resumes/*.md into clean, zero-markdown-syntax .html and .docx files."""
+    if not os.path.exists(RESUMES_DIR):
+        return
+    for fname in os.listdir(RESUMES_DIR):
+        if not fname.endswith(".md"):
+            continue
+        md_path = os.path.join(RESUMES_DIR, fname)
+        try:
+            with open(md_path, "r", encoding="utf-8") as f:
+                md_text = f.read()
+        except Exception:
+            continue
+        clean_html = markdown_to_clean_resume_html(md_text)
+        stem = fname[:-3]
+        target_base = RESUME_DOCX_MAP.get(fname, f"Raju_Sudhakar_{stem.split('-')[0].capitalize()}_Resume")
+        html_out_path = os.path.join(RESUMES_DIR, f"{target_base}.html")
+        docx_out_path = os.path.join(RESUMES_DIR, f"{target_base}.docx")
+        try:
+            with open(html_out_path, "w", encoding="utf-8") as hf:
+                hf.write(clean_html)
+            subprocess.run(
+                ["textutil", "-convert", "docx", html_out_path, "-output", docx_out_path],
+                check=False,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL
+            )
+        except Exception:
+            pass
+
 def sync_jobs_json():
     """Exports SQLite records to data/jobs.json for GitHub Pages & Mobile sync."""
     try:
+        compile_all_resumes()
         conn = get_db_connection()
         rows = conn.execute("SELECT * FROM jobs ORDER BY updated_at DESC").fetchall()
         jobs = []
@@ -631,7 +776,13 @@ class TrackerHandler(BaseHTTPRequestHandler):
             file_path = os.path.join(RESUMES_DIR, filename)
             if os.path.exists(file_path):
                 self.send_response(200)
-                self.send_header("Content-Type", "text/markdown; charset=utf-8")
+                if filename.endswith(".html"):
+                    self.send_header("Content-Type", "text/html; charset=utf-8")
+                elif filename.endswith(".docx"):
+                    self.send_header("Content-Type", "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+                    self.send_header("Content-Disposition", f'attachment; filename="{filename}"')
+                else:
+                    self.send_header("Content-Type", "text/markdown; charset=utf-8")
                 self.end_headers()
                 with open(file_path, "rb") as f:
                     self.wfile.write(f.read())

@@ -1,7 +1,7 @@
 # Sudhakar Raju
 **Mobile Application Architect | Staff Software Engineer**  
 📍 Bangalore, Karnataka  
-📧 **Email**: sudhakar.r08@gmail.com &bull; 🔗 [LinkedIn Profile](https://www.linkedin.com/in/sudhakar-raju/) &bull; 💻 [GitHub Profile](https://github.com/sudhakar-r08)
+📧 **Email**: sudhakar.r08@gmail.com • 🔗 [LinkedIn Profile](https://www.linkedin.com/in/sudhakar-raju/) • 💻 [GitHub Profile](https://github.com/sudhakar-r08)
 
 ---
 
