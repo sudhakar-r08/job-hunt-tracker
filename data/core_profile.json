@@ -1,0 +1,154 @@
+{
+  "personal": {
+    "name": "Sudhakar Raju",
+    "email": "sudhakar.r08@gmail.com",
+    "linkedin": "https://www.linkedin.com/in/sudhakar-raju/",
+    "github": "https://github.com/sudhakar-r08",
+    "locations": [
+      "Bangalore, Karnataka",
+      "Chennai, Tamil Nadu",
+      "Hyderabad, Telangana",
+      "Dubai, UAE (Open to Relocation)"
+    ],
+    "current_employer": "Guardian",
+    "current_package": "28 LPA (INR)",
+    "target_package": "36.4+ LPA (INR) / AED 28,000 - 36,000/mo (Tax-Free UAE)",
+    "target_roles": [
+      "Mobile Application Architect",
+      "Staff Software Engineer (Mobile)",
+      "Senior Software Engineer",
+      "SDE 3"
+    ]
+  },
+  "summary": "Accomplished Mobile Application Architect and Lead Software Development Engineer currently with Guardian, bringing over a decade of progressive industry experience architecting scalable Android, iOS, IoT, and enterprise mobility platforms. Proven track record leading mobile engineering initiatives at Guardian, Ayla Networks, and Vectone Mobile, delivering high-throughput enterprise applications, real-time communication systems (VoIP, WebRTC, WebSockets), and modular architectures. Deep expertise in Clean Architecture, MVI/MVVM, on-device AI/ML (TensorFlow, OpenCV), and reactive streams.",
+  "employment_history": [
+    {
+      "company": "Guardian",
+      "title": "Lead Mobile Engineer / Mobile Architect",
+      "location": "India (Bengaluru / Chennai)",
+      "period": "Current Role",
+      "is_current": true,
+      "projects_and_responsibilities": [
+        "Architecting and engineering mission-critical enterprise mobile platforms at Guardian.",
+        "Driving mobile architectural standards, Clean Architecture, modularization, and modern Kotlin/Jetpack Compose and iOS practices.",
+        "Leading security, compliance, performance optimization, and cross-functional engineering pods across distributed enterprise systems."
+      ]
+    },
+    {
+      "company": "Ayla Networks",
+      "title": "Lead Software Development Engineer (Promoted from SDE III)",
+      "location": "Bengaluru, Karnataka, India",
+      "period": "November 2022 – 2024",
+      "roles_held": [
+        {
+          "designation": "Lead Software Development Engineer",
+          "dates": "August 2023 – 2024"
+        },
+        {
+          "designation": "Software Development Engineer III (via CloudCollab)",
+          "dates": "November 2022 – August 2023"
+        }
+      ],
+      "projects_and_responsibilities": [
+        "Led the mobile engineering team architecting enterprise IoT connected device platforms and smart appliance Android applications.",
+        "Engineered real-time bidirectional communication layers using WebSockets for ultra-low latency smart device telemetry and remote command execution.",
+        "Architected Bluetooth Low Energy (BLE) and Wi-Fi device provisioning pipelines with resilient retry and fallback strategies, reducing pairing dropouts by 25%.",
+        "Implemented user metadata-driven push notifications and background device synchronization using the Ayla Mobile SDK and Room DB.",
+        "Directed architectural migrations, technical RFC reviews, code quality governance, and performance profiling across distributed pods."
+      ]
+    },
+    {
+      "company": "Vectone Mobile",
+      "title": "Senior Software Engineer / Mobile Lead",
+      "location": "Chennai, Tamil Nadu, India",
+      "period": "February 2021 – November 2022",
+      "projects_and_responsibilities": [
+        "Led mobile development of the 'Worktual' Unified Communication (UCaaS) application (enterprise calling, video conferencing, team chat, and meetings), managing an engineering pod of 10 developers.",
+        "Architected reactive asynchronous state handling using RxJava/RxAndroid and Kotlin Coroutines, boosting application performance and responsiveness by 30%.",
+        "Engineered high-concurrency VoIP calling and real-time messaging layers using WebRTC, SIP, and secure RESTful APIs."
+      ]
+    },
+    {
+      "company": "Infitech Reality Pvt Ltd",
+      "title": "Senior Software Engineer (Mobile & IoT)",
+      "location": "Chennai, Tamil Nadu, India",
+      "period": "November 2018 – January 2021",
+      "projects_and_responsibilities": [
+        "Directed end-to-end mobile development for client projects encompassing IoT, facial recognition systems, indoor mapping, and Automatic License Plate Recognition (ALPR).",
+        "Integrated on-device machine learning and computer vision models using OpenCV, TensorFlow, and Android NDK/JNI.",
+        "Built real-time messaging, audio/video conferencing, and location telemetry modules utilizing WebRTC, Socket.IO, and XMPP protocols."
+      ]
+    },
+    {
+      "company": "Anubavam Technologies Pvt Ltd",
+      "title": "Software Engineer",
+      "location": "Chennai, Tamil Nadu, India",
+      "period": "September 2016 – December 2017",
+      "projects_and_responsibilities": [
+        "Developed scalable Learning Management System (LMS) mobile applications and healthcare digital solutions.",
+        "Implemented resilient offline data persistence, intuitive UI patterns, and optimized RESTful API integration."
+      ]
+    },
+    {
+      "company": "Valley Point Technologies Pvt Ltd",
+      "title": "Software Engineer",
+      "location": "Chennai, Tamil Nadu, India",
+      "period": "December 2013 – January 2016",
+      "projects_and_responsibilities": [
+        "Developed cross-platform and native Android applications, RESTful backends, and responsive web portals.",
+        "Delivered end-to-end client projects from design specification through Play Store release."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "degree": "Master of Computer Applications (MCA)",
+      "field_of_study": "Computer and Information Sciences",
+      "institution": "University College of Engineering, Anna University, Tiruchirappalli (Tiruchi)"
+    }
+  ],
+  "technical_skills": {
+    "architecture": ["Clean Architecture", "MVI", "MVVM", "Multi-Module Architecture", "Domain-Driven Design (DDD)", "Offline-First", "Micro-Apps"],
+    "mobile_languages": ["Kotlin (Expert)", "Java", "Swift", "TypeScript", "JavaScript", "Python", "C++ (NDK/JNI)"],
+    "frameworks_tools": ["Jetpack Compose", "CameraX", "Coroutines & Flow", "Hilt / Dagger", "Koin", "Room DB", "DataStore", "RxJava/RxAndroid", "SwiftUI", "Combine"],
+    "iot_realtime_protocols": ["WebSockets", "WebRTC (Audio/Video)", "VoIP / SIP", "Bluetooth Low Energy (BLE)", "Socket.IO", "XMPP", "Ayla Mobile SDK"],
+    "ai_computer_vision": ["TensorFlow Lite (TFLite)", "OpenCV (C++ / Android SDK)", "ML Kit (OCR & Face Detection)", "MediaPipe", "Face Liveness Anti-Spoofing"]
+  },
+  "hobby_and_pet_projects": [
+    {
+      "name": "Circular SeekBar Android Library",
+      "type": "Open-Source Published Library",
+      "link": "https://github.com/sudhakar-r08/circular_seekbar",
+      "description": "Customizable circular progress and SeekBar supporting full circles, semi-circles, and variable arcs with 60fps touch trigonometry."
+    },
+    {
+      "name": "AvatarApp (Photo to Stylized Avatar)",
+      "type": "On-Device AI & Computer Vision",
+      "description": "Decoupled multi-module Android app using CameraX, ML Kit, TensorFlow Lite, and OpenCV for 100% offline edge face avatar synthesis."
+    },
+    {
+      "name": "Zero Cut — One-Take Studio",
+      "type": "Published App on Google Play",
+      "description": "Real-time on-device neural video segmentation studio enabling continuous one-take video recording with virtual backgrounds."
+    },
+    {
+      "name": "Face Liveness Detection",
+      "type": "Computer Vision Security",
+      "description": "OpenCV and TensorFlow anti-spoofing pipeline detecting live human faces vs. printed photos or screen attacks."
+    },
+    {
+      "name": "Balanced Diet Advisor",
+      "type": "On-Device LLM & OCR",
+      "description": "MVI Clean Architecture app parsing hotel menus via OCR with on-device LLM nutritional recommendations."
+    },
+    {
+      "name": "Status Vault",
+      "type": "Published App on Google Play",
+      "description": "Privacy-first scoped storage media utility compliant with modern Android 11+ SAF without dangerous permissions."
+    }
+  ],
+  "certifications": [
+    "Modern Android Architecture Specialist (Jetpack Compose, Kotlin Multiplatform, MVI)",
+    "IoT & Real-Time Embedded Systems Integration"
+  ]
+}

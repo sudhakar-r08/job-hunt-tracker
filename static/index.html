@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Command Center | Sudhakar Raju</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Marked.js for fast, seamless markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        :root {
+            --bg-base: #090d16;
+            --bg-surface: #0f172a;
+            --bg-card: #141f36;
+            --bg-card-hover: #1a2947;
+            
+            --border-subtle: #1e293b;
+            --border-medium: #334155;
+            --border-focus: #38bdf8;
+
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --text-dim: #64748b;
+
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --emerald: #10b981;
+            --emerald-bg: rgba(16, 185, 129, 0.12);
+            --emerald-border: rgba(16, 185, 129, 0.28);
+            --amber: #f59e0b;
+            --amber-bg: rgba(245, 158, 11, 0.12);
+            --amber-border: rgba(245, 158, 11, 0.28);
+            --violet: #8b5cf6;
+            --violet-bg: rgba(139, 92, 246, 0.12);
+            --violet-border: rgba(139, 92, 246, 0.28);
+            --cyan: #06b6d4;
+            --cyan-bg: rgba(6, 182, 212, 0.12);
+            --rose: #f43f5e;
+            --rose-bg: rgba(244, 63, 94, 0.12);
+
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 14px;
+            --radius-full: 9999px;
+            
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.5);
+            --shadow-lg: 0 12px 32px rgba(0,0,0,0.6);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* LOGIN SCREEN OVERLAY */
+        #loginScreen {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at 50% 30%, #172554 0%, var(--bg-base) 70%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            z-index: 9999;
+        }
+
+        .login-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 420px;
+            padding: 36px 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .login-header {
+            text-align: center;
+        }
+
+        .login-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin: 0 auto 14px;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+        }
+
+        .login-header h2 {
+            font-size: 20px;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .login-header p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--text-dim);
+        }
+
+        .form-input {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            color: #fff;
+            font-size: 13.5px;
+            outline: none;
+            transition: border-color 0.15s ease;
+        }
+
+        .form-input:focus {
+            border-color: var(--border-focus);
+        }
+
+        .btn-submit {
+            background: var(--primary);
+            border: 1px solid #60a5fa;
+            color: #fff;
+            padding: 11px;
+            border-radius: var(--radius-sm);
+            font-size: 13.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+
+        .btn-submit:hover {
+            background: var(--primary-hover);
+        }
+
+        .login-hint {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed var(--border-subtle);
+            border-radius: var(--radius-sm);
+            padding: 10px 12px;
+            font-size: 11.5px;
+            color: var(--text-dim);
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .login-hint strong {
+            color: #38bdf8;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .login-error {
+            display: none;
+            color: var(--rose);
+            font-size: 12px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* Top Navigation Bar */
+        header {
+            background: rgba(15, 23, 42, 0.88);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-subtle);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-inner {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 12px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .brand-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-md);
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .brand-text h1 {
+            font-size: 16.5px;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+            color: #fff;
+        }
+
+        .brand-text p {
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .badge-current-role {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            padding: 1px 7px;
+            border-radius: var(--radius-full);
+            font-size: 10.5px;
+            font-weight: 600;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-profile-md {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(139, 92, 246, 0.15));
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            color: #38bdf8;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s ease;
+        }
+
+        .btn-profile-md:hover {
+            background: rgba(56, 189, 248, 0.25);
+            border-color: #38bdf8;
+            color: #fff;
+        }
+
+        .user-chip {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            padding: 6px 12px;
+            border-radius: var(--radius-md);
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .user-chip a {
+            color: #38bdf8;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .user-chip a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-logout {
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-dim);
+            padding: 6px 10px;
+            border-radius: var(--radius-sm);
+            font-size: 11.5px;
+            cursor: pointer;
+        }
+
+        .btn-logout:hover {
+            color: var(--rose);
+            border-color: rgba(244, 63, 94, 0.4);
+        }
+
+        /* Main Container */
+        main {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 24px 28px 60px;
+            width: 100%;
+            flex: 1;
+        }
+
+        /* Metric KPI Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 900px) {
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .metric-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 16px 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .metric-card:hover {
+            border-color: var(--border-medium);
+            transform: translateY(-1px);
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 3px;
+            background: var(--primary);
+        }
+
+        .metric-card.emerald::before { background: var(--emerald); }
+        .metric-card.amber::before { background: var(--amber); }
+        .metric-card.violet::before { background: var(--violet); }
+
+        .metric-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--text-dim);
+        }
+
+        .metric-num {
+            font-size: 26px;
+            font-weight: 800;
+            margin: 4px 0 2px;
+            color: var(--text-main);
+            letter-spacing: -0.5px;
+        }
+
+        .metric-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Filter & Control Strip */
+        .control-strip {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            padding: 10px 14px;
+            border-radius: var(--radius-md);
+            margin-bottom: 18px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            background: var(--bg-base);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            padding: 7px 12px;
+            flex: 1;
+            min-width: 260px;
+            max-width: 420px;
+        }
+
+        .search-container input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-main);
+            font-size: 13px;
+            width: 100%;
+            margin-left: 8px;
+        }
+
+        .filter-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        select {
+            background: var(--bg-base);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-main);
+            padding: 7px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 500;
+            outline: none;
+            cursor: pointer;
+            transition: border-color 0.15s ease;
+        }
+
+        select:focus {
+            border-color: var(--border-focus);
+        }
+
+        .btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-main);
+            padding: 7px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+
+        .btn:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--border-medium);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            border-color: #60a5fa;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 11px;
+            border-radius: 5px;
+        }
+
+        .btn-linkedin {
+            background: rgba(10, 102, 194, 0.15);
+            color: #38bdf8;
+            border-color: rgba(10, 102, 194, 0.4);
+            font-weight: 600;
+        }
+
+        .btn-linkedin:hover {
+            background: rgba(10, 102, 194, 0.3);
+            border-color: #38bdf8;
+        }
+
+        /* TABLE VIEW - FIXED LAYOUT */
+        .table-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            font-size: 13px;
+        }
+
+        .data-table thead {
+            background: #111a2f;
+            border-bottom: 1px solid var(--border-medium);
+        }
+
+        .data-table th {
+            padding: 12px 14px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            font-weight: 700;
+            color: var(--text-dim);
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        .col-role      { width: 32%; }
+        .col-location  { width: 14%; }
+        .col-salary    { width: 18%; }
+        .col-rating    { width: 10%; }
+        .col-status    { width: 12%; }
+        .col-actions   { width: 14%; text-align: right !important; }
+
+        .job-row {
+            border-bottom: 1px solid var(--border-subtle);
+            transition: background 0.15s ease;
+            cursor: pointer;
+        }
+
+        .job-row:hover {
+            background: var(--bg-card);
+        }
+
+        .job-row td {
+            padding: 13px 14px;
+            vertical-align: middle;
+            overflow: hidden;
+        }
+
+        .title-block {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .title-text {
+            font-weight: 700;
+            font-size: 13.5px;
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .company-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+        }
+
+        .company-name {
+            font-weight: 700;
+            color: #60a5fa;
+        }
+
+        .tag-lob {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 10.5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 140px;
+        }
+
+        .location-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 500;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .salary-block {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .salary-main {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 13px;
+            color: var(--emerald);
+            white-space: nowrap;
+        }
+
+        .salary-sub {
+            font-size: 11px;
+            color: var(--text-dim);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .rating-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            background: rgba(245, 158, 11, 0.1);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.25);
+            padding: 2px 7px;
+            border-radius: var(--radius-sm);
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 3px 8px;
+            border-radius: var(--radius-full);
+            font-size: 10.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            white-space: nowrap;
+        }
+
+        .status-applied { background: var(--emerald-bg); color: var(--emerald); border: 1px solid var(--emerald-border); }
+        .status-queued { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
+        .status-interviewing { background: var(--violet-bg); color: #c084fc; border: 1px solid var(--violet-border); }
+        .status-offer { background: var(--cyan-bg); color: #38bdf8; border: 1px solid rgba(6, 182, 212, 0.3); }
+        .status-rejected { background: var(--rose-bg); color: var(--rose); border: 1px solid rgba(244, 63, 94, 0.3); }
+
+        .actions-cell {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        /* MODAL STYLES */
+        .modal-backdrop {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.82);
+            backdrop-filter: blur(6px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            z-index: 1000;
+        }
+
+        .modal-window {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 900px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+        }
+
+        .modal-header {
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            background: #111a2f;
+            border-top-left-radius: var(--radius-lg);
+            border-top-right-radius: var(--radius-lg);
+        }
+
+        .modal-body {
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .modal-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 16px;
+        }
+
+        .modal-section h4 {
+            font-size: 11.5px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: #38bdf8;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Markdown rendered content styles */
+        .markdown-rendered {
+            font-size: 13px;
+            line-height: 1.7;
+            color: #e2e8f0;
+        }
+
+        .markdown-rendered h1 { font-size: 19px; color: #fff; margin-bottom: 12px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 6px; }
+        .markdown-rendered h2 { font-size: 16px; color: #60a5fa; margin: 18px 0 8px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 4px; }
+        .markdown-rendered h3 { font-size: 14px; color: #38bdf8; margin: 14px 0 6px; }
+        .markdown-rendered p { margin-bottom: 10px; color: #cbd5e1; }
+        .markdown-rendered ul, .markdown-rendered ol { padding-left: 20px; margin-bottom: 12px; }
+        .markdown-rendered li { margin-bottom: 4px; color: #cbd5e1; }
+        .markdown-rendered strong { color: #fff; font-weight: 700; }
+        .markdown-rendered a { color: #38bdf8; text-decoration: underline; }
+        .markdown-rendered blockquote { border-left: 3px solid #3b82f6; padding-left: 12px; margin: 12px 0; color: #94a3b8; font-style: italic; }
+        .markdown-rendered table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 12px; }
+        .markdown-rendered th, .markdown-rendered td { border: 1px solid var(--border-subtle); padding: 8px 10px; }
+        .markdown-rendered th { background: rgba(0,0,0,0.3); color: #38bdf8; }
+
+        .modal-footer {
+            padding: 14px 24px;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #111a2f;
+            border-bottom-left-radius: var(--radius-lg);
+            border-bottom-right-radius: var(--radius-lg);
+        }
+
+        .btn-close {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            font-size: 22px;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .btn-close:hover { color: #fff; }
+
+        .copy-toast {
+            display: none;
+            color: var(--emerald);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .empty-state {
+            padding: 48px 16px;
+            text-align: center;
+            color: var(--text-dim);
+        }
+    </style>
+</head>
+<body>
+
+<!-- Login Overlay Screen -->
+<div id="loginScreen">
+    <div class="login-card">
+        <div class="login-header">
+            <div class="login-icon">&#128274;</div>
+            <h2>Career Command Center</h2>
+            <p>Enter your credentials to access your job tracker</p>
+        </div>
+
+        <div id="loginError" class="login-error">Invalid username or password</div>
+
+        <form id="loginForm" onsubmit="handleLogin(event)" style="display: flex; flex-direction: column; gap: 14px;">
+            <div class="form-group">
+                <label>Username / Email</label>
+                <input type="text" id="loginUser" class="form-input" placeholder="e.g. sudhakar" required autofocus value="sudhakar">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="loginPass" class="form-input" placeholder="Enter password" required value="JobHunt2026!">
+            </div>
+            <button type="submit" class="btn-submit">Sign In to Command Center &rarr;</button>
+        </form>
+
+        <div class="login-hint">
+            <div>Credentials configured:</div>
+            <div>Username: <strong>sudhakar</strong> | Password: <strong>JobHunt2026!</strong></div>
+        </div>
+    </div>
+</div>
+
+<!-- Header -->
+<header>
+    <div class="header-inner">
+        <div class="brand-section">
+            <div class="brand-logo">&#9889;</div>
+            <div class="brand-text">
+                <h1>Career Pipeline & Tracker</h1>
+                <p>
+                    <span>Sudhakar Raju</span>
+                    <span class="badge-current-role">Current: Guardian &bull; Lead Mobile Architect</span>
+                </p>
+            </div>
+        </div>
+
+        <div class="nav-actions">
+            <!-- Dedicated Master Profile Reader Button -->
+            <button class="btn-profile-md" onclick="openProfileModal()">
+                <span>&#128196; View Master Profile (.md)</span>
+            </button>
+
+            <div class="user-chip">
+                <span>&#9993;</span>
+                <a href="mailto:sudhakar.r08@gmail.com">sudhakar.r08@gmail.com</a>
+                <span>&bull;</span>
+                <a href="https://www.linkedin.com/in/sudhakar-raju/" target="_blank" rel="noreferrer">
+                    LinkedIn &#x2197;
+                </a>
+            </div>
+
+            <button class="btn-logout" onclick="handleLogout()" title="Sign out of dashboard">
+                Sign Out
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- Main Dashboard -->
+<main>
+    <!-- KPI Row -->
+    <div class="metrics-grid">
+        <div class="metric-card">
+            <div class="metric-label">Positions Tracked</div>
+            <div class="metric-num" id="stat-total">0</div>
+            <div class="metric-desc">Matched from LinkedIn & UAE listings</div>
+        </div>
+        <div class="metric-card emerald">
+            <div class="metric-label">Applied / Submitted</div>
+            <div class="metric-num" id="stat-applied">0</div>
+            <div class="metric-desc">Tailored profile & resume delivered</div>
+        </div>
+        <div class="metric-card amber">
+            <div class="metric-label">Ready in Queue</div>
+            <div class="metric-num" id="stat-queued">0</div>
+            <div class="metric-desc">Vetted matches awaiting review</div>
+        </div>
+        <div class="metric-card violet">
+            <div class="metric-label">Current &rarr; Target Package</div>
+            <div class="metric-num" style="font-size: 21px; margin-top: 6px;">28 &rarr; 36.4+ LPA</div>
+            <div class="metric-desc">+30% Targeted Hike Baseline</div>
+        </div>
+    </div>
+
+    <!-- Filters & Search Toolbar -->
+    <div class="control-strip">
+        <div class="search-container">
+            <span>&#128269;</span>
+            <input type="text" id="searchInput" placeholder="Search by role, company, line of business, tech..." oninput="filterJobs()">
+        </div>
+        <div class="filter-controls">
+            <select id="statusFilter" onchange="filterJobs()">
+                <option value="ALL">All Statuses</option>
+                <option value="Applied">Applied</option>
+                <option value="Queued">Queued</option>
+                <option value="Interviewing">Interviewing</option>
+                <option value="Offer">Offer</option>
+                <option value="Rejected">Rejected</option>
+            </select>
+            <select id="locationFilter" onchange="filterJobs()">
+                <option value="ALL">All Locations</option>
+                <option value="Bangalore">Bangalore</option>
+                <option value="Chennai">Chennai</option>
+                <option value="Hyderabad">Hyderabad</option>
+                <option value="UAE">UAE / Dubai</option>
+            </select>
+            <button class="btn btn-sm" onclick="fetchJobs()">&#x21bb; Refresh</button>
+        </div>
+    </div>
+
+    <!-- Strictly Contained Table View -->
+    <div class="table-card">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th class="col-role">Role & Company</th>
+                    <th class="col-location">Location</th>
+                    <th class="col-salary">Target Compensation</th>
+                    <th class="col-rating">Rating</th>
+                    <th class="col-status">Status</th>
+                    <th class="col-actions">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="jobsTableBody">
+                <!-- Dynamically rendered rows -->
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<!-- Master Profile (.md) Modal -->
+<div id="profileModal" class="modal-backdrop" onclick="closeProfileModal(event)">
+    <div class="modal-window" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <div>
+                <h2 style="font-size: 17px; font-weight: 700; color: #fff;">Master Core Profile</h2>
+                <div style="font-size: 12px; color: #38bdf8; margin-top: 3px;">
+                    Rendered directly from <code>data/core_profile.md</code>
+                </div>
+            </div>
+            <button class="btn-close" onclick="closeProfileModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="modal-section" style="background: #090e18;">
+                <div id="profileMarkdownContent" class="markdown-rendered">
+                    <em>Loading profile markdown...</em>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <span id="profileCopyToast" class="copy-toast">&#10003; Master profile copied to clipboard!</span>
+            <div style="display: flex; gap: 8px;">
+                <button class="btn btn-sm" onclick="copyMasterProfile()">&#128203; Copy Profile Markdown</button>
+                <button class="btn btn-sm btn-primary" onclick="closeProfileModal()">Done</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Deep Dive Intelligence & Resume Modal -->
+<div id="detailModal" class="modal-backdrop" onclick="closeModal(event)">
+    <div class="modal-window" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <div>
+                <h2 id="mTitle" style="font-size: 17px; font-weight: 700; color: #fff;">Role Title</h2>
+                <div id="mSubtitle" style="font-size: 12.5px; color: #38bdf8; margin-top: 3px;">Company &bull; Location</div>
+            </div>
+            <button class="btn-close" onclick="closeModal()">&times;</button>
+        </div>
+
+        <div class="modal-body" id="mBody">
+            <!-- Rendered by openModal() -->
+        </div>
+
+        <div class="modal-footer">
+            <div>
+                <span id="copyToast" class="copy-toast">&#10003; Tailored resume copied to clipboard!</span>
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <button class="btn btn-sm" onclick="copyResumeText()">&#128203; Copy Resume Markdown</button>
+                <a id="mLinkedInBtn" href="#" target="_blank" rel="noreferrer" class="btn btn-sm btn-primary">
+                    Exact LinkedIn Match &#x2197;
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let allJobs = [];
+    let activeModalJob = null;
+    let masterProfileRaw = '';
+
+    // Check Authentication
+    function checkAuth() {
+        const token = localStorage.getItem('job_hunt_token');
+        const loginScreen = document.getElementById('loginScreen');
+        if (token) {
+            loginScreen.style.display = 'none';
+            fetchJobs();
+            fetchMasterProfile();
+        } else {
+            loginScreen.style.display = 'flex';
+        }
+    }
+
+    async function handleLogin(e) {
+        e.preventDefault();
+        const username = document.getElementById('loginUser').value.trim();
+        const password = document.getElementById('loginPass').value.trim();
+        const errDiv = document.getElementById('loginError');
+        errDiv.style.display = 'none';
+
+        try {
+            const res = await fetch('/api/login', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username, password})
+            });
+            const data = await res.json();
+            if (data.success && data.token) {
+                localStorage.setItem('job_hunt_token', data.token);
+                localStorage.setItem('job_hunt_user', JSON.stringify(data.user));
+                document.getElementById('loginScreen').style.display = 'none';
+                fetchJobs();
+                fetchMasterProfile();
+            } else {
+                errDiv.innerText = data.error || 'Invalid credentials';
+                errDiv.style.display = 'block';
+            }
+        } catch (err) {
+            errDiv.innerText = 'Server error during sign in';
+            errDiv.style.display = 'block';
+        }
+    }
+
+    function handleLogout() {
+        localStorage.removeItem('job_hunt_token');
+        localStorage.removeItem('job_hunt_user');
+        document.getElementById('loginScreen').style.display = 'flex';
+    }
+
+    // Markdown Parser Helper
+    function parseMarkdown(mdText) {
+        if (!mdText) return '';
+        if (typeof marked !== 'undefined') {
+            return marked.parse(mdText);
+        }
+        // Fallback simple parser
+        return mdText
+            .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+            .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+            .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+            .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>')
+            .replace(/\*(.*)\*/gim, '<em>$1</em>')
+            .replace(/^\- (.*$)/gim, '<li>$1</li>')
+            .replace(/\n$/gim, '<br />');
+    }
+
+    async function fetchMasterProfile() {
+        try {
+            const res = await fetch('/api/profile');
+            const data = await res.json();
+            masterProfileRaw = data.content || '';
+        } catch (e) {
+            console.error("Failed to load master profile", e);
+        }
+    }
+
+    function openProfileModal() {
+        const container = document.getElementById('profileMarkdownContent');
+        if (masterProfileRaw) {
+            container.innerHTML = parseMarkdown(masterProfileRaw);
+        } else {
+            container.innerHTML = '<p>Loading master profile from disk...</p>';
+            fetchMasterProfile().then(() => {
+                container.innerHTML = parseMarkdown(masterProfileRaw);
+            });
+        }
+        document.getElementById('profileModal').style.display = 'flex';
+    }
+
+    function closeProfileModal(e) {
+        document.getElementById('profileModal').style.display = 'none';
+        document.getElementById('profileCopyToast').style.display = 'none';
+    }
+
+    function copyMasterProfile() {
+        if (!masterProfileRaw) return;
+        navigator.clipboard.writeText(masterProfileRaw).then(() => {
+            const toast = document.getElementById('profileCopyToast');
+            toast.style.display = 'inline-block';
+            setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        });
+    }
+
+    async function fetchJobs() {
+        try {
+            const res = await fetch('/api/jobs');
+            const data = await res.json();
+            allJobs = data.jobs || [];
+            updateKPIs();
+            filterJobs();
+        } catch (e) {
+            console.error("Error fetching jobs", e);
+        }
+    }
+
+    function updateKPIs() {
+        document.getElementById('stat-total').innerText = allJobs.length;
+        document.getElementById('stat-applied').innerText = allJobs.filter(j => j.status === 'Applied').length;
+        document.getElementById('stat-queued').innerText = allJobs.filter(j => j.status === 'Queued').length;
+    }
+
+    function filterJobs() {
+        const query = document.getElementById('searchInput').value.toLowerCase().trim();
+        const status = document.getElementById('statusFilter').value;
+        const location = document.getElementById('locationFilter').value;
+
+        const filtered = allJobs.filter(j => {
+            const matchQuery = !query ||
+                (j.title && j.title.toLowerCase().includes(query)) ||
+                (j.company && j.company.toLowerCase().includes(query)) ||
+                (j.line_of_business && j.line_of_business.toLowerCase().includes(query)) ||
+                (j.location && j.location.toLowerCase().includes(query));
+
+            const matchStatus = status === 'ALL' || j.status === status;
+            const matchLocation = location === 'ALL' || (j.location && j.location.toLowerCase().includes(location.toLowerCase()));
+
+            return matchQuery && matchStatus && matchLocation;
+        });
+
+        renderRows(filtered);
+    }
+
+    function getStatusBadge(status) {
+        switch(status) {
+            case 'Applied': return `<span class="status-badge status-applied">Applied</span>`;
+            case 'Queued': return `<span class="status-badge status-queued">Queued</span>`;
+            case 'Interviewing': return `<span class="status-badge status-interviewing">Interviewing</span>`;
+            case 'Offer': return `<span class="status-badge status-offer">Offer</span>`;
+            case 'Rejected': return `<span class="status-badge status-rejected">Rejected</span>`;
+            default: return `<span class="status-badge status-queued">${status}</span>`;
+        }
+    }
+
+    function parseShortSalary(quoted) {
+        if (!quoted) return '36.4+ LPA';
+        if (quoted.includes('AED')) {
+            const match = quoted.match(/AED\s*[\d,]+/i);
+            return match ? match[0] + '/mo' : 'AED 30k/mo';
+        }
+        const match = quoted.match(/₹?[\d.]+\s*LPA/i);
+        return match ? match[0] : '36.4+ LPA';
+    }
+
+    function parseShortRating(rating) {
+        if (!rating) return '★ 4.2';
+        const match = rating.match(/[\d.]+/);
+        return match ? `★ ${match[0]}` : '★ 4.2';
+    }
+
+    function parseShortLocation(loc) {
+        if (!loc) return 'India';
+        if (loc.toLowerCase().includes('dubai') || loc.toLowerCase().includes('uae')) return 'Dubai, UAE';
+        if (loc.toLowerCase().includes('bangalore') || loc.toLowerCase().includes('bengaluru')) return 'Bangalore';
+        if (loc.toLowerCase().includes('chennai')) return 'Chennai';
+        if (loc.toLowerCase().includes('hyderabad')) return 'Hyderabad';
+        return loc.split(',')[0];
+    }
+
+    async function changeStatus(id, newStatus, event) {
+        if (event) event.stopPropagation();
+        try {
+            await fetch(`/api/jobs/${id}`, {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({status: newStatus})
+            });
+            await fetchJobs();
+        } catch (err) {
+            alert("Error updating status");
+        }
+    }
+
+    function renderRows(jobs) {
+        const tbody = document.getElementById('jobsTableBody');
+        if (!jobs || jobs.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" class="empty-state">No matching positions found.</td></tr>`;
+            return;
+        }
+
+        let html = '';
+        jobs.forEach(j => {
+            const exactSearchKeywords = `"${j.title}" ${j.company}`;
+            const linkedInUrl = j.job_url || `https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(exactSearchKeywords)}&location=${encodeURIComponent(j.location || '')}&sortBy=R`;
+            const shortSalary = parseShortSalary(j.quoted_salary);
+            const shortRating = parseShortRating(j.reliability_rating);
+            const shortLocation = parseShortLocation(j.location);
+            const lobCategory = (j.line_of_business || 'Technology').split('/')[0].split(',')[0].trim();
+
+            html += `
+                <tr class="job-row" onclick="openModal(${j.id})">
+                    <td class="col-role">
+                        <div class="title-block">
+                            <div class="title-text" title="${escapeHtml(j.title)}">${escapeHtml(j.title)}</div>
+                            <div class="company-row">
+                                <span class="company-name">${escapeHtml(j.company)}</span>
+                                <span class="tag-lob" title="${escapeHtml(j.line_of_business || '')}">${escapeHtml(lobCategory)}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="col-location">
+                        <span class="location-pill">&#128205; ${escapeHtml(shortLocation)}</span>
+                    </td>
+                    <td class="col-salary">
+                        <div class="salary-block">
+                            <span class="salary-main">${escapeHtml(shortSalary)}</span>
+                            <span class="salary-sub">Target (+30% Hike)</span>
+                        </div>
+                    </td>
+                    <td class="col-rating">
+                        <span class="rating-chip">${escapeHtml(shortRating)}</span>
+                    </td>
+                    <td class="col-status" onclick="event.stopPropagation()">
+                        <div style="display: flex; align-items: center; gap: 5px;">
+                            ${getStatusBadge(j.status)}
+                            <select onchange="changeStatus(${j.id}, this.value, event)" style="padding: 1px 4px; font-size: 10px;">
+                                <option value="Queued" ${j.status === 'Queued' ? 'selected' : ''}>Queued</option>
+                                <option value="Applied" ${j.status === 'Applied' ? 'selected' : ''}>Applied</option>
+                                <option value="Interviewing" ${j.status === 'Interviewing' ? 'selected' : ''}>Interviewing</option>
+                                <option value="Offer" ${j.status === 'Offer' ? 'selected' : ''}>Offer</option>
+                                <option value="Rejected" ${j.status === 'Rejected' ? 'selected' : ''}>Rejected</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td class="col-actions" onclick="event.stopPropagation()">
+                        <div class="actions-cell">
+                            <button class="btn btn-primary btn-sm" onclick="openModal(${j.id})">
+                                View Detail
+                            </button>
+                            <a href="${linkedInUrl}" target="_blank" rel="noreferrer" class="btn btn-sm btn-linkedin" title="Open exact matching LinkedIn job listing">
+                                Match &#x2197;
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+
+        tbody.innerHTML = html;
+    }
+
+    function openModal(id) {
+        const job = allJobs.find(j => j.id === id);
+        if (!job) return;
+        activeModalJob = job;
+
+        document.getElementById('mTitle').innerText = job.title;
+        document.getElementById('mSubtitle').innerHTML = `
+            <strong>${escapeHtml(job.company)}</strong> &bull; ${escapeHtml(job.location)} &bull; Line of Business: <em>${escapeHtml(job.line_of_business || 'Technology')}</em>
+        `;
+
+        const exactKeywords = `"${job.title}" ${job.company}`;
+        const linkedInUrl = job.job_url || `https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(exactKeywords)}&location=${encodeURIComponent(job.location || '')}&sortBy=R`;
+        document.getElementById('mLinkedInBtn').href = linkedInUrl;
+
+        const resumeMarkdown = job.tailored_resume_content || 'No tailored resume found on disk.';
+        const renderedResumeHtml = parseMarkdown(resumeMarkdown);
+
+        document.getElementById('mBody').innerHTML = `
+            <div class="modal-section">
+                <h4>&#127970; Company Profile & Line of Business</h4>
+                <p style="color: var(--text-muted); font-size: 13px;">${escapeHtml(job.company_profile || 'Leading enterprise and product organization.')}</p>
+                <div style="margin-top: 6px; font-size: 12px; color: var(--text-dim);">
+                    <strong>Domain:</strong> ${escapeHtml(job.line_of_business || 'Technology / Mobile')}
+                </div>
+            </div>
+
+            <div class="modal-section">
+                <h4>&#127919; Strategic Need for This Role</h4>
+                <p style="color: var(--text-muted); font-size: 13px;">${escapeHtml(job.need_for_role || 'Role requirements matching Mobile Architect & Staff SWE competencies.')}</p>
+            </div>
+
+            <div class="modal-section">
+                <h4>&#11088; Company Reliability & Glassdoor / Culture Feedback</h4>
+                <p style="color: #fbbf24; font-weight: 700; font-size: 13px; margin-bottom: 4px;">
+                    ${escapeHtml(job.reliability_rating || '4.2 / 5 (Glassdoor)')}
+                </p>
+                <p style="color: var(--text-muted); font-size: 13px;">${escapeHtml(job.glassdoor_review || 'Positive engineering culture and competitive compensation.')}</p>
+            </div>
+
+            <div class="modal-section">
+                <h4>&#128181; Compensation Positioning</h4>
+                <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 4px;">
+                    <div>
+                        <span style="font-size: 11px; color: var(--text-dim); text-transform: uppercase;">Market Benchmark:</span>
+                        <div style="font-weight: 600; font-size: 13px;">${escapeHtml(job.market_salary || 'Competitive market rate')}</div>
+                    </div>
+                    <div>
+                        <span style="font-size: 11px; color: var(--text-dim); text-transform: uppercase;">Target Quoted Rate (+30% Hike):</span>
+                        <div style="font-weight: 700; color: var(--emerald); font-family: 'JetBrains Mono', monospace; font-size: 14px;">
+                            ${escapeHtml(job.quoted_salary || '36.4+ LPA')}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <h4>&#128196; Tailored Resume (Synthesizing Guardian & Core Architecture Experience)</h4>
+                    <span style="font-size: 10.5px; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">
+                        ${escapeHtml(job.tailored_resume_path || '')}
+                    </span>
+                </div>
+                <!-- Rendered Markdown seamlessly -->
+                <div class="markdown-rendered" style="background: #090e18; border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 18px; max-height: 380px; overflow-y: auto;">
+                    ${renderedResumeHtml}
+                </div>
+            </div>
+        `;
+
+        document.getElementById('detailModal').style.display = 'flex';
+    }
+
+    function closeModal(e) {
+        document.getElementById('detailModal').style.display = 'none';
+        document.getElementById('copyToast').style.display = 'none';
+    }
+
+    function copyResumeText() {
+        if (!activeModalJob) return;
+        const text = activeModalJob.tailored_resume_content || '';
+        navigator.clipboard.writeText(text).then(() => {
+            const toast = document.getElementById('copyToast');
+            toast.style.display = 'inline-block';
+            setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        });
+    }
+
+    function escapeHtml(text) {
+        if (!text) return '';
+        return text.toString()
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    // Initialize Auth & App
+    checkAuth();
+</script>
+
+</body>
+</html>
