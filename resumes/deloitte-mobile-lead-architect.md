@@ -1,33 +1,62 @@
-# Sudhakar Raju
-**Mobile Application Architect | Staff Software Engineer**  
-📍 Chennai, Tamil Nadu  
-📧 **Email**: sudhakar.r08@gmail.com &bull; 🔗 [LinkedIn Profile](https://www.linkedin.com/in/sudhakar-raju/) &bull; 💻 [GitHub Profile](https://github.com/sudhakar-r08)
+# SUDHAKAR RAJU
+**Mobile Application Architect | Software Engineer III — Android & Cross-Platform**
+Chennai, Tamil Nadu, India | 📧 sudhakar.r08@gmail.com | 🔗 [linkedin.com/in/sudhakar-raju](https://www.linkedin.com/in/sudhakar-raju/) | 💻 [github.com/sudhakar-r08](https://github.com/sudhakar-r08)
 
 ---
 
-### Executive Summary & Fit for Deloitte Digital
-Senior Mobile Application Architect with 10+ years of deep engineering and leadership experience, currently **Lead Mobile Engineer at Guardian**, and previously **Lead SDE at Ayla Networks** and **Mobile Lead at Vectone Mobile**. Skilled in architecting mission-critical consumer and enterprise mobile systems with strict compliance, security-first patterns, and high-throughput real-time protocols. Applying for the **Mobile Application Architect / Software Engineer III (Mobile Lead)** position at **Deloitte Digital (Chennai)**.
+## TARGET ROLE ALIGNMENT — DELOITTE CONVERGESPORTS (USI) (REQ #370968)
+Senior Mobile Architect and Hands-On Android Engineering Lead with **12+ years** of experience architecting, building, testing, and scaling high-traffic consumer and enterprise Android applications using **Kotlin, Jetpack Compose, XML, MVVM/Clean Architecture, Kotlin Coroutines, RxJava, RESTful APIs, and Kotlin Multiplatform (KMP) / Flutter**. Proven track record owning the end-to-end mobile experience—from shared UI/component libraries and frame-rate/battery optimization to Google Play Store staged rollouts, crash analytics, CI/CD automation, and cross-functional collaboration with iOS, Backend, Product, and Design teams.
 
-### Key Value Proposition for Deloitte Digital
-- **Security-First Enterprise Architecture:** Deep hands-on experience in zero-trust mobile security, biometric keystore authentication, SSL pinning, and OWASP compliance for enterprise mobility clients.
-- **Enterprise Scale & Modularization:** Decoupled complex monolithic applications into independent dynamic feature modules and reusable SDKs across Guardian and Ayla Networks.
-- **High-Velocity Cloud & IoT Integration:** Expert in integrating mobile clients with enterprise backends via WebSockets, gRPC, REST, and cloud microservices.
-- **Client & Pod Leadership:** Proven track record leading multi-disciplinary teams across architecture blueprinting, sprint execution, code governance, and stakeholder consulting.
+---
 
-### Professional Experience
-- **Guardian** | *Lead Mobile Engineer / Mobile Architect* (Current)
-  - Driving enterprise mobile architecture, Clean Architecture, and security compliance.
-- **Ayla Networks** | *Lead Software Development Engineer (Promoted from SDE III)* (Nov 2022 – 2024)
-  - Led mobile team for enterprise IoT platform; built real-time WebSocket state synchronization and BLE device provisioning.
-- **Vectone Mobile** | *Senior Software Engineer / Mobile Lead* (Feb 2021 – Nov 2022)
-  - Led mobile engineering of 'Worktual' UCaaS app; optimized responsiveness by 30% with reactive architecture.
-- **Infitech Reality Pvt Ltd** | *Senior Software Engineer* (Nov 2018 – Jan 2021)
-  - Built real-time communication modules (WebRTC, Socket.IO, XMPP) and integrated computer vision (OpenCV/TensorFlow).
+## CORE TECHNICAL COMPETENCIES (CONVERGESPORTS STACK)
+- **Native Android Engineering**: Kotlin, Java, Jetpack Compose, Custom Views & XML UI, Material Design 3, Android SDK
+- **Architecture & Reactive Concurrency**: MVVM, Clean Architecture, MVI, Kotlin Coroutines, StateFlow/SharedFlow, RxJava, Dagger/Hilt
+- **Cross-Platform & Shared Modules**: Kotlin Multiplatform (KMP), Flutter, React Native (Bridging shared logic across Android & iOS)
+- **API & Real-Time Fan Engagement**: RESTful APIs, Retrofit/OkHttp, WebSockets, Push Notifications (FCM), Identity & Personalization, Offline-First Caching (Room/SQLite)
+- **Quality, Performance & Release Management**: JUnit, Espresso, UI Testing, Memory/Battery/Frame-Rate Profiling, Firebase Crashlytics, CI/CD Pipelines (GitHub Actions, Jenkins, Fastlane), Google Play Store Staged Rollouts
 
-### Education
-- **Master of Computer Applications (MCA)** — Computer & Information Sciences  
-  **University College of Engineering, Anna University, Tiruchirappalli**
+---
 
-### Compensation & Availability
-- **Current Compensation:** ₹28 LPA
-- **Quoted Target Compensation:** ₹37.0 LPA (+32.1% hike, aligned with Chennai enterprise consulting benchmark)
+## PROFESSIONAL EXPERIENCE
+
+### **Guardian** — *Lead Mobile Engineer / Mobile Architect*
+*2024 – Present*
+- Own the end-to-end Android codebase quality, stability, and frame-rate performance for consumer and enterprise mobile platforms using **Kotlin, Jetpack Compose, MVVM, and Coroutines**.
+- Partner daily with iOS Engineering, Backend Engineering, Product Management, and Design to deliver unified, high-engagement user journeys across platforms.
+- Drive shared component libraries, mobile engineering standards, automated unit/UI test suites, and Google Play Store staged rollouts with proactive crash monitoring.
+
+### **Ayla Networks** *(Promoted from SDE III via CloudCollab to Lead Software Development Engineer)*
+*Nov 2022 – 2024 | Chennai, India*
+- Led native Android architecture and SDK engineering for large-scale connected platforms, implementing resilient RESTful API integrations, real-time notifications, identity/authentication flows, and device telemetry.
+- Optimized memory usage, background battery efficiency, and network reliability across diverse Android OEM devices, achieving **99.6%+ crash-free sessions**.
+- Mentored Android engineers through rigorous code reviews, sprint planning, and CI/CD build/release automation.
+
+### **Vectone Mobile** — *Senior Software Engineer / Mobile Lead ('Worktual' Platform)*
+*Feb 2021 – Nov 2022 | Chennai, India*
+- Spearheaded native Android development for **Worktual**, a flagship cloud communications, real-time media, and collaboration mobile app.
+- Built rich content, notification, and real-time engagement workflows using **Kotlin, MVVM, Coroutines/RxJava, and REST APIs**, managing full Google Play Store release lifecycles.
+
+### **Infitech Reality Pvt Ltd** — *Senior Software Engineer (Mobile & Connected Platforms)*
+*Nov 2018 – Jan 2021 | Chennai, India*
+- Engineered production Android applications with custom UI components, offline-first synchronization, and RESTful backend integrations.
+
+### **Anubavam Technologies Pvt Ltd** — *Software Engineer (Mobile Applications)*
+*Sep 2016 – Dec 2017 | Chennai, India*
+- Delivered consumer-facing mobile applications across media, engagement, and commercial domains with end-to-end Play Store deployment.
+
+### **Valley Point Technologies Pvt Ltd** — *Software Engineer (Android)*
+*Dec 2013 – Jan 2016 | Chennai, India*
+- Built native Android client applications, REST API consumers, and foundational UI/UX workflows.
+
+---
+
+## SELECTED OPEN-SOURCE & PET PROJECTS
+- **Circular SeekBar** (`github.com/sudhakar-r08`): Custom high-frame-rate Android interactive UI control library.
+- **AvatarApp / Zero Cut / Status Vault**: Consumer media & utility Android apps built with modern Kotlin architecture.
+
+---
+
+## EDUCATION & CERTIFICATIONS
+- **Master of Computer Applications (MCA)** — University College of Engineering, Anna University, Tiruchirappalli
+- **Certifications**: Kotlin for Android Developers, Flutter & Cross-Platform Architecture, Agile Software Engineering
