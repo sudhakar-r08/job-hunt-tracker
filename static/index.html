@@ -1405,7 +1405,7 @@
     let currentStatusTab = 'ALL';
     let rawProfileMarkdown = '';
     let deferredInstallPrompt = null;
-    const LOCAL_OVERRIDES_KEY = 'sr_job_tracker_overrides_v10';
+    const LOCAL_OVERRIDES_KEY = 'sr_job_tracker_overrides_v11';
     const GH_TOKEN_KEY = 'sr_job_tracker_gh_pat';
     const AUTH_USER_KEY = 'sr_job_tracker_auth_user';
     const GITHUB_REPO = 'sudhakar-r08/job-hunt-tracker';
@@ -1958,7 +1958,10 @@
           emirates: 'emirates-prep.md',
           careem: 'careem-prep.md',
           nagarro: 'nagarro-prep.md',
-          valuelabs: 'valuelabs-prep.md'
+          valuelabs: 'valuelabs-prep.md',
+          talabat: 'talabat-prep.md',
+          speechify: 'speechify-prep.md',
+          bureau: 'bureau-prep.md'
         };
         const matchKey = Object.keys(prepMap).find((k) => companyLower.includes(k));
         const dynamicSlug = companyLower.split(/[\s,/()-]+/)[0].replace(/[^a-z0-9]/g, '');
@@ -2073,7 +2076,10 @@
                   emirates: 'Raju_Sudhakar_Emirates_Resume',
                   careem: 'Raju_Sudhakar_Careem_Resume',
                   nagarro: 'Raju_Sudhakar_Nagarro_Resume',
-                  valuelabs: 'Raju_Sudhakar_ValueLabs_Resume'
+                  valuelabs: 'Raju_Sudhakar_ValueLabs_Resume',
+                  talabat: 'Raju_Sudhakar_Talabat_Resume',
+                  speechify: 'Raju_Sudhakar_Speechify_Resume',
+                  bureau: 'Raju_Sudhakar_Bureau_Resume'
                 };
                 const mKey = Object.keys(docxMap).find((k) => cLower.includes(k));
                 const baseName = mKey ? docxMap[mKey] : '';

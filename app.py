@@ -40,6 +40,9 @@ PREP_FILE_MAP = {
     "careem": "careem-prep.md",
     "nagarro": "nagarro-prep.md",
     "valuelabs": "valuelabs-prep.md",
+    "talabat": "talabat-prep.md",
+    "speechify": "speechify-prep.md",
+    "bureau": "bureau-prep.md",
 }
 
 def get_prep_info_for_company(company_name):
@@ -243,6 +246,9 @@ RESUME_DOCX_MAP = {
     "phonepe-staff-mobile-architect.md": "Raju_Sudhakar_PhonePe_Resume",
     "careem-staff-mobile-architect.md": "Raju_Sudhakar_Careem_Resume",
     "valuelabs-lead-android-developer.md": "Raju_Sudhakar_ValueLabs_Resume",
+    "talabat-lead-mobile-architect-dubai.md": "Raju_Sudhakar_Talabat_Resume",
+    "speechify-team-lead-android.md": "Raju_Sudhakar_Speechify_Resume",
+    "bureau-senior-android-security-sdk.md": "Raju_Sudhakar_Bureau_Resume",
 }
 
 def compile_all_resumes():
