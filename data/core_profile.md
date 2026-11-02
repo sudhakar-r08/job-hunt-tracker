@@ -84,3 +84,18 @@ Accomplished Mobile Application Architect and Lead Software Development Engineer
 - **Real-Time Face Liveness Detection**: OpenCV and TensorFlow anti-spoofing pipeline detecting live human faces vs. printed photos or screen attacks.
 - **Balanced Diet Advisor**: MVI Clean Architecture app parsing hotel menus via OCR with on-device LLM nutritional recommendations.
 - **Status Vault**: Privacy-first scoped storage media utility compliant with Android 11+ SAF without dangerous permissions.
+
+---
+
+## 8. STANDARD APPLICATION QUESTIONNAIRE DEFAULTS
+- **Nationality per Passport**: Indian
+- **Marital Status**: Married
+- **UAE / International Visa Status**: Visit/ Tourist Visa (Ready for immediate employment visa sponsorship & relocation)
+- **Notice Period**: 90 days (negotiable / buyout possible for high-impact leadership roles)
+- **Current Monthly Compensation**: INR 233,333 / month gross (~₹28.0 LPA fixed baseline)
+- **Target Monthly Compensation (UAE)**: AED 30,000 – 35,000 / month gross (tax-free)
+- **Target Annual Compensation (India)**: ₹36.4 – 42.0 LPA CTC (+30% to +50% hike)
+- **Family Book**: No
+- **Prior Employment with Delivery Hero / Affiliates**: No
+- **Internal Relationships**: None
+- **Primary Reason for Joining**: Career growth — seeking high-scale architectural impact and advancing long-term within the organization.

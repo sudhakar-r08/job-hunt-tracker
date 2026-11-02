@@ -22,5 +22,17 @@
   "target_hike_percentage": 30,
   "target_compensation_inr": "36.4+ LPA (INR)",
   "target_compensation_uae": "28,000 - 36,000+ AED / month (Tax-free)",
+  "questionnaire_defaults": {
+    "nationality_passport": "Indian",
+    "marital_status": "Married",
+    "visa_status_uae": "Visit/ Tourist Visa",
+    "notice_period_days": 90,
+    "current_monthly_gross_inr": "233333",
+    "expected_monthly_gross_aed": "33000",
+    "family_book": false,
+    "previously_employed_delivery_hero": false,
+    "relationships_inside_company": false,
+    "primary_reason_joining": "Career growth - I see myself advancing in the future"
+  },
   "core_profile_path": "/Users/sudhakarraju/.gemini/antigravity/scratch/job-hunt-tracker/data/core_profile.md"
 }
