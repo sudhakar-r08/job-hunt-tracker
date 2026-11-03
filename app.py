@@ -43,6 +43,7 @@ PREP_FILE_MAP = {
     "talabat": "talabat-prep.md",
     "speechify": "speechify-prep.md",
     "bureau": "bureau-prep.md",
+    "dazn": "dazn-prep.md",
 }
 
 def get_prep_info_for_company(company_name):
