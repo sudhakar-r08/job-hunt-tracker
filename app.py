@@ -44,6 +44,8 @@ PREP_FILE_MAP = {
     "speechify": "speechify-prep.md",
     "bureau": "bureau-prep.md",
     "dazn": "dazn-prep.md",
+    "motive": "motive-prep.md",
+    "bjak": "bjak-prep.md",
 }
 
 def get_prep_info_for_company(company_name):
@@ -250,6 +252,9 @@ RESUME_DOCX_MAP = {
     "talabat-lead-mobile-architect-dubai.md": "Raju_Sudhakar_Talabat_Resume",
     "speechify-team-lead-android.md": "Raju_Sudhakar_Speechify_Resume",
     "bureau-senior-android-security-sdk.md": "Raju_Sudhakar_Bureau_Resume",
+    "dazn-lead-android-architect.md": "Raju_Sudhakar_Dazn_Resume",
+    "motive-lead-android-iot.md": "Raju_Sudhakar_Motive_Resume",
+    "bjak-senior-android-ai.md": "Raju_Sudhakar_Bjak_Resume",
 }
 
 def compile_all_resumes():
