@@ -21,13 +21,13 @@ Senior Mobile Architect and Hands-On Android Engineering Lead with **12+ years**
 ## PROFESSIONAL EXPERIENCE
 
 ### **Guardian** — *Lead Mobile Engineer / Mobile Architect*
-*2024 – Present*
+*August 2025 – Present*
 - Own the end-to-end Android codebase quality, stability, and frame-rate performance for consumer and enterprise mobile platforms using **Kotlin, Jetpack Compose, MVVM, and Coroutines**.
 - Partner daily with iOS Engineering, Backend Engineering, Product Management, and Design to deliver unified, high-engagement user journeys across platforms.
 - Drive shared component libraries, mobile engineering standards, automated unit/UI test suites, and Google Play Store staged rollouts with proactive crash monitoring.
 
 ### **Ayla Networks** *(Promoted from SDE III via CloudCollab to Lead Software Development Engineer)*
-*Nov 2022 – 2024 | Chennai, India*
+*November 2022 – August 2025 | Chennai, India*
 - Led native Android architecture and SDK engineering for large-scale connected platforms, implementing resilient RESTful API integrations, real-time notifications, identity/authentication flows, and device telemetry.
 - Optimized memory usage, background battery efficiency, and network reliability across diverse Android OEM devices, achieving **99.6%+ crash-free sessions**.
 - Mentored Android engineers through rigorous code reviews, sprint planning, and CI/CD build/release automation.

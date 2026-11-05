@@ -19,14 +19,14 @@ Dynamic Mobile Application Architect and Senior Android Engineer with 11+ years 
 ### Professional Experience
 
 #### **Guardian** | *Lead Mobile Engineer / Mobile Architect*
-*2024 – Present | India*
+*August 2025 – Present | India*
 - Directing mobile architectural standards, Clean Architecture, and multi-module modularization for high-scale enterprise applications.
 - Built declarative UI systems with **Jetpack Compose**, implementing custom state holders and `derivedStateOf` memoization to guarantee smooth 60fps transitions.
 - Enforced hardware-backed Keystore biometric authorization, TLS 1.3 certificate pinning, and Proguard/R8 bytecode obfuscation.
 - Reduced cold start latency by 35% through Baseline Profiles and automated CI/CD performance regression gates.
 
 #### **Ayla Networks** | *Lead Software Development Engineer (Promoted from SDE III via CloudCollab)*
-*November 2022 – 2024 | Bengaluru, India*
+*November 2022 – August 2025 | Bengaluru, India*
 - Led native Android engineering pods architecting high-scale connected device client applications and real-time state synchronization.
 - Engineered resilient offline data caching with **Room DB** and transactional event queues, guaranteeing zero state loss during intermittent connectivity.
 - Optimized background memory footprint and thread scheduling, raising crash-free user rates from 94% to 99.6%+.

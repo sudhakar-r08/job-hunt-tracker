@@ -18,14 +18,14 @@ Accomplished Mobile Application Architect and Lead Software Development Engineer
 ## 2. Professional Employment History & Worked Production Projects
 
 ### 🏢 Guardian | India
-**Lead Mobile Engineer / Mobile Architect** &bull; *Current Role*
+**Lead Mobile Engineer / Mobile Architect** &bull; *August 2025 – Present (Current Role)*
 - Architecting and engineering mission-critical enterprise mobile platforms at Guardian.
 - Driving mobile architectural standards, Clean Architecture, modularization, and modern Kotlin/Jetpack Compose and iOS practices.
 - Leading security, compliance, performance optimization, and cross-functional engineering pods across distributed enterprise systems.
 
 ### 🏢 Ayla Networks | Bengaluru, India
-**Lead Software Development Engineer** *(Promoted from SDE III)* &bull; *November 2022 – 2024*
-- **Lead Software Development Engineer** *(August 2023 – 2024)*
+**Lead Software Development Engineer** *(Promoted from SDE III)* &bull; *November 2022 – August 2025*
+- **Lead Software Development Engineer** *(August 2023 – August 2025)*
 - **Software Development Engineer III** *(November 2022 – August 2023, via CloudCollab)*
 - Led the mobile engineering team architecting enterprise IoT connected device platforms and smart appliance Android applications.
 - Engineered real-time bidirectional communication layers using **WebSockets** for ultra-low latency smart device telemetry and remote command execution.

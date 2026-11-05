@@ -19,7 +19,7 @@ Accomplished Mobile Application Architect and Lead Android Engineer with 11+ yea
 ### Professional Experience
 
 #### **Guardian** | *Lead Mobile Engineer / Mobile Architect*
-*2024 – Present | India*
+*August 2025 – Present | India*
 - Directing mobile architectural standards, Clean Architecture, and multi-module modularization for high-throughput enterprise platforms.
 - Architected enterprise declarative UI components using **Jetpack Compose**, establishing reusable design system tokens and achieving deterministic 60fps frame rendering.
 - Enforced hardware-backed Keystore cryptographic authorization, mutual TLS certificate pinning, and hardened Proguard/R8 bytecode obfuscation.
@@ -27,7 +27,7 @@ Accomplished Mobile Application Architect and Lead Android Engineer with 11+ yea
 - Sustained 99.85%+ crash-free session rates across large-scale distributed user bases.
 
 #### **Ayla Networks** | *Lead Software Development Engineer (Promoted from SDE III via CloudCollab)*
-*November 2022 – 2024 | Bengaluru, India*
+*November 2022 – August 2025 | Bengaluru, India*
 - Led mobile engineering pods architecting high-scale connected device client applications and enterprise IoT management platforms.
 - Engineered resilient offline data caching with **Room DB** and transactional event queues, guaranteeing zero state loss during intermittent connectivity.
 - Architected real-time bidirectional messaging over **WebSockets** and secure MQTT pipelines for ultra-low latency command execution and device telemetry.

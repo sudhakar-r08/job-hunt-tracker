@@ -15,9 +15,9 @@ High-impact Mobile Application Architect with 10+ years of software engineering 
 - **Security & Keystore Integration:** Built hardware Keystore biometric authentication, SSL pinning, and tamper-detection layers adhering to strict financial compliance standards.
 
 ### Professional Experience
-- **Guardian** | *Lead Mobile Engineer / Mobile Architect* (Current)
+- **Guardian** | *Lead Mobile Engineer / Mobile Architect* (August 2025 – Present)
   - Driving enterprise mobile architecture, Clean Architecture, and high-performance Kotlin/Swift standards.
-- **Ayla Networks** | *Lead Software Development Engineer (Promoted from SDE III)* (Nov 2022 – 2024)
+- **Ayla Networks** | *Lead Software Development Engineer (Promoted from SDE III)* (November 2022 – August 2025)
   - Led mobile team for enterprise IoT platform; built real-time WebSocket state synchronization and BLE device provisioning.
 - **Vectone Mobile** | *Senior Software Engineer / Mobile Lead* (Feb 2021 – Nov 2022)
   - Led engineering of 'Worktual' UCaaS app; optimized responsiveness by 30% with reactive architecture.

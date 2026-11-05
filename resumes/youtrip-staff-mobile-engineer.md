@@ -15,9 +15,9 @@ Seasoned Mobile Application Architect with 10+ years of engineering experience, 
 - **Team Leadership & Scale:** Led engineering pods of 10+ mobile developers, established architectural RFC processes, code reviews, and automated CI/CD performance testing.
 
 ### Professional Experience
-- **Guardian** | *Lead Mobile Engineer / Mobile Architect* (Current)
+- **Guardian** | *Lead Mobile Engineer / Mobile Architect* (August 2025 – Present)
   - Architecting enterprise mobile platforms, instituting Clean Architecture and modern Kotlin/Jetpack Compose standards.
-- **Ayla Networks** | *Lead Software Development Engineer (Promoted from SDE III)* (Nov 2022 – 2024)
+- **Ayla Networks** | *Lead Software Development Engineer (Promoted from SDE III)* (November 2022 – August 2025)
   - Led mobile team for enterprise IoT platform; built real-time WebSocket state synchronization and BLE/Wi-Fi device provisioning pipelines.
 - **Vectone Mobile** | *Senior Software Engineer / Mobile Lead* (Feb 2021 – Nov 2022)
   - Led mobile development of 'Worktual' UCaaS app (VoIP, video calling, team chat); boosted app performance by 30% using reactive architecture.

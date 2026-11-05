@@ -16,11 +16,11 @@ Hands-on Lead Android Developer and Mobile Application Architect with 11+ years 
 - **Testing & DevOps**: JUnit5, MockK, Turbine, Compose UI Testing, Macrobenchmark, GitHub Actions, Jenkins, Fastlane, Google Play Staged Rollouts
 
 ### Professional Experience
-- **Guardian** | *Lead Mobile Engineer / Mobile Architect* (2024 – Present)
+- **Guardian** | *Lead Mobile Engineer / Mobile Architect* (August 2025 – Present)
   - Architecting enterprise and consumer Android platforms using Kotlin, Jetpack Compose, Clean Architecture, and multi-module Gradle conventions.
   - Enforcing strict security standards (hardware-backed Keystore encryption, certificate pinning, obfuscation) and achieving 60fps UI rendering performance.
   - Mentoring cross-functional mobile engineering pods through architectural RFCs, code reviews, and automated CI/CD release pipelines.
-- **Ayla Networks** | *Lead Software Development Engineer (Promoted from SDE III via CloudCollab)* (Nov 2022 – 2024 | Chennai, India)
+- **Ayla Networks** | *Lead Software Development Engineer (Promoted from SDE III via CloudCollab)* (November 2022 – August 2025 | Chennai, India)
   - Led native Android architecture and SDK development for enterprise connected platforms, implementing resilient WebSocket state synchronization, OAuth2/PKCE authentication, and encrypted local storage.
   - Improved crash-free session rates from 94% to 99.6%+ across diverse Android OEM devices.
 - **Vectone Mobile** | *Senior Software Engineer / Mobile Lead ('Worktual' Platform)* (Feb 2021 – Nov 2022 | Chennai, India)

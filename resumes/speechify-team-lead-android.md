@@ -15,11 +15,11 @@ Senior Android Architect and Hands-on Engineering Lead with 11+ years of experie
 - **Engineering Pod Leadership:** Led 10+ mobile developers, instituted automated CI/CD test gates, pair programming, and architectural RFC reviews.
 
 ### Professional Experience
-- **Guardian** | *Lead Mobile Engineer / Mobile Architect* (2024 – Present)
+- **Guardian** | *Lead Mobile Engineer / Mobile Architect* (August 2025 – Present)
   - Driving enterprise Android architecture, Clean Architecture, and modern Jetpack Compose standards.
   - Reduced cold start latency to sub-600ms via Baseline Profiles and optimized recomposition trees to eliminate frame drops.
   - Mentoring mobile engineering squads through technical RFCs, sprint planning, and automated CI/CD testing.
-- **Ayla Networks** | *Lead Software Development Engineer (Promoted from SDE III via CloudCollab)* (Nov 2022 – 2024 | Chennai, India)
+- **Ayla Networks** | *Lead Software Development Engineer (Promoted from SDE III via CloudCollab)* (November 2022 – August 2025 | Chennai, India)
   - Led native Android architecture and SDK development, engineering real-time WebSocket state synchronization and encrypted local storage.
   - Achieved 99.6%+ crash-free session rates across millions of connected edge interactions.
 - **Vectone Mobile** | *Senior Software Engineer / Mobile Lead ('Worktual' Platform)* (Feb 2021 – Nov 2022 | Chennai, India)
