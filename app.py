@@ -46,6 +46,9 @@ PREP_FILE_MAP = {
     "dazn": "dazn-prep.md",
     "motive": "motive-prep.md",
     "bjak": "bjak-prep.md",
+    "okta": "okta-prep.md",
+    "citi": "citi-prep.md",
+    "citigroup": "citi-prep.md",
 }
 
 def get_prep_info_for_company(company_name):
@@ -255,6 +258,8 @@ RESUME_DOCX_MAP = {
     "dazn-lead-android-architect.md": "Raju_Sudhakar_Dazn_Resume",
     "motive-lead-android-iot.md": "Raju_Sudhakar_Motive_Resume",
     "bjak-senior-android-ai.md": "Raju_Sudhakar_Bjak_Resume",
+    "okta-senior-android-security-sdk.md": "Raju_Sudhakar_Okta_Resume",
+    "citi-avp-lead-android-architect.md": "Raju_Sudhakar_Citi_Resume",
 }
 
 def compile_all_resumes():
