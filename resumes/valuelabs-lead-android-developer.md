@@ -16,7 +16,7 @@ Hands-on Lead Android Developer and Mobile Application Architect with 11+ years 
 - **Testing & DevOps**: JUnit5, MockK, Turbine, Compose UI Testing, Macrobenchmark, GitHub Actions, Jenkins, Fastlane, Google Play Staged Rollouts
 
 ### Professional Experience
-- **Guardian** | *Lead Mobile Engineer / Mobile Architect* (August 2025 – Present)
+- **Guardian** | *Lead Mobile Engineer / Mobile Architect* (September 2025 – Present)
   - Architecting enterprise and consumer Android platforms using Kotlin, Jetpack Compose, Clean Architecture, and multi-module Gradle conventions.
   - Enforcing strict security standards (hardware-backed Keystore encryption, certificate pinning, obfuscation) and achieving 60fps UI rendering performance.
   - Mentoring cross-functional mobile engineering pods through architectural RFCs, code reviews, and automated CI/CD release pipelines.

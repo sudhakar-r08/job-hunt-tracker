@@ -15,7 +15,7 @@ Results-driven Mobile Application Architect with 10+ years of software engineeri
 - **Engineering Leadership:** Mentored squads of 10+ engineers, authored technical RFCs, established automated CI/CD pipelines (Fastlane, GitHub Actions), and directed code reviews.
 
 ### Professional Experience
-- **Guardian** | *Lead Mobile Engineer / Mobile Architect* (August 2025 – Present)
+- **Guardian** | *Lead Mobile Engineer / Mobile Architect* (September 2025 – Present)
   - Driving enterprise mobile architecture, Clean Architecture, modularity, and security across distributed teams.
 - **Ayla Networks** | *Lead Software Development Engineer (Promoted from SDE III)* (November 2022 – August 2025)
   - Led mobile team for enterprise IoT platforms; built real-time WebSocket state synchronization and BLE device provisioning.

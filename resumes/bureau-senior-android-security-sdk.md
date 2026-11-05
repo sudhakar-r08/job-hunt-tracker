@@ -15,7 +15,7 @@ Mobile Application Architect and Hands-on Android Security Specialist with 11+ y
 - **Enterprise Scale & Reliability:** Architected mobile client layers supporting high-concurrency event ingestion with 99.7%+ crash-free sessions at Guardian and Ayla Networks.
 
 ### Professional Experience
-- **Guardian** | *Lead Mobile Engineer / Mobile Architect* (August 2025 – Present)
+- **Guardian** | *Lead Mobile Engineer / Mobile Architect* (September 2025 – Present)
   - Driving enterprise mobile architecture, Clean Architecture, and secure cryptographic storage across mobile platforms.
   - Enforced strict hardware-backed Keystore standards, certificate pinning, and code obfuscation across distributed pods.
 - **Ayla Networks** | *Lead Software Development Engineer (Promoted from SDE III via CloudCollab)* (November 2022 – August 2025 | Chennai, India)

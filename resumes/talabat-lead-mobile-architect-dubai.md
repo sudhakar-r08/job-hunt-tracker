@@ -15,7 +15,7 @@ High-impact Mobile Application Architect and Hands-on Engineering Lead with 11+ 
 - **International Relocation:** Immediate readiness to relocate to Dubai, UAE, with extensive experience collaborating across multinational time zones.
 
 ### Professional Experience
-- **Guardian** | *Lead Mobile Engineer / Mobile Architect* (August 2025 – Present)
+- **Guardian** | *Lead Mobile Engineer / Mobile Architect* (September 2025 – Present)
   - Driving enterprise mobile architecture, Clean Architecture, and high-performance Kotlin and Swift standards across distributed pods.
   - Instituted mobile engineering review RFCs, automated test coverage gates (>80%), and frame-rate optimization achieving consistent 60fps rendering.
   - Partnered with product and design leadership to shape consumer mobile roadmaps and balance UX fidelity with architectural scalability.

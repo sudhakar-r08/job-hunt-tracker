@@ -15,7 +15,7 @@ Senior Android Architect and Hands-on Engineering Lead with 11+ years of experie
 - **Engineering Pod Leadership:** Led 10+ mobile developers, instituted automated CI/CD test gates, pair programming, and architectural RFC reviews.
 
 ### Professional Experience
-- **Guardian** | *Lead Mobile Engineer / Mobile Architect* (August 2025 – Present)
+- **Guardian** | *Lead Mobile Engineer / Mobile Architect* (September 2025 – Present)
   - Driving enterprise Android architecture, Clean Architecture, and modern Jetpack Compose standards.
   - Reduced cold start latency to sub-600ms via Baseline Profiles and optimized recomposition trees to eliminate frame drops.
   - Mentoring mobile engineering squads through technical RFCs, sprint planning, and automated CI/CD testing.

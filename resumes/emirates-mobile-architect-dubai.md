@@ -15,7 +15,7 @@ Accomplished Mobile Application Architect with 10+ years of high-scale mobile en
 - **International Mobility:** Ready for immediate relocation to Dubai; experienced collaborating across global engineering teams.
 
 ### Professional Experience
-- **Guardian** | *Lead Mobile Engineer / Mobile Architect* (August 2025 – Present)
+- **Guardian** | *Lead Mobile Engineer / Mobile Architect* (September 2025 – Present)
   - Driving enterprise mobile architecture, Clean Architecture, and high-performance Kotlin/Swift standards.
 - **Ayla Networks** | *Lead Software Development Engineer (Promoted from SDE III)* (November 2022 – August 2025)
   - Led mobile team for enterprise IoT platform; built real-time WebSocket state synchronization and BLE device provisioning.

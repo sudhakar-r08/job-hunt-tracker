@@ -21,7 +21,7 @@ Senior Mobile Architect and Hands-On Android Engineering Lead with **12+ years**
 ## PROFESSIONAL EXPERIENCE
 
 ### **Guardian** — *Lead Mobile Engineer / Mobile Architect*
-*August 2025 – Present*
+*September 2025 – Present*
 - Own the end-to-end Android codebase quality, stability, and frame-rate performance for consumer and enterprise mobile platforms using **Kotlin, Jetpack Compose, MVVM, and Coroutines**.
 - Partner daily with iOS Engineering, Backend Engineering, Product Management, and Design to deliver unified, high-engagement user journeys across platforms.
 - Drive shared component libraries, mobile engineering standards, automated unit/UI test suites, and Google Play Store staged rollouts with proactive crash monitoring.

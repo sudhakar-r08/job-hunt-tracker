@@ -19,7 +19,7 @@ Accomplished Mobile Application Architect and Lead Android Engineer with 11+ yea
 ### Professional Experience
 
 #### **Guardian** | *Lead Mobile Engineer / Mobile Architect*
-*August 2025 – Present | India*
+*September 2025 – Present | India*
 - Directing mobile architectural standards, Clean Architecture, and multi-module modularization for high-throughput enterprise platforms.
 - Architected enterprise declarative UI components using **Jetpack Compose**, establishing reusable design system tokens and achieving deterministic 60fps frame rendering.
 - Enforced hardware-backed Keystore cryptographic authorization, mutual TLS certificate pinning, and hardened Proguard/R8 bytecode obfuscation.

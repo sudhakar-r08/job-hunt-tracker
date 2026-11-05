@@ -18,7 +18,7 @@ Accomplished Mobile Application Architect and Lead Software Development Engineer
 ## 2. Professional Employment History & Worked Production Projects
 
 ### 🏢 Guardian | India
-**Lead Mobile Engineer / Mobile Architect** &bull; *August 2025 – Present (Current Role)*
+**Lead Mobile Engineer / Mobile Architect** &bull; *September 2025 – Present (Current Role)*
 - Architecting and engineering mission-critical enterprise mobile platforms at Guardian.
 - Driving mobile architectural standards, Clean Architecture, modularization, and modern Kotlin/Jetpack Compose and iOS practices.
 - Leading security, compliance, performance optimization, and cross-functional engineering pods across distributed enterprise systems.

@@ -17,7 +17,7 @@ Accomplished Mobile Application Architect and Lead Software Engineer with 11+ ye
 ### Professional Experience
 
 #### **Guardian** | *Lead Mobile Engineer / Mobile Architect*
-*August 2025 – Present | India*
+*September 2025 – Present | India*
 - Directing mobile architectural standards, Clean Architecture, multi-module decomposition, and cross-platform reliability for mission-critical enterprise platforms.
 - Enforcing strict thread safety, reactive state streaming (Kotlin Flow/Coroutines), hardware-backed security, and performance profiling across distributed engineering pods.
 - Established automated CI/CD quality gates, linting rules, and modular decoupling, reducing developer build times by 35%.

@@ -19,7 +19,7 @@ Dynamic Mobile Application Architect and Senior Android Engineer with 11+ years 
 ### Professional Experience
 
 #### **Guardian** | *Lead Mobile Engineer / Mobile Architect*
-*August 2025 – Present | India*
+*September 2025 – Present | India*
 - Directing mobile architectural standards, Clean Architecture, and multi-module modularization for high-scale enterprise applications.
 - Built declarative UI systems with **Jetpack Compose**, implementing custom state holders and `derivedStateOf` memoization to guarantee smooth 60fps transitions.
 - Enforced hardware-backed Keystore biometric authorization, TLS 1.3 certificate pinning, and Proguard/R8 bytecode obfuscation.
