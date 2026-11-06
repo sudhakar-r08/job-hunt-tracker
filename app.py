@@ -49,6 +49,8 @@ PREP_FILE_MAP = {
     "okta": "okta-prep.md",
     "citi": "citi-prep.md",
     "citigroup": "citi-prep.md",
+    "conviva": "conviva-prep.md",
+    "cardboard": "cardboard-prep.md",
 }
 
 def get_prep_info_for_company(company_name):
@@ -260,6 +262,8 @@ RESUME_DOCX_MAP = {
     "bjak-senior-android-ai.md": "Raju_Sudhakar_Bjak_Resume",
     "okta-senior-android-security-sdk.md": "Raju_Sudhakar_Okta_Resume",
     "citi-avp-lead-android-architect.md": "Raju_Sudhakar_Citi_Resume",
+    "conviva-senior-android-sdk.md": "Raju_Sudhakar_Conviva_Resume",
+    "cardboard-product-engineer-mobile.md": "Raju_Sudhakar_Cardboard_Resume",
 }
 
 def compile_all_resumes():
