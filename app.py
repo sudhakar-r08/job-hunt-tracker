@@ -51,6 +51,9 @@ PREP_FILE_MAP = {
     "citigroup": "citi-prep.md",
     "conviva": "conviva-prep.md",
     "cardboard": "cardboard-prep.md",
+    "dhl": "dhl-prep.md",
+    "dexcom": "dexcom-prep.md",
+    "walgreens": "walgreens-prep.md",
 }
 
 def get_prep_info_for_company(company_name):
@@ -264,6 +267,9 @@ RESUME_DOCX_MAP = {
     "citi-avp-lead-android-architect.md": "Raju_Sudhakar_Citi_Resume",
     "conviva-senior-android-sdk.md": "Raju_Sudhakar_Conviva_Resume",
     "cardboard-product-engineer-mobile.md": "Raju_Sudhakar_Cardboard_Resume",
+    "dhl-manager-mobile-solutions.md": "Raju_Sudhakar_DHL_Resume",
+    "dexcom-staff-mobile-engineer.md": "Raju_Sudhakar_Dexcom_Resume",
+    "walgreens-lead-android-developer.md": "Raju_Sudhakar_Walgreens_Resume",
 }
 
 def compile_all_resumes():
