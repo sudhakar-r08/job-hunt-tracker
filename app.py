@@ -54,6 +54,8 @@ PREP_FILE_MAP = {
     "dhl": "dhl-prep.md",
     "dexcom": "dexcom-prep.md",
     "walgreens": "walgreens-prep.md",
+    "outreach": "outreach-prep.md",
+    "intuit": "intuit-prep.md",
 }
 
 def get_prep_info_for_company(company_name):
@@ -270,6 +272,8 @@ RESUME_DOCX_MAP = {
     "dhl-manager-mobile-solutions.md": "Raju_Sudhakar_DHL_Resume",
     "dexcom-staff-mobile-engineer.md": "Raju_Sudhakar_Dexcom_Resume",
     "walgreens-lead-android-developer.md": "Raju_Sudhakar_Walgreens_Resume",
+    "outreach-staff-software-engineer-android.md": "Raju_Sudhakar_Outreach_Resume",
+    "intuit-senior-staff-mobile-engineer.md": "Raju_Sudhakar_Intuit_Resume",
 }
 
 def compile_all_resumes():
