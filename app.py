@@ -56,6 +56,9 @@ PREP_FILE_MAP = {
     "walgreens": "walgreens-prep.md",
     "outreach": "outreach-prep.md",
     "intuit": "intuit-prep.md",
+    "tide": "tide-prep.md",
+    "truecaller": "truecaller-prep.md",
+    "analog": "analog-prep.md",
 }
 
 def get_prep_info_for_company(company_name):
@@ -274,6 +277,9 @@ RESUME_DOCX_MAP = {
     "walgreens-lead-android-developer.md": "Raju_Sudhakar_Walgreens_Resume",
     "outreach-staff-software-engineer-android.md": "Raju_Sudhakar_Outreach_Resume",
     "intuit-senior-staff-mobile-engineer.md": "Raju_Sudhakar_Intuit_Resume",
+    "tide-staff-mobile-engineer.md": "Raju_Sudhakar_Tide_Resume",
+    "truecaller-staff-android-engineer.md": "Raju_Sudhakar_Truecaller_Resume",
+    "analog-senior-android-developer.md": "Raju_Sudhakar_Analog_Resume",
 }
 
 def compile_all_resumes():
