@@ -59,6 +59,9 @@ PREP_FILE_MAP = {
     "tide": "tide-prep.md",
     "truecaller": "truecaller-prep.md",
     "analog": "analog-prep.md",
+    "atlassian": "atlassian-prep.md",
+    "coupang": "coupang-prep.md",
+    "backbase": "backbase-prep.md",
 }
 
 def get_prep_info_for_company(company_name):
@@ -280,6 +283,9 @@ RESUME_DOCX_MAP = {
     "tide-staff-mobile-engineer.md": "Raju_Sudhakar_Tide_Resume",
     "truecaller-staff-android-engineer.md": "Raju_Sudhakar_Truecaller_Resume",
     "analog-senior-android-developer.md": "Raju_Sudhakar_Analog_Resume",
+    "atlassian-senior-mobile-engineer.md": "Raju_Sudhakar_Atlassian_Resume",
+    "coupang-senior-android-engineer.md": "Raju_Sudhakar_Coupang_Resume",
+    "backbase-senior-android-lead.md": "Raju_Sudhakar_Backbase_Resume",
 }
 
 def compile_all_resumes():
